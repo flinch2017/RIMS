@@ -43,24 +43,29 @@ body::before {
     0% { background-position: center, 0 0; }  /* Start at the top */
     100% { background-position: center, 0 100%; }  /* Move to the bottom */
 }
-        .header {
-            background: linear-gradient(90deg, #2e7d32, #66bb6a); /* Trendy gradient */
-            color: white;
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            left: 0;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            z-index: 1000;
-        }
-        .header .brand {
-            font-size: 1.5rem;
-            font-weight: 600;
-        }
+.header {
+    background: linear-gradient(90deg, #2e7d32, #66bb6a); /* Trendy gradient */
+    color: white;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: flex-start;  /* Aligns the items to the left */
+    align-items: center;         /* Vertically center the items */
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+.header .brand {
+    font-size: 20px;
+    font-weight: 600;
+    text-align: left;            /* Ensures the brand text aligns to the left */
+    margin-right: auto;          /* This ensures the brand stays on the left side */
+    margin-left: 20px;           /* Add space between the logo and the text */
+}
+
         .header .btn-back-home {
             background-color: #ffffff; /* White background for button */
             color: #2e7d32; /* Dark green text */
@@ -129,6 +134,8 @@ body::before {
 <body>
 
 <div class="header">
+    
+    <img src="/images/essu_logo.png" alt="ESSU Logo" style="width: 30px; height: 30px; object-fit: contain;">
     <div class="brand">ESSU Research and Information Management System</div>
     <button class="btn-back-home" onclick="window.location.href='/'">Go back to homepage</button>
 </div>
