@@ -4,6 +4,7 @@ const fs = require('fs');
 const https = require('https');
 const os = require('os');
 const express = require('express');
+const nodemailer = require("nodemailer");
 const { v4: uuidv4 } = require('uuid');  // Import the uuid package
 const bwipjs = require('bwip-js');
 const multer = require('multer');
@@ -190,9 +191,6 @@ router.post('/setupaccount', async (req, res) => {
 
 // GET route for /setupaccount
 router.get('/login', (req, res) => {
-    if (!req.session.user) {
-        return res.redirect('/signup');
-    }
 
    
     res.render('login');
@@ -222,15 +220,25 @@ router.post('/login', async (req, res) => {
         }
 
         // If authentication is successful, store user details in session
-        req.session.user = { username: user.username, idnumber: user.idnumber, role: user.role};
+        req.session.user = { username: user.username, idnumber: user.idnumber, role: user.role };
 
-        // Redirect to the homepage or dashboard
+        // Redirect based on user role
+        if (user.role === 'RDSO Staff') {
+            return res.redirect('/rdsodashboard'); // Redirect to RDSO Staff dashboard
+        }
+
+        if (user.role === 'Super Admin') {
+            return res.redirect('/superadmindashboard'); // Redirect to Super Admin dashboard
+        }
+
+        // Default redirect (if the role is neither RDSO Staff nor Super Admin)
         res.redirect('/facultypapers');
     } catch (error) {
         console.error('Error during login:', error);
         res.status(500).render('login', { errorMessage: 'An error occurred during login. Please try again later.' });
     }
 });
+
 
 // GET route for faculty researches
 router.get('/facultypapers', async (req, res) => {
@@ -668,7 +676,7 @@ router.get('/search', async (req, res) => {
         const result = await pool.query(
             `(
                 
-                SELECT e.id, e.title, e.abstract, e.author, e.filename, e.nature, e.origin, e.keyword, 
+                SELECT e.id, e.title, e.abstract, e.author, e.filename, e.nature, e.origin, e.keyword, e.barcode, 
                     CASE 
                         WHEN e.publication_date = 'Not published' THEN 'Not published'
                         ELSE e.publication_date
@@ -710,6 +718,90 @@ router.get('/search', async (req, res) => {
         res.render('search-results', { query, results: [], sort });
     }
 });
+
+
+router.post("/send-email", async (req, res) => {
+    const { researchId, filename, email } = req.body;
+    
+    if (!filename) {
+        return res.json({ message: "No file available to send." });
+    }
+
+    const filePath = path.join(__dirname, "./uploads", filename);
+
+    // Configure nodemailer
+    let transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASS
+        }
+    });
+
+    let mailOptions = {
+        from: process.env.EMAIL_USER,
+        to: email,
+        subject: "Research File",
+        text: `Here is the research file you requested (Research ID: ${researchId}).`,
+        attachments: [{ filename, path: filePath }]
+    };
+
+    try {
+        await transporter.sendMail(mailOptions);
+        res.json({ message: "Email sent successfully!" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Failed to send email." });
+    }
+});
+
+router.get('/facultydashboard', async (req, res) => {
+    // Check if the user is logged in
+    if (!req.session.user) {
+        return res.redirect('/login'); // Redirect to login if not authenticated
+    }
+
+    const userId = req.session.user.idnumber;
+
+    try {
+        // Query the database to get the user's fullname from the users table
+        const userResult = await pool.query('SELECT fullname FROM users WHERE idnumber = $1', [userId]);
+
+        if (userResult.rows.length === 0) {
+            return res.status(404).send('User not found');
+        }
+
+        const fullname = userResult.rows[0].fullname;
+
+        // Query the database to get counts for each research status
+        const totalResearchResult = await pool.query('SELECT COUNT(*) FROM globalresearches WHERE idnumber = $1', [userId]);
+        const proposedCountResult = await pool.query('SELECT COUNT(*) FROM globalresearches WHERE idnumber = $1 AND status_id = 4', [userId]);
+        const ongoingCountResult = await pool.query('SELECT COUNT(*) FROM globalresearches WHERE idnumber = $1 AND status_id = 2', [userId]);
+        const completedCountResult = await pool.query('SELECT COUNT(*) FROM globalresearches WHERE idnumber = $1 AND status_id = 1', [userId]);
+        const publishedCountResult = await pool.query('SELECT COUNT(*) FROM globalresearches WHERE idnumber = $1 AND status_id = 3', [userId]);
+
+        // Prepare the counts
+        const totalResearch = totalResearchResult.rows[0].count;
+        const proposedCount = proposedCountResult.rows[0].count;
+        const ongoingCount = ongoingCountResult.rows[0].count;
+        const completedCount = completedCountResult.rows[0].count;
+        const publishedCount = publishedCountResult.rows[0].count;
+
+        // Render the faculty dashboard view with user and research counts data
+        res.render('facultydashboard', {
+            fullname: fullname, // Use fetched fullname from the database
+            totalResearch: totalResearch,
+            proposedCount: proposedCount,
+            ongoingCount: ongoingCount,
+            completedCount: completedCount,
+            publishedCount: publishedCount
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server Error');
+    }
+});
+
 
 
 // GET route for logout
