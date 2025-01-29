@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results - ESSU Research and Information Management System</title>
+    <!-- Bootstrap CSS for responsiveness -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Custom styles (same as before) */
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #c6f6d5, #e9f5e9);
+    background-size: 200% 200%;
+}
+
+.header {
+    background: linear-gradient(90deg, #2e7d32, #66bb6a); /* Trendy gradient */
+    color: white;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+.header .brand {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.header .btn-login:hover {
+    background-color: #f1f1f1; /* Light grey on hover */
+    color: #2e7d32; /* Dark green text on hover */
+}
+
+.search-results-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 5rem 2rem; /* Space for the header */
+    text-align: center;
+    margin-top: 5rem; /* Added margin-top to avoid overlap */
+}
+
+.search-results-container h1 {
+    margin-bottom: 1rem;
+    font-weight: 700;
+    color: #333;
+    font-size: 2rem; /* Adjusted font size */
+}
+
+.sort-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 2rem;
+    margin-top: -10px;
+    
+}
+
+.search-info p {
+    font-size: 1.2rem;
+    margin: 0;
+    font-weight: normal;
+    margin-top: 20px;
+    padding-top: 30px;
+}
+
+.sort-form {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    margin-top: 40px;
+}
+
+.sort-form .form-select {
+    max-width: 200px; /* You can adjust the width as needed */
+}
+
+.sort-options form {
+    width: 100%;
+    max-width: 400px;
+}
+
+.result-card {
+    background-color: #ffffff;
+    padding: 1rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1rem;
+    width: 100%;
+    max-width: 100%;
+    text-align: left;
+    font-size: 0.875rem;
+}
+
+.result-card h3 {
+    font-size: 1.25rem;
+}
+
+.result-card p {
+    font-size: 0.875rem;
+}
+
+.footer {
+    background-color: #2e7d32; /* Dark green */
+    color: white;
+    padding: 1rem 2rem; /* Same as header */
+    position: relative;
+    text-align: center;
+    width: 100%;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column;
+        padding: 1rem;
+        align-items: flex-start;
+    }
+
+    .header .btn-login {
+        margin-top: 1rem;
+        width: 100%;
+        text-align: center;
+    }
+
+    .search-input {
+        width: 80%;
+    }
+
+    .search-button {
+        width: 100%;
+        margin-top: 1rem;
+    }
+
+    .result-card {
+        width: 100%;
+        padding: 1rem;
+    }
+
+    .sort-options {
+        flex-direction: column;
+        align-items: flex-start;
+
+    }
+
+    .results-header h1 {
+        font-size: 1.5rem;
+    }
+
+    
+}
+
+/* Further mobile optimizations */
+@media (max-width: 480px) {
+    .header .brand {
+        font-size: 1.25rem;
+    }
+
+    .search-results-container h1 {
+        font-size: 1.5rem;
+    }
+
+    .search-container {
+        display: flex;
+        justify-content: flex-start; /* Align to the left */
+        align-items: center; /* Center vertically */
+    }
+
+    .search-input {
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+
+    .search-button {
+        width: 50px;
+    }
+}
+
+.d-flex {
+    display: flex;
+    justify-content: flex-start; /* Align items to the left */
+    align-items: center; /* Vertically align buttons */
+    gap: 10px; /* Add a small space between the buttons */
+}
+
+.header .btn-back-home,
+.header .btn-login {
+    background-color: #ffffff; /* White background for button */
+    color: #2e7d32; /* Dark green text */
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.header .btn-back-home:hover,
+.header .btn-login:hover {
+    background-color: #f1f1f1; /* Light grey on hover */
+    color: #2e7d32; /* Dark green text on hover */
+}
+
+/* Additional styles for aligning search bar to the left */
+.search-container {
+    display: flex;
+    justify-content: flex-start; /* Align to the left */
+    align-items: center; /* Center vertically */
+    width: 100%; /* Take full width of the container */
+    padding: 0px;
+    padding-right: 10px;
+}
+
+.search-input {
+    width: 70%; /* Adjust the width as needed */
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+    padding-right: 10px;
+    margin-left: -20px ;
+
+}
+
+.search-button {
+    background-color: #2e7d32;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    margin-left: 0.5rem;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.search-button:hover {
+    background-color: #1e5631;
+}
+
+
+
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div class="brand">ESSU Research and Information Management System</div>
+    <div class="d-flex">
+        <button class="btn-back-home" onclick="window.location.href='/'">Go back to homepage</button>
+        
+    </div>
+</div>
+
+<div class="search-results-container">
+    <div class="search-container">
+        <form action="/search" method="GET" style="position: relative;">
+            <input type="text" class="search-input" placeholder="Search for research topics..." name="query" id="search-input" required>
+            <input type="hidden" name="barcode" id="hidden-barcode-input">
+            <button type="submit" class="search-button">
+                <i class="fas fa-search"></i>
+            </button>
+        </form>
+    </div>
+
+   
+    <div class="sort-options">
+        <div class="search-info">
+            <p>Here's what I found...</p>
+        </div>
+        <form method="GET" action="/search" class="sort-form">
+            <input type="hidden" name="query" value="<%= query %>">
+            <select name="sort" onchange="this.form.submit()" class="form-select w-50">
+                <option value="All" <%= sort === 'All' ? 'selected' : '' %>>All</option>
+                <option value="Completed" <%= sort === 'Completed' ? 'selected' : '' %>>Completed</option>
+                <option value="Ongoing" <%= sort === 'Ongoing' ? 'selected' : '' %>>Ongoing</option>
+                <option value="Published" <%= sort === 'Published' ? 'selected' : '' %>>Published</option>
+                <option value="Proposed" <%= sort === 'Proposed' ? 'selected' : '' %>>Proposed</option>
+                <option value="newest" <%= sort === 'newest' ? 'selected' : '' %>>Newest</option>
+                <option value="oldest" <%= sort === 'oldest' ? 'selected' : '' %>>Oldest</option>
+            </select>
+        </form>
+    </div>
+    
+
+    <% if (results.length > 0) { %>
+        <% results.forEach(result => { %>
+            <div class="result-card">
+                <h3><%= result.title %></h3>
+                <p>Authors: <%= result.author_names %></p>
+                <p><strong>Publication Date:</strong> <%= result.publication_date %></p>
+                <p><strong>Status:</strong> <%= result.status %></p>
+                <p><strong>Keyword(s):</strong> <%= result.keyword %></p>
+                
+                <button type="button" class="btn btn-success" data-bs-toggle="offcanvas" data-bs-target="#researchDetails<%= result.id %>">See More</button>
+                
+                <div class="offcanvas offcanvas-end" tabindex="-1" id="researchDetails<%= result.id %>" aria-labelledby="researchDetailsLabel">
+                    <div class="offcanvas-header">
+                        <h5 class="offcanvas-title" id="researchDetailsLabel">Research Details</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                    </div>
+                    <div class="offcanvas-body">
+                        <% if (result.title) { %>
+                            <p><strong>Title:</strong> <%= result.title %></p>
+                        <% } %>
+                        <% if (result.author_names) { %>
+                            <p><strong>Author:</strong> <%= result.author_names %></p>
+                        <% } %>
+                        <% if (result.nature) { %>
+                            <p><strong>Type of research by nature:</strong> <%= result.nature %></p>
+                        <% } %>
+                        <% if (result.origin) { %>
+                            <p><strong>Type of research by origin:</strong> <%= result.origin %></p>
+                        <% } %>
+                        <% if (result.publication_date) { %>
+                            <p><strong>Publication Date:</strong> <%= result.publication_date %></p>
+                        <% } %>
+                        <% if (result.status) { %>
+                            <p><strong>Status:</strong> <%= result.status %></p>
+                        <% } %>
+                        <% if (result.abstract) { %>
+                            <p><strong>Abstract:</strong> <%= result.abstract %></p>
+                        <% } %>
+                        <% if (result.keyword) { %>
+                            <p><strong>Keyword(s):</strong> <%= result.keyword %></p>
+                        <% } %>
+                        <p><strong>PDF Preview:</strong></p>
+                        <% if (result.filename) { %>
+                            <iframe 
+                                src="/uploads/<%= result.filename %>" 
+                                width="100%" 
+                                height="600px" 
+                                style="border: none;"
+                                onerror="this.contentDocument.body.innerHTML = '<p>No PDF available for preview.</p>'"
+                            ></iframe>
+                        <% } else { %>
+                            <p>No PDF available for preview.</p>
+                        <% } %>
+                    </div>
+                </div>
+                
+            </div>
+        <% }); %>
+    <% } else { %>
+        <p>No results found.</p>
+    <% } %>
+</div>
+
+<div class="footer">
+    <p>© 2025 ESSU Research and Information Management System</p>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

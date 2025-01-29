@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESSU Research and Information Management System - Login</title>
+    <!-- Bootstrap CSS for responsiveness -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+    position: relative;
+    background-color: #e8f5e9; /* No background on the main body */
+    display: flex;
+    flex-direction: column;
+    font-family: 'Arial', sans-serif;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        url('/images/essu_logo.png') no-repeat center center fixed,  /* Logo image */
+        url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2220%22 height=%2220%22 viewBox=%220 0 20 20%22%3E%3Cpath fill=%22%23e0e0e0%22 d=%22M0 0h2v2H0zm2 2h2v2H2zm2 2h2v2H4zm2 2h2v2H6zm2 2h2v2H8zm2 2h2v2H10zm2 2h2v2H12zm2 2h2v2H14z%22/%3E%3C/svg%3E') repeat;
+    background-size: 450px, 30px 30px; /* Larger checkered pattern for a more refined look */
+    background-position: center, 0 0; /* Logo stays centered, checkered pattern starts at the top */
+    opacity: 0.9; /* Slightly faded to make it softer */
+    z-index: -1; /* Place it behind other content */
+    animation: fadeAnimation 15s ease-in-out infinite, moveCheckered 10s linear infinite; /* Fading + vertical move */
+}
+
+/* Keyframes for fading effect */
+@keyframes fadeAnimation {
+    0%, 100% { opacity: 0.9; } /* Keep the opacity at a subtle level */
+    50% { opacity: 0.4; }   /* Faded in the middle for a smooth transition */
+}
+
+/* Keyframes for moving only the checkered pattern vertically */
+@keyframes moveCheckered {
+    0% { background-position: center, 0 0; }  /* Start at the top */
+    100% { background-position: center, 0 100%; }  /* Move to the bottom */
+}
+        .header {
+            background: linear-gradient(90deg, #2e7d32, #66bb6a); /* Trendy gradient */
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+        .header .brand {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        .header .btn-back-home {
+            background-color: #ffffff; /* White background for button */
+            color: #2e7d32; /* Dark green text */
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .header .btn-back-home:hover {
+            background-color: #f1f1f1; /* Light grey on hover */
+            color: #2e7d32; /* Dark green text on hover */
+        }
+        .login-container {
+            background-color: #ffffff; /* White background for the login container */
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            margin: 5rem auto 2rem; /* Added top margin to avoid header overlap */
+        }
+        .login-container h2 {
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-weight: 600;
+            color: #2e7d32; /* Dark green for the title */
+        }
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+        .form-select, .form-control {
+            height: 45px;
+            font-size: 1rem;
+            border-color: #66bb6a; /* Medium green border */
+        }
+        .form-select:focus, .form-control:focus {
+            border-color: #388e3c; /* Darker green when focused */
+            box-shadow: 0 0 0 0.25rem rgba(56, 142, 60, 0.25); /* Green shadow on focus */
+        }
+        .btn-login {
+            background-color: #388e3c; /* Dark green button */
+            color: white;
+            font-size: 1rem;
+            font-weight: bold;
+        }
+        .btn-login:hover {
+            background-color: #2e7d32; /* Darker green on hover */
+        }
+        .signup-link {
+            text-align: center;
+            margin-top: 1rem;
+        }
+        .signup-link a {
+            color: #388e3c;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .signup-link a:hover {
+            text-decoration: underline;
+        }
+
+        .readonly-field {
+    background-color: #f0f0f0; /* Light grey background */
+    color: #6c757d; /* Muted text color */
+    pointer-events: none; /* Prevent interaction */
+    border: 1px solid #ced4da; /* Optional: match other inputs' borders */
+}
+
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div class="brand" style="display: flex; align-items: center; gap: 10px;">
+        <div style="width: 40px; height: 40px; border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center; background-color: white;">
+            <img src="/images/essu_logo.png" alt="ESSU Logo" style="width: 100%; height: auto; object-fit: contain;">
+        </div>
+        ESSU Research and Information Management System
+    </div>
+    <button class="btn-back-home" onclick="window.location.href='/'">Go back to homepage</button>
+</div>
+
+<div class="login-container" style="background: linear-gradient(90deg, #ffffff, #d4edda);">
+    <h2>Setup Researcher Profile</h2>
+    <form action="/setupaccount" method="POST">
+        <div class="mb-3">
+            <label for="name" class="form-label">Researcher Name</label>
+            <input 
+                type="text" 
+                id="name" 
+                name="name" 
+                class="form-control readonly-field" 
+                required 
+                value="<%= fullname %>" 
+                readonly
+            >
+        </div>
+        <div class="mb-3">
+            <label for="designation" class="form-label">Designation</label>
+            <input type="text" id="designation" name="designation" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label for="college" class="form-label">College</label>
+            <select id="college" name="college" class="form-control" required onchange="updateDepartments()">
+                <option value="" disabled selected>Select College</option>
+                <option value="Agriculture">Agriculture</option>
+                <option value="Arts and Sciences">Arts and Sciences</option>
+                <option value="Business Management and Accountancy">Business Management and Accountancy</option>
+                <option value="Computer Studies">Computer Studies</option>
+                <option value="Criminal Justice Education">Criminal Justice Education</option>
+                <option value="Education">Education</option>
+                <option value="Engineering">Engineering</option>
+                <option value="Fisheries and Aquatics Sciences">Fisheries and Aquatics Sciences</option>
+                <option value="Hospitality Management">Hospitality Management</option>
+                <option value="Nursing and Allied Sciences">Nursing and Allied Sciences</option>
+                <option value="Science">Science</option>
+                <option value="Technology">Technology</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="department" class="form-label">Department</label>
+            <select id="department" name="department" class="form-control" required>
+                <option value="" disabled selected>Select Department</option>
+                <!-- Departments will be dynamically populated based on college selection -->
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="campus" class="form-label">Campus</label>
+            <select id="campus" name="campus" class="form-control" required>
+                <option value="ESSU MAIN">ESSU MAIN</option>
+                <option value="ESSU ARTECHE">ESSU ARTECHE</option>
+                <option value="ESSU BALANGIGA">ESSU BALANGIGA</option>
+                <option value="ESSU CAN-AVID">ESSU CAN-AVID</option>
+                <option value="ESSU GUIUAN">ESSU GUIUAN</option>
+                <option value="ESSU MAYDOLONG">ESSU MAYDOLONG</option>
+                <option value="ESSU SALCEDO">ESSU SALCEDO</option>
+            </select>
+        </div>
+       
+        <button type="submit" class="btn btn-primary">Create Profile</button>
+    </form>
+    
+    
+    <script>
+        const departmentOptions = {
+            "Agriculture": ["Bachelor Of Science In Agriculture"],
+            "Arts and Sciences": [
+                "Bachelor Of Arts In Communication",
+                "Bachelor Of Arts In Political Science",
+                "Bachelor Of Science In Social Work",
+            ],
+            "Business Management and Accountancy": [
+                "Bachelor Of Science In Accountancy",
+                "Bachelor Of Science In Accounting Information System",
+                "Bachelor Of Science In Entrepreneurship",
+                "Bachelor Of Science In Business Administration Major In Business Economics",
+                "Bachelor Of Science In Business Administration Major In Financial Management",
+                "Bachelor Of Science In Business Administration Major In Human Resource Management",
+                "Bachelor Of Science In Business Administration Major In Marketing Management"
+            ],
+            "Computer Studies": [
+                "Associate In Computer Technology",
+                "Bachelor Of Science In Computer Science",
+                "Bachelor Of Science In Entertainment And Multimedia Computing",
+                "Bachelor Of Science In Information Technology"
+            ],
+            "Criminal Justice Education": ["Bachelor Of Science In Criminology"],
+            "Education": [
+                "Bachelor Of Elementary Education",
+                "Bachelor Of Secondary Education Major In English",
+                "Bachelor Of Secondary Education Major In Filipino",
+                "Bachelor Of Secondary Education Major In Mathematics",
+                "Bachelor Of Secondary Education Major In Science",
+                "Bachelor Of Secondary Education Major In Social Studies"
+            ],
+            "Engineering": [
+                "Bachelor Of Science In Electrical Engineering",
+                "Bachelor Of Science In Computer Engineering",
+                "Bachelor Of Science In Civil Engineering"
+            ],
+            "Fisheries and Aquatics Sciences": ["Bachelor Of Science In Fisheries"],
+            "Hospitality Management": [
+                "Bachelor Of Science In Hospitality Management",
+                "Bachelor Of Science In Tourism Management"
+            ],
+            "Nursing and Allied Sciences": [
+                "Bachelor Of Science In Midwifery",
+                "Bachelor Of Science In Nursing",
+                "Bachelor Of Science in Nutrition And Dietetics"
+            ],
+            "Science": [
+                "Bachelor Of Science In Biology",
+                "Bachelor Of Science In Environmental Science"
+            ],
+            "Technology": ["Bachelor In Industrial Technology"]
+        };
+    
+        function updateDepartments() {
+            const college = document.getElementById("college").value;
+            const departmentSelect = document.getElementById("department");
+    
+            // Clear previous department options
+            departmentSelect.innerHTML = '<option value="" disabled selected>Select Department</option>';
+    
+            // Disable "Select College" option after selection
+            document.querySelector('#college option[value=""]').disabled = true;
+    
+            if (college && departmentOptions[college]) {
+                departmentOptions[college].forEach(department => {
+                    const option = document.createElement("option");
+                    option.value = department;
+                    option.textContent = department;
+                    departmentSelect.appendChild(option);
+                });
+            }
+        }
+    
+        // Disable "Select Department" option once a department is selected
+        document.getElementById("department").addEventListener("change", function() {
+            const departmentSelect = document.getElementById("department");
+            if (departmentSelect.value) {
+                document.querySelector('#department option[value=""]').disabled = true;
+            }
+        });
+    </script>
+    
+
+
+
+
+
+
+
+<!-- Bootstrap JS for responsiveness -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

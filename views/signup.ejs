@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESSU Research and Information Management System - Sign Up</title>
+    <!-- Bootstrap CSS for responsiveness -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+    position: relative;
+    background-color: #e8f5e9; /* No background on the main body */
+    display: flex;
+    flex-direction: column;
+    font-family: 'Arial', sans-serif;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        url('/images/essu_logo.png') no-repeat center center fixed,  /* Logo image */
+        url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2220%22 height=%2220%22 viewBox=%220 0 20 20%22%3E%3Cpath fill=%22%23e0e0e0%22 d=%22M0 0h2v2H0zm2 2h2v2H2zm2 2h2v2H4zm2 2h2v2H6zm2 2h2v2H8zm2 2h2v2H10zm2 2h2v2H12zm2 2h2v2H14z%22/%3E%3C/svg%3E') repeat;
+    background-size: 450px, 30px 30px; /* Larger checkered pattern for a more refined look */
+    background-position: center, 0 0; /* Logo stays centered, checkered pattern starts at the top */
+    opacity: 0.9; /* Slightly faded to make it softer */
+    z-index: -1; /* Place it behind other content */
+    animation: fadeAnimation 15s ease-in-out infinite, moveCheckered 10s linear infinite; /* Fading + vertical move */
+}
+
+/* Keyframes for fading effect */
+@keyframes fadeAnimation {
+    0%, 100% { opacity: 0.9; } /* Keep the opacity at a subtle level */
+    50% { opacity: 0.4; }   /* Faded in the middle for a smooth transition */
+}
+
+/* Keyframes for moving only the checkered pattern vertically */
+@keyframes moveCheckered {
+    0% { background-position: center, 0 0; }  /* Start at the top */
+    100% { background-position: center, 0 100%; }  /* Move to the bottom */
+}
+        .header {
+            background: linear-gradient(90deg, #2e7d32, #66bb6a); /* Trendy gradient */
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+        .header .brand {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        .header .btn-back-home {
+            background-color: #ffffff; /* White background for button */
+            color: #2e7d32; /* Dark green text */
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .header .btn-back-home:hover {
+            background-color: #f1f1f1; /* Light grey on hover */
+            color: #2e7d32; /* Dark green text on hover */
+        }
+        .signup-container {
+            background-color: #ffffff; /* White background for the sign-up container */
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            margin: 5rem auto 2rem; /* Added top margin to avoid header overlap */
+        }
+        .signup-container h2 {
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-weight: 600;
+            color: #2e7d32; /* Dark green for the title */
+        }
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+        .form-control {
+            height: 45px;
+            font-size: 1rem;
+            border-color: #66bb6a; /* Medium green border */
+        }
+        .form-control:focus {
+            border-color: #388e3c; /* Darker green when focused */
+            box-shadow: 0 0 0 0.25rem rgba(56, 142, 60, 0.25); /* Green shadow on focus */
+        }
+        .btn-signup {
+            background-color: #388e3c; /* Dark green button */
+            color: white;
+            font-size: 1rem;
+            font-weight: bold;
+        }
+        .btn-signup:hover {
+            background-color: #2e7d32; /* Darker green on hover */
+        }
+        .login-link {
+            text-align: center;
+            margin-top: 1rem;
+        }
+        .login-link a {
+            color: #388e3c;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div class="brand">ESSU Research and Information Management System</div>
+    <button class="btn-back-home" onclick="window.location.href='/'">Go back to homepage</button>
+</div>
+
+<div class="signup-container" style="background: linear-gradient(90deg, #ffffff, #d4edda);">
+    <h2>Sign Up</h2>
+    <form action="/signup" method="POST" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="role">Sign up as</label>
+            <select class="form-select" id="role" name="role" required>
+                <option value="Faculty">Faculty</option>
+                <option value="RDSO Staff">RDSO Staff</option>
+                <!-- Disable Super Admin option if one already exists -->
+                <option value="Super Admin">Super Admin</option>
+
+            </select>
+        </div>
+
+        <div style="text-align: center;">
+            <label for="profilePic" style="display: block; margin-bottom: 10px; font-size: 16px; font-weight: bold;">Profile Picture</label>
+            <input type="file" id="profilePic" name="profilePic" accept="image/*" style="display: none;">
+            <div id="imagePreview" 
+                 style="width: 150px; height: 150px; border-radius: 50%; overflow: hidden; border: 2px solid #ccc; display: inline-block; background-color: #f0f0f0; cursor: pointer; position: relative;">
+                <img id="previewImg" src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="Default Profile Icon" 
+                     style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0;">
+            </div>
+        </div>
+    
+        <!-- Full Name Field -->
+        <div class="form-group">
+            <label for="fullname">Full Name</label>
+            <input type="text" class="form-control" id="fullname" name="fullname" placeholder="Enter full name" required>
+        </div>
+    
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" class="form-control" id="username" name="username" placeholder="Enter username" required>
+            <div id="usernameFeedback" class="text-danger" style="display: none;">
+                Username must be in lowercase and cannot contain spaces.
+            </div>
+        </div>
+    
+        <% if (typeof errorMessage !== 'undefined') { %>
+            <div class="form-group text-center text-danger">
+                <p><%= errorMessage %></p>
+            </div>
+        <% } %>
+    
+        
+    
+        
+        
+        
+        
+    
+        <div class="form-group">
+            <label for="birthday">Birthday</label>
+            <input type="date" class="form-control" id="birthday" name="birthday" required>
+        </div>
+    
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" required>
+        </div>
+    
+        <div class="form-group">
+            <label for="contact">Contact Number</label>
+            <input type="text" class="form-control" id="contact" name="contact" placeholder="Enter your contact number" required>
+        </div>
+
+        <div class="form-group">
+            <label for="password">Password</label>
+            <div class="password-container">
+                <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" required>
+                <span class="toggle-password" id="togglePassword" onclick="togglePasswordVisibility()">👁️</span>
+            </div>
+    
+            <div id="passwordRequirementsList">
+                <h>Password must have:</h>
+                <ul style="list-style-type: none;">
+                    <li id="lengthRequirement"><span id="lengthTick">❌ </span>8+ characters </li>
+                    <li id="uppercaseRequirement"><span id="uppercaseTick">❌ </span>At least one uppercase letter </li>
+                    <li id="numberRequirement"><span id="numberTick">❌ </span>At least one number </li>
+                    <li id="specialCharRequirement"><span id="specialCharTick">❌ </span>At least one special character </li>
+                </ul>
+            </div>
+        </div>
+    
+        <div class="form-group">
+            <label for="confirmPassword">Confirm Password</label>
+            <div class="password-container">
+                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Confirm your password" required>
+                <span class="toggle-password" id="toggleConfirmPassword" onclick="toggleConfirmPasswordVisibility()">👁️</span>
+            </div>
+            <div id="confirmPasswordError" class="text-danger" style="display: none;">
+                Passwords do not match.
+            </div>
+        </div>
+    
+        <div class="form-group text-center">
+            <button type="submit" class="btn btn-signup w-100" id="submitButton">Sign Up</button>
+        </div>
+    </form>
+    
+    
+    
+    
+    <script>
+        // Enforce lowercase and no spaces for username
+        function validateUsername() {
+
+            var fullnameField = document.getElementById('fullname');
+    var fullname = fullnameField.value.trim();
+
+    // Check if the Full Name field is empty
+    if (fullname === "") {
+        alert("Full Name is required.");
+        return false; // Prevent form submission
+    }
+            var usernameField = document.getElementById('username');
+            var username = usernameField.value;
+    
+            // Convert to lowercase
+            username = username.toLowerCase();
+    
+            // Remove spaces
+            username = username.replace(/\s+/g, '');
+    
+            // Update the field value
+            usernameField.value = username;
+    
+            // Prevent form submission if there are spaces
+            if (/\s/.test(username)) {
+                alert("Username cannot contain spaces.");
+                return false; // Prevent form submission
+            }
+    
+            return true; // Allow form submission
+
+            
+        }
+
+       
+
+
+
+    
+        // Real-time username checker
+        document.getElementById('username').addEventListener('input', function() {
+            var username = this.value;
+    
+            // Convert to lowercase
+            username = username.toLowerCase();
+    
+            // Remove spaces
+            var formattedUsername = username.replace(/\s+/g, '');
+    
+            // Update the input field value
+            this.value = formattedUsername;
+    
+            // Show or hide the feedback message
+            var feedback = document.getElementById('usernameFeedback');
+            if (/\s/.test(formattedUsername) || formattedUsername !== username) {
+                feedback.style.display = 'block'; // Show feedback if there are spaces or it's not lowercase
+            } else {
+                feedback.style.display = 'none'; // Hide feedback if username is valid
+            }
+        });
+    </script>
+
+<script>
+    const profilePicInput = document.getElementById('profilePic');
+    const imagePreview = document.getElementById('imagePreview');
+    const previewImg = document.getElementById('previewImg');
+
+    imagePreview.addEventListener('click', () => {
+        profilePicInput.click();
+    });
+
+    profilePicInput.addEventListener('change', (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                previewImg.src = e.target.result;
+                previewImg.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+</script>
+
+
+
+    
+    
+    
+    <script>
+        // Toggle password visibility for the password field
+        function togglePasswordVisibility() {
+            const passwordField = document.getElementById('password');
+            const toggleIcon = document.getElementById('togglePassword');
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                toggleIcon.textContent = '🙈';  // Change icon to "hide"
+            } else {
+                passwordField.type = 'password';
+                toggleIcon.textContent = '👁️';  // Change icon to "show"
+            }
+        }
+    
+        // Toggle password visibility for the confirm password field
+        function toggleConfirmPasswordVisibility() {
+            const confirmPasswordField = document.getElementById('confirmPassword');
+            const toggleIcon = document.getElementById('toggleConfirmPassword');
+            if (confirmPasswordField.type === 'password') {
+                confirmPasswordField.type = 'text';
+                toggleIcon.textContent = '🙈';  // Change icon to "hide"
+            } else {
+                confirmPasswordField.type = 'password';
+                toggleIcon.textContent = '👁️';  // Change icon to "show"
+            }
+        }
+    
+        // Password validation
+        const passwordRequirements = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        const lengthTick = document.getElementById('lengthTick');
+        const uppercaseTick = document.getElementById('uppercaseTick');
+        const numberTick = document.getElementById('numberTick');
+        const specialCharTick = document.getElementById('specialCharTick');
+        const confirmPasswordTick = document.getElementById('confirmPasswordTick');
+        const confirmPasswordError = document.getElementById('confirmPasswordError');
+    
+        // Check each password requirement
+        document.getElementById('password').addEventListener('input', function() {
+            const password = this.value;
+    
+            // Check length requirement
+            if (password.length >= 8) {
+                lengthTick.textContent = '✔️';
+            } else {
+                lengthTick.textContent = '❌';
+            }
+    
+            // Check uppercase letter
+            if (/[A-Z]/.test(password)) {
+                uppercaseTick.textContent = '✔️';
+            } else {
+                uppercaseTick.textContent = '❌';
+            }
+    
+            // Check number
+            if (/\d/.test(password)) {
+                numberTick.textContent = '✔️';
+            } else {
+                numberTick.textContent = '❌';
+            }
+    
+            // Check special character
+            if (/[@$!%*?&]/.test(password)) {
+                specialCharTick.textContent = '✔️';
+            } else {
+                specialCharTick.textContent = '❌';
+            }
+        });
+    
+        // Confirm password check
+        document.getElementById('confirmPassword').addEventListener('input', function() {
+            const password = document.getElementById('password').value;
+            const confirmPassword = this.value;
+    
+            // Check if confirm password matches the password
+            if (password === confirmPassword) {
+                confirmPasswordTick.textContent = '✔️';
+                confirmPasswordError.style.display = 'none';
+            } else {
+                confirmPasswordTick.textContent = '❌';
+                confirmPasswordError.style.display = 'block';
+            }
+        });
+    
+        // Prevent form submission if validation fails
+        document.querySelector('form').addEventListener('submit', function(event) {
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+    
+            const isPasswordValid = passwordRequirements.test(password);
+            const isConfirmPasswordValid = password === confirmPassword;
+    
+            if (!isPasswordValid || !isConfirmPasswordValid) {
+                event.preventDefault();  // Prevent form submission
+            }
+        });
+    </script>
+    
+    <style>
+        /* Styling for password input containers */
+        .password-container {
+            position: relative;
+        }
+    
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+        }
+    
+        /* Optional: Style the tick icons */
+        #lengthTick, #uppercaseTick, #numberTick, #specialCharTick, #confirmPasswordTick {
+            color: green;
+        }
+    
+        #lengthTick, #uppercaseTick, #numberTick, #specialCharTick {
+            color: red;
+        }
+    </style>
+    
+    
+    
+    
+    
+
+    <div class="login-link">
+        <p>Already have an account? <a href="/login">Login</a></p>
+    </div>
+</div>
+
+
+
+
+
+<!-- Bootstrap JS for responsiveness -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

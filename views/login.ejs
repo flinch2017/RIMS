@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESSU Research and Information Management System - Login</title>
+    <!-- Bootstrap CSS for responsiveness -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+    position: relative;
+    background-color: #e8f5e9; /* No background on the main body */
+    display: flex;
+    flex-direction: column;
+    font-family: 'Arial', sans-serif;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        url('/images/essu_logo.png') no-repeat center center fixed,  /* Logo image */
+        url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2220%22 height=%2220%22 viewBox=%220 0 20 20%22%3E%3Cpath fill=%22%23e0e0e0%22 d=%22M0 0h2v2H0zm2 2h2v2H2zm2 2h2v2H4zm2 2h2v2H6zm2 2h2v2H8zm2 2h2v2H10zm2 2h2v2H12zm2 2h2v2H14z%22/%3E%3C/svg%3E') repeat;
+    background-size: 450px, 30px 30px; /* Larger checkered pattern for a more refined look */
+    background-position: center, 0 0; /* Logo stays centered, checkered pattern starts at the top */
+    opacity: 0.9; /* Slightly faded to make it softer */
+    z-index: -1; /* Place it behind other content */
+    animation: fadeAnimation 15s ease-in-out infinite, moveCheckered 10s linear infinite; /* Fading + vertical move */
+}
+
+/* Keyframes for fading effect */
+@keyframes fadeAnimation {
+    0%, 100% { opacity: 0.9; } /* Keep the opacity at a subtle level */
+    50% { opacity: 0.4; }   /* Faded in the middle for a smooth transition */
+}
+
+/* Keyframes for moving only the checkered pattern vertically */
+@keyframes moveCheckered {
+    0% { background-position: center, 0 0; }  /* Start at the top */
+    100% { background-position: center, 0 100%; }  /* Move to the bottom */
+}
+        .header {
+            background: linear-gradient(90deg, #2e7d32, #66bb6a); /* Trendy gradient */
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+        .header .brand {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        .header .btn-back-home {
+            background-color: #ffffff; /* White background for button */
+            color: #2e7d32; /* Dark green text */
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .header .btn-back-home:hover {
+            background-color: #f1f1f1; /* Light grey on hover */
+            color: #2e7d32; /* Dark green text on hover */
+        }
+        .login-container {
+            background-color: #ffffff; /* White background for the login container */
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            margin: 5rem auto 2rem; /* Added top margin to avoid header overlap */
+        }
+        .login-container h2 {
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-weight: 600;
+            color: #2e7d32; /* Dark green for the title */
+        }
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+        .form-select, .form-control {
+            height: 45px;
+            font-size: 1rem;
+            border-color: #66bb6a; /* Medium green border */
+        }
+        .form-select:focus, .form-control:focus {
+            border-color: #388e3c; /* Darker green when focused */
+            box-shadow: 0 0 0 0.25rem rgba(56, 142, 60, 0.25); /* Green shadow on focus */
+        }
+        .btn-login {
+            background-color: #388e3c; /* Dark green button */
+            color: white;
+            font-size: 1rem;
+            font-weight: bold;
+        }
+        .btn-login:hover {
+            background-color: #2e7d32; /* Darker green on hover */
+        }
+        .signup-link {
+            text-align: center;
+            margin-top: 1rem;
+        }
+        .signup-link a {
+            color: #388e3c;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .signup-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div class="brand" style="display: flex; align-items: center; gap: 10px;">
+        <div style="width: 40px; height: 40px; border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center; background-color: white;">
+            <img src="/images/essu_logo.png" alt="ESSU Logo" style="width: 100%; height: auto; object-fit: contain;">
+        </div>
+        ESSU Research and Information Management System
+    </div>
+    <button class="btn-back-home" onclick="window.location.href='/'">Go back to homepage</button>
+</div>
+
+<div class="login-container" style="background: linear-gradient(90deg, #ffffff, #d4edda);">
+    <h2>Login</h2>
+    <form action="/login" method="POST" autocomplete="off">
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" class="form-control" id="username" name="username" placeholder="Enter username" required autocomplete="off">
+        </div>
+    
+        <div class="form-group">
+            <label for="password">Password</label>
+            <div class="password-container">
+                <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" required autocomplete="off">
+                <span class="toggle-password" id="togglePassword" onclick="togglePasswordVisibility()">👁️</span>
+            </div>
+        </div>
+    
+        <% if (typeof errorMessage !== 'undefined') { %>
+            <div class="form-group text-center text-danger">
+                <p><%= errorMessage %></p>
+            </div>
+        <% } %>
+    
+        <div class="form-group text-center">
+            <button type="submit" class="btn btn-login w-100">Login</button>
+        </div>
+    </form>
+    
+    
+    
+    
+    
+
+
+
+
+    <div class="signup-link">
+        <p>Don't have an account? <a href="/signup">Sign Up</a></p>
+    </div>
+</div>
+
+
+
+
+<script>
+    // Clear form fields when the page loads
+    window.onload = function() {
+        document.getElementById('username').value = '';
+        document.getElementById('password').value = '';
+    };
+
+    // Toggle password visibility for the password field
+    function togglePasswordVisibility() {
+        const passwordField = document.getElementById('password');
+        const toggleIcon = document.getElementById('togglePassword');
+        if (passwordField.type === 'password') {
+            passwordField.type = 'text';
+            toggleIcon.textContent = '🙈';  // Change icon to "hide"
+        } else {
+            passwordField.type = 'password';
+            toggleIcon.textContent = '👁️';  // Change icon to "show"
+        }
+    }
+</script>
+
+
+
+<script>
+    // Toggle password visibility for the password field
+    function togglePasswordVisibility() {
+        const passwordField = document.getElementById('password');
+        const toggleIcon = document.getElementById('togglePassword');
+        if (passwordField.type === 'password') {
+            passwordField.type = 'text';
+            toggleIcon.textContent = '🙈';  // Change icon to "hide"
+        } else {
+            passwordField.type = 'password';
+            toggleIcon.textContent = '👁️';  // Change icon to "show"
+        }
+    }
+</script>
+
+<style>
+    /* Styling for password input containers */
+    .password-container {
+        position: relative;
+    }
+
+    .toggle-password {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+    }
+</style>
+
+<!-- Bootstrap JS for responsiveness -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

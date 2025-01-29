@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>User Profile</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            background-color: #e8f5e9;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+        }
+        body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        
+        url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2220%22 height=%2220%22 viewBox=%220 0 20 20%22%3E%3Cpath fill=%22%23e0e0e0%22 d=%22M0 0h2v2H0zm2 2h2v2H2zm2 2h2v2H4zm2 2h2v2H6zm2 2h2v2H8zm2 2h2v2H10zm2 2h2v2H12zm2 2h2v2H14z%22/%3E%3C/svg%3E') repeat;
+    background-size: 450px, 30px 30px; /* Larger checkered pattern for a more refined look */
+    background-position: center, 0 0; /* Logo stays centered, checkered pattern starts at the top */
+    opacity: 0.9; /* Slightly faded to make it softer */
+    z-index: -1; /* Place it behind other content */
+    animation: fadeAnimation 15s ease-in-out infinite, moveCheckered 10s linear infinite; /* Fading + vertical move */
+}
+
+/* Keyframes for fading effect */
+@keyframes fadeAnimation {
+    0%, 100% { opacity: 0.9; } /* Keep the opacity at a subtle level */
+    50% { opacity: 0.4; }   /* Faded in the middle for a smooth transition */
+}
+
+/* Keyframes for moving only the checkered pattern vertically */
+@keyframes moveCheckered {
+    0% { background-position: center, 0 0; }  /* Start at the top */
+    100% { background-position: center, 0 100%; }  /* Move to the bottom */
+}
+
+        .header {
+            background: linear-gradient(90deg, #008000, #66bb6a);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            font-size: 1rem;
+        }
+        .header .brand {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+        .header .btn-profile,
+        .header .btn-logout {
+            background-color: #ffffff;
+            color: #2e7d32;
+            border: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            margin-right: 10px;
+        }
+        .header .btn-profile:hover,
+        .header .btn-logout:hover {
+            background-color: #f1f1f1;
+            color: #2e7d32;
+        }
+        .dashboard-container {
+            margin-top: 60px;
+            display: flex;
+        }
+        .sidebar {
+            width: 220px;
+            background-color: #66bb6a;
+            padding-top: 15px;
+            position: fixed;
+            top: 60px;
+            left: 0;
+            height: calc(100% - 60px);
+            overflow-y: auto;
+        }
+        .sidebar a {
+            display: block;
+            color: white;
+            padding: 0.8rem;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+        .sidebar a:hover {
+            background-color: #388e3c;
+        }
+        .sidebar i {
+            margin-right: 8px;
+            font-size: 1rem;
+        }
+        .main-content {
+            margin-left: 220px;
+            padding: 1.5rem;
+            flex-grow: 1;
+            width: 100%;
+            font-size: 0.9rem;
+        }
+        .welcome {
+            font-size: 1.5rem;
+            color: #2e7d32;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+        .profile-card {
+    background: linear-gradient(to bottom, #ffffff, #008000); /* White to green gradient */
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+    position: relative;
+    clip-path: polygon(0 0, 100% 0, 100% 90%, 50% 100%, 0 90%);
+}
+
+
+
+.profile-card .profile-pic-container {
+    flex-shrink: 0;
+}
+
+.profile-card .profile-pic {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+}
+
+.profile-card .user-details {
+    flex-grow: 1;
+}
+
+.profile-card h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.profile-card p {
+    font-size: 1rem;
+    color: #000000;
+    margin-bottom: 1rem;
+}
+
+.profile-card .btn-save {
+    background-color: #ffffff;
+    color: rgb(0, 0, 0);
+    padding: 0.5rem 1.5rem;
+    border-radius: 4px;
+    border: none;
+    font-weight: bold;
+}
+
+.profile-card .btn-save:hover {
+    background-color: #000000;
+    color: white;
+}
+
+.researcher-profile-card {
+            background: linear-gradient(to bottom, #ffffff, #4caf50); /* White to green gradient */
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            position: relative;
+            clip-path: polygon(0 0, 100% 0, 100% 90%, 50% 100%, 0 90%);
+        }
+
+        .researcher-profile-card h3 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .researcher-profile-card p {
+            font-size: 1rem;
+            color: #000000;
+            margin-bottom: 1rem;
+        }
+
+
+
+
+        .profile-cards-container {
+    display: flex;
+    gap: 20px; /* Space between the cards */
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+    justify-content: space-between; /* Optional: to spread out the cards */
+}
+
+.profile-card, .researcher-profile-card {
+    flex: 1;
+    min-width: 300px; /* Ensures the cards don't shrink too small */
+    max-width: 45%; /* Optional: Limit the width to prevent too wide */
+    box-sizing: border-box; /* Ensure padding doesn't affect the width */
+    border: 1px solid #ddd; /* Optional: border for better visualization */
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+.profile-card .profile-pic-container {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.profile-card .profile-pic {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.user-details {
+    margin-left: 20px;
+}
+
+.researcher-profile-card h3 {
+    margin-bottom: 10px;
+}
+
+.researcher-profile-card p {
+  
+    margin: 20px 0;
+}
+
+
+    </style>
+    <style>
+        .educational-background-card {
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-top: 20px;
+    transition: all 0.3s ease;
+}
+
+.educational-background-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.card-title {
+    font-size: 1.5rem;
+    color: #495057;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.card-details {
+    font-size: 1rem;
+    color: #6c757d;
+}
+
+.card-details p {
+    margin: 10px 0;
+    display: flex;
+    align-items: center;
+}
+
+.card-details i {
+    margin-right: 10px;
+    color: #007bff;
+}
+
+.no-details {
+    color: #dc3545;
+    font-weight: 500;
+    margin-bottom: 15px;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.btn-edit {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: transparent;
+    border: none;
+    color: #000000;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.btn-edit i {
+    pointer-events: none; /* Ensure the icon is not clickable */
+}
+
+.btn-edit:hover {
+    color: #0056b3;
+}
+
+    </style>
+</head>
+<body>
+
+<div class="header">
+    
+    <div class="brand">ESSU Research and Information Management System</div>
+    <div class="d-flex">
+        <button class="btn-logout" onclick="window.location.href='/logout'">Logout</button>
+    </div>
+</div>
+
+<div class="dashboard-container">
+    <div class="sidebar">
+        <a href="/facultydashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+        <a href="/facultypapers"><i class="fas fa-book"></i> Researches</a>
+       
+    </div>
+
+    <div class="main-content">
+        <div class="welcome">Good day <%= user.username %>!</div>
+    
+        <div class="profile-cards-container">
+            <!-- Profile Card -->
+            <div class="profile-card">
+                <div class="d-flex align-items-center">
+                    <!-- Profile Picture -->
+                    <div class="profile-pic-container me-4">
+                        <% if (user && user.filename) { %>
+                            <img src="/uploads/<%= user.filename %>" alt="Profile Picture" class="profile-pic">
+                            <p>Filename: <%= user.filename %></p> <!-- Debugging: Display filename -->
+                        <% } else { %>
+                            <p>No profile picture available.</p>
+                        <% } %>
+                    </div>
+
+                
+                    <!-- User Details -->
+                    <div class="user-details position-relative">
+                        <h2><%= user.username %></h2>
+                        <p><i class="fas fa-user"></i> Full Name: <%= user.fullname %></p>
+                        <p><i class="fas fa-id-badge"></i> ID: <%= idnumber %></p>
+                        <p><i class="fas fa-briefcase"></i> Role: <%= user.role %></p>
+                        <p><i class="fas fa-birthday-cake"></i> Birthday: <%= user.formattedBirthday %></p>
+                        <p><i class="fas fa-envelope"></i> Email: <%= user.email %></p>
+                        <p><i class="fas fa-phone-alt"></i> Contact: <%= user.contact %></p>
+                
+                        <!-- Edit Profile Button (Pencil Icon at the top-right) -->
+                        <button class="btn-edit" data-bs-toggle="modal" data-bs-target="#editProfileModal">
+                            <i class="fas fa-pencil-alt"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Researcher Profile Card -->
+<div class="researcher-profile-card">
+    <h3>Other Details</h3>
+    <p><i class="fas fa-school"></i> <strong>Campus:</strong> <%= user.campus %></p>
+    <p><i class="fas fa-university"></i> <strong>College:</strong> <%= user.college %></p>
+    <p><i class="fas fa-building"></i> <strong>Department:</strong> <%= user.department %></p>
+    <p><i class="fas fa-user-tie"></i> <strong>Designation:</strong> <%= user.designation %></p>
+
+     <!-- Edit Profile Button (Pencil Icon at the top-right) -->
+     <button class="btn-edit" data-bs-toggle="modal" data-bs-target="#editOtherDetailsModal">
+        <i class="fas fa-pencil-alt"></i>
+    </button>
+
+  
+</div>
+
+        </div>
+        <!-- Educational Background Card -->
+<div class="educational-background-card">
+    <h3>Educational Background</h3>
+    <div class="card-details">
+        <p><i class="fas fa-graduation-cap"></i> <strong>Degree:</strong> <%= user.degreex %></p>
+        <p><i class="fas fa-university"></i> <strong>Institution:</strong> <%= user.institution %></p>
+        <p><i class="fas fa-calendar-alt"></i> <strong>Year of Graduation:</strong> <%= user.graduation_year %></p>
+    </div>
+
+     <!-- Edit Profile Button (Pencil Icon at the top-right) -->
+     <button class="btn-edit" data-bs-toggle="modal" data-bs-target="#editEducationalBackgroundModal">
+        <i class="fas fa-pencil-alt"></i>
+    </button>
+
+   
+</div>
+
+        <!-- Edit Profile Modal -->
+<div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editProfileModalLabel">Edit Profile</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="editProfileForm" method="POST" action="/update-profile" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <!-- Username -->
+                        <div class="col-md-6">
+                            <label for="username" class="form-label">Username</label>
+                            <input type="text" class="form-control" id="username" name="username" value="<%= user.username %>">
+                        </div>
+
+                        <!-- Full Name -->
+                        <div class="col-md-6">
+                            <label for="fullname" class="form-label">Full Name</label>
+                            <input type="text" class="form-control" id="fullname" name="fullname" value="<%= user.fullname %>">
+                        </div>
+                        
+                        <!-- Email -->
+                        <div class="col-md-6">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" value="<%= user.email %>">
+                        </div>
+                        <!-- Contact -->
+                        <div class="col-md-6">
+                            <label for="contact" class="form-label">Contact</label>
+                            <input type="text" class="form-control" id="contact" name="contact" value="<%= user.contact %>">
+                        </div>
+                        <!-- Campus -->
+                        
+                        <div class="col-md-6">
+                            <label for="profilePic" class="form-label">Profile Picture</label>
+                            <input type="file" class="form-control" id="profilePic" name="profilePic">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!-- Edit Other Details Modal -->
+<div class="modal fade" id="editOtherDetailsModal" tabindex="-1" aria-labelledby="editOtherDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editOtherDetailsModalLabel">Edit Profile Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="editOtherDetailsForm" method="POST" action="/update-other-details">
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <!-- Campus -->
+                        <div class="col-md-6">
+                            <label for="campus" class="form-label">Campus</label>
+                            <input type="text" class="form-control" id="campus" name="campus" value="<%= user.campus %>">
+                        </div>
+
+                        <!-- College -->
+                        <div class="col-md-6">
+                            <label for="college" class="form-label">College</label>
+                            <input type="text" class="form-control" id="college" name="college" value="<%= user.college %>">
+                        </div>
+
+                        <!-- Department -->
+                        <div class="col-md-6">
+                            <label for="department" class="form-label">Department</label>
+                            <input type="text" class="form-control" id="department" name="department" value="<%= user.department %>">
+                        </div>
+
+                        <!-- Designation -->
+                        <div class="col-md-6">
+                            <label for="designation" class="form-label">Designation</label>
+                            <input type="text" class="form-control" id="designation" name="designation" value="<%= user.designation %>">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Educational Background Modal -->
+<div class="modal fade" id="editEducationalBackgroundModal" tabindex="-1" aria-labelledby="editEducationalBackgroundModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editEducationalBackgroundModalLabel">Edit Educational Background</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="editEducationalBackgroundForm" method="POST" action="/update-educational-background">
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <!-- Degree -->
+                        <div class="col-md-6">
+                            <label for="degreex" class="form-label">Degree</label>
+                            <input type="text" class="form-control" id="degreex" name="degreex" value="<%= user.degreex %>">
+                        </div>
+
+                        <!-- Institution -->
+                        <div class="col-md-6">
+                            <label for="institution" class="form-label">Institution</label>
+                            <input type="text" class="form-control" id="institution" name="institution" value="<%= user.institution %>">
+                        </div>
+
+                        <!-- Graduation Year -->
+                        <div class="col-md-6">
+                            <label for="graduation_year" class="form-label">Year of Graduation</label>
+                            <input type="text" class="form-control" id="graduation_year" name="graduation_year" value="<%= user.graduation_year %>">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+    </div>
+</div>
+
+
+    
+       
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
