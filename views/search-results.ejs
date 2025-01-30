@@ -334,13 +334,14 @@ body {
                 <div class="offcanvas offcanvas-end" tabindex="-1" id="researchDetails<%= result.id %>" aria-labelledby="researchDetailsLabel">
                     <div class="offcanvas-header d-flex justify-content-between align-items-center">
                         <h5 class="offcanvas-title" id="researchDetailsLabel">Research Details</h5>
-                        
-                        <button class="btn btn-primary" onclick="sendToEmail('<%= result.id %>', '<%= result.filename %>')">
-                            <i class="fas fa-paper-plane"></i> Send to my email
-                        </button>
-                        
-                        
-
+                
+                        <% if (result.filename) { %>
+                            <button class="btn btn-primary btn-sm px-2 py-1" onclick="sendToEmail('<%= result.barnum %>', '<%= result.filename %>')">
+                                <i class="fas fa-paper-plane"></i> Send PDF to my email
+                            </button>
+                            
+                        <% } %>
+                
                         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                     </div>
                     <div class="offcanvas-body">
@@ -349,7 +350,7 @@ body {
                                 <img src="data:image/png;base64,<%= result.barcode %>" alt="Barcode" class="barcode-img">
                             </div>
                         <% } %>
-                        
+                
                         <% if (result.title) { %>
                             <p><strong>Title:</strong> <%= result.title %></p>
                         <% } %>
@@ -388,6 +389,7 @@ body {
                         <% } %>
                     </div>
                 </div>
+                
 
                 <style>
                     .barcode-img {

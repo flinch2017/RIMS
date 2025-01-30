@@ -196,22 +196,16 @@ body::before {
         }
     </style>
     <style>
-        /* General Card Styles */
+       /* General Card Styles */
 .card {
     padding: 1rem;
     border-radius: 0.5rem;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     text-align: center;
-}
-
-.card-title {
-    font-size: 1.125rem;
-    font-weight: 600;
-}
-
-.card-count {
-    font-size: 1.875rem;
-    font-weight: 700;
+    display: flex;               /* Allow the content to stretch */
+    flex-direction: column;      /* Align items vertically */
+    justify-content: space-between; /* Allow items to spread out */
+    flex-grow: 1;                /* Allow the card to grow */
 }
 
 /* Color Specific Styles */
@@ -253,6 +247,20 @@ body::before {
     }
 }
 
+/* Adjust card sizes for better stretching */
+.scrolling-tabs .card {
+    width: 180px; /* Adjust width to make them more rectangular */
+    height: auto; /* Allow height to adjust automatically */
+    border-radius: 10px; /* Slightly rounded corners for a sleek look */
+    padding: 0.75rem;
+    display: flex;
+    flex-direction: column; /* Align items vertically */
+    justify-content: space-between; /* Allow items to spread out */
+    align-items: center;
+    text-align: center; /* Align text to the center */
+}
+
+
     </style>
 </head>
 <body>
@@ -267,16 +275,69 @@ body::before {
 
 <div class="dashboard-container">
     <div class="sidebar">
-        <a href="/facultydashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-        <a href="/facultypapers"><i class="fas fa-book"></i> Researches</a>
-        
-        
+        <a href="/rdsodashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+        <a href="/rdsopapers"><i class="fas fa-file-alt"></i> Researches</a>
+        <a href="/campusescolleges"><i class="fas fa-university"></i> Campuses & Colleges</a>
+        <a href="/faculties"><i class="fas fa-user-graduate"></i> Faculties/Researchers</a>
+        <a href="/requests"><i class="fas fa-envelope"></i> Verification Requests</a>
     </div>
+    
 
     <div class="main-content">
         <div class="welcome">Hi, <%= fullname %>!</div>
         <h1 class="my-4">Dashboard</h1>
     
+        <div class="scrolling-tabs-container">
+            <div class="scrolling-tabs">
+                <!-- Total Research Card -->
+                <div class="card total-research">
+                    <h2 class="card-title">Total Research</h2>
+                    <p class="card-count"><%= totalResearch %></p>
+                </div>
+            
+                <!-- Proposed Research Card -->
+                <div class="card proposed-research">
+                    <h2 class="card-title">Proposed</h2>
+                    <p class="card-count"><%= proposedCount %></p>
+                </div>
+            
+                <!-- Completed Research Card -->
+                <div class="card completed-research">
+                    <h2 class="card-title">Completed</h2>
+                    <p class="card-count"><%= completedCount %></p>
+                </div>
+            
+                <!-- Ongoing Research Card -->
+                <div class="card ongoing-research">
+                    <h2 class="card-title">Ongoing</h2>
+                    <p class="card-count"><%= ongoingCount %></p>
+                </div>
+            
+                <!-- Published Research Card -->
+                <div class="card published-research">
+                    <h2 class="card-title">Published</h2>
+                    <p class="card-count"><%= publishedCount %></p>
+                </div>
+            </div>
+        </div>
+        
+        <style>
+        .scrolling-tabs-container {
+            overflow-x: auto;
+            white-space: nowrap;
+            padding: 10px 0;
+            margin-bottom: 1rem;
+        }
+        
+        .scrolling-tabs {
+            display: flex;
+            gap: 10px;
+            width: max-content;
+        }
+        
+        
+
+        </style>
         
         
         

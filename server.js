@@ -59,6 +59,7 @@ const pool = new Pool({
 });
 
 // Middleware setup
+
 app.use(express.urlencoded({ extended: true })); // For form submissions
 app.use(express.json()); // For JSON payloads
 app.use(session({
@@ -78,6 +79,29 @@ const storage = multer.diskStorage({
     filename: (req, file, cb) => cb(null, `${Date.now()}-${file.originalname}`),
 });
 const upload = multer({ storage });
+
+// Configure nodemailer with environment variables
+const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+    },
+});
+
+// Function to send an email
+const sendEmail = async (email, subject, message) => {
+    try {
+        await transporter.sendMail({
+            from: `"ESSU RIMS" <${process.env.EMAIL_USER}>`, // Use env email
+            to: email,
+            subject: subject,
+            html: message,
+        });
+    } catch (error) {
+        console.error("Error sending email:", error);
+    }
+};
 
 // Helper function to generate a random 8-character alphanumeric ID
 function generateIdNumber() {
@@ -142,7 +166,12 @@ router.post('/signup', upload.single('profilePic'), async (req, res) => {
             ]
         );
 
-        req.session.user = { fullname, idnumber, filename: req.file ? req.file.filename : null };
+        req.session.user = { fullname, idnumber, filename: req.file ? req.file.filename : null, role };
+
+        // Redirect based on role
+        if (role === 'RDSO Staff') {
+            return res.redirect('/rdsodashboard');
+        }
 
         res.redirect('/setupaccount');
     } catch (error) {
@@ -150,6 +179,7 @@ router.post('/signup', upload.single('profilePic'), async (req, res) => {
         res.status(500).render('signup', { errorMessage: 'An error occurred during signup. Please try again later.' });
     }
 });
+
 
 // GET route for /setupaccount
 router.get('/setupaccount', (req, res) => {
@@ -161,33 +191,53 @@ router.get('/setupaccount', (req, res) => {
     res.render('setupaccount', { fullname, idnumber, filename });
 });
 
-// POST route for /setupaccount
-router.post('/setupaccount', async (req, res) => {
+router.post("/setupaccount", async (req, res) => {
     const { name, designation, college, department, campus } = req.body;
-    const { idnumber } = req.session.user;
-    const { filename } = req.session.user;
+    const { idnumber, filename } = req.session.user; // Get ID number from session
 
     if (!name) {
-        return res.status(400).send('Name is required');
+        return res.status(400).send("Name is required");
     }
 
     try {
+        // Fetch user's email from the database using idnumber
+        const userResult = await pool.query("SELECT email FROM users WHERE idnumber = $1", [idnumber]);
+
+        if (userResult.rows.length === 0) {
+            return res.status(404).send("User not found");
+        }
+
+        const email = userResult.rows[0].email; // Extract email from query result
+
         // Generate a new UUID for researcher_id
         const researcher_id = uuidv4();
 
-        // Insert data into the faculty table, including the generated researcher_id
+        // Insert data into the faculty table
         await pool.query(
             `INSERT INTO faculty (name, designation, college, department, campus, idnumber, filename, researcher_id)
              VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
             [name, designation, college, department, campus, idnumber, filename, researcher_id]
         );
 
-        res.redirect('/facultypapers');
+        // Send verification email
+        const subject = "ESSU Research System - Account Verification";
+        const message = `
+            <p>Dear ${name},</p>
+            <p>Thank you for setting up your account with the ESSU Research Information Management System.</p>
+            <p>We are currently <strong>verifying your account</strong>, and we will get back to you shortly.</p>
+            <p>Best regards,<br>ESSU RIMS Team</p>
+        `;
+
+        await sendEmail(email, subject, message);
+
+        res.redirect("/facultypapers");
     } catch (err) {
-        console.error('Error saving faculty:', err);
-        res.status(500).send('Server error');
+        console.error("Error saving faculty:", err);
+        res.status(500).send("Server error");
     }
 });
+
+
 
 // GET route for /setupaccount
 router.get('/login', (req, res) => {
@@ -239,6 +289,8 @@ router.post('/login', async (req, res) => {
     }
 });
 
+router.get('/rdsodashboard', )
+
 
 // GET route for faculty researches
 router.get('/facultypapers', async (req, res) => {
@@ -249,9 +301,16 @@ router.get('/facultypapers', async (req, res) => {
 
     const userIdNumber = req.session.user.idnumber;
 
-    console.log('User ID Number from session:', req.session.user.idnumber);
-
     try {
+        // Query to fetch user mode (Pending/Verified)
+        const userResult = await pool.query('SELECT mode FROM users WHERE idnumber = $1', [userIdNumber]);
+        
+        if (userResult.rows.length === 0) {
+            return res.status(404).send('User not found');
+        }
+
+        const userMode = userResult.rows[0].mode;
+
         const { status, search } = req.query;
 
         let query = `
@@ -274,7 +333,6 @@ router.get('/facultypapers', async (req, res) => {
             queryParams.push(parseInt(status, 10));
         }
 
-        // Add GROUP BY clause to group by all non-aggregated columns
         query += `
             GROUP BY 
                 e.id, e.title, e.date_uploaded, e.publication_date, 
@@ -293,12 +351,14 @@ router.get('/facultypapers', async (req, res) => {
                 { id: 3, name: 'Published' },
                 { id: 4, name: 'Proposed' }
             ],
+            userMode, // Pass the user mode to the view
         });
     } catch (err) {
         console.error(err.message);
         res.status(500).send(err.message); // Return error message for easier debugging
     }
 });
+
 
 
 
@@ -676,7 +736,7 @@ router.get('/search', async (req, res) => {
         const result = await pool.query(
             `(
                 
-                SELECT e.id, e.title, e.abstract, e.author, e.filename, e.nature, e.origin, e.keyword, e.barcode, 
+                SELECT e.id, e.title, e.abstract, e.author, e.filename, e.nature, e.origin, e.keyword, e.barcode, e.barnum, 
                     CASE 
                         WHEN e.publication_date = 'Not published' THEN 'Not published'
                         ELSE e.publication_date
@@ -799,6 +859,259 @@ router.get('/facultydashboard', async (req, res) => {
     } catch (err) {
         console.error(err);
         res.status(500).send('Server Error');
+    }
+});
+
+router.get('/rdsodashboard', async (req, res) => {
+    // Check if the user is logged in
+    if (!req.session.user) {
+        return res.redirect('/login'); // Redirect to login if not authenticated
+    }
+
+    const userId = req.session.user.idnumber;
+
+    try {
+        // Query the database to get the user's fullname from the users table
+        const userResult = await pool.query('SELECT fullname FROM users WHERE idnumber = $1', [userId]);
+
+        if (userResult.rows.length === 0) {
+            return res.status(404).send('User not found');
+        }
+
+        const fullname = userResult.rows[0].fullname;
+
+        // Query the database to get total counts of all research entries
+        const totalResearchResult = await pool.query('SELECT COUNT(*) FROM globalresearches');
+        const proposedCountResult = await pool.query('SELECT COUNT(*) FROM globalresearches WHERE status_id = 4');
+        const ongoingCountResult = await pool.query('SELECT COUNT(*) FROM globalresearches WHERE status_id = 2');
+        const completedCountResult = await pool.query('SELECT COUNT(*) FROM globalresearches WHERE status_id = 1');
+        const publishedCountResult = await pool.query('SELECT COUNT(*) FROM globalresearches WHERE status_id = 3');
+
+        // Prepare the counts
+        const totalResearch = totalResearchResult.rows[0].count;
+        const proposedCount = proposedCountResult.rows[0].count;
+        const ongoingCount = ongoingCountResult.rows[0].count;
+        const completedCount = completedCountResult.rows[0].count;
+        const publishedCount = publishedCountResult.rows[0].count;
+
+        // Render the RDSO dashboard view with user and research counts data
+        res.render('rdsodashboard', {
+            fullname: fullname, // Use fetched fullname from the database
+            totalResearch: totalResearch,
+            proposedCount: proposedCount,
+            ongoingCount: ongoingCount,
+            completedCount: completedCount,
+            publishedCount: publishedCount
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server Error');
+    }
+});
+
+// GET route for faculty researches
+router.get('/rdsopapers', async (req, res) => {
+    // Check if the user is logged in
+    if (!req.session.user.idnumber) {
+        return res.redirect('/login'); // Redirect to login if not authenticated
+    }
+
+    console.log('User ID Number from session:', req.session.user.idnumber);
+
+    try {
+        const { status, search } = req.query;
+
+        let query = `
+            SELECT 
+                e.id, e.title, e.date_uploaded, e.publication_date, 
+                e.journal_publication, e.barcode, e.barnum, e.doi, e.abstract, e.funding, e.nature, e.origin, e.isbn, e.startdate, e.enddate, e.keyword, e.filename, s.name AS status, 
+                STRING_AGG(r.name, ', ') AS author_name
+            FROM globalresearches e
+            LEFT JOIN statuses s ON e.status_id = s.id
+            LEFT JOIN faculty r ON r.researcher_id = ANY(
+                string_to_array(TRIM(BOTH ' ' FROM e.author), ', ')::uuid[]
+            )
+        `;
+
+        const queryParams = [];
+        let conditions = [];
+
+        if (status) {
+            conditions.push('e.status_id = $1');
+            queryParams.push(parseInt(status, 10));
+        }
+
+        if (conditions.length > 0) {
+            query += ' WHERE ' + conditions.join(' AND ');
+        }
+
+        // Add GROUP BY clause to group by all non-aggregated columns
+        query += `
+            GROUP BY 
+                e.id, e.title, e.date_uploaded, e.publication_date, 
+                e.journal_publication, e.barcode, e.barnum, e.doi, e.abstract, e.funding, e.nature, e.origin, e.isbn, e.startdate, e.enddate, e.keyword, e.filename, s.name
+        `;
+
+        const result = await pool.query(query, queryParams);
+
+        res.render('rdsopapers', {
+            researches: result.rows,
+            statusFilter: status || '',
+            searchQuery: search || '',
+            statuses: [
+                { id: 1, name: 'Completed' },
+                { id: 2, name: 'Ongoing' },
+                { id: 3, name: 'Published' },
+                { id: 4, name: 'Proposed' }
+            ],
+        });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send(err.message); // Return error message for easier debugging
+    }
+});
+
+
+router.get('/campusescolleges', (req, res) => {
+    res.render('campusescolleges');
+})
+
+
+// POST route to handle form submission
+router.post('/save-campus-data', async (req, res) => {
+    const { campus, college, year, targetResearch } = req.body;
+
+    // Ensure the user is logged in and the idnumber is available in the session
+    const idnumber = req.session.user ? req.session.user.idnumber : null;
+
+    if (!idnumber) {
+        return res.status(401).send('User is not logged in or idnumber is missing');
+    }
+
+    // Query to insert the data into the database
+    const query = 'INSERT INTO task (campus, college, year, target, idnumber) VALUES ($1, $2, $3, $4, $5)';
+    const values = [campus, college, year, targetResearch, idnumber];
+
+    try {
+        // Execute the query using the pool
+        await pool.query(query, values);
+
+        // After successfully saving, fetch the updated campuses data to render the page
+        const result = await pool.query('SELECT * FROM task WHERE campus = $1', [campus]);
+
+        // Render the campusescolleges page with the retrieved data
+        res.render('campusescolleges', { campuses: result.rows });
+    } catch (err) {
+        console.error('Error inserting data:', err);
+        res.status(500).send('Error inserting data');
+    }
+});
+
+// Route to fetch tasks for a specific campus
+router.get('/view-campus-tasks/:campus', async (req, res) => {
+    const campus = req.params.campus;
+
+    try {
+        // Query to fetch tasks where campus matches
+        const result = await pool.query('SELECT * FROM task WHERE campus = $1', [campus]);
+
+        // Check if any tasks are found
+        if (result.rows.length > 0) {
+            res.json({ tasks: result.rows });
+        } else {
+            res.json({ message: 'No tasks found for this campus.' });
+        }
+    } catch (error) {
+        console.error('Error fetching tasks:', error);
+        res.status(500).json({ message: 'Error fetching tasks' });
+    }
+});
+
+
+
+app.get('/requests', async (req, res) => {
+    try {
+        // Fetch users with 'Pending' mode and faculty information by joining on idnumber
+        const result = await pool.query(`
+            SELECT u.idnumber, u.fullname, u.username, u.email, f.designation, f.college, f.department, f.campus
+            FROM users u
+            LEFT JOIN faculty f ON u.idnumber = f.idnumber
+            WHERE u.mode = $1
+            AND u.role NOT IN ('RDSO Staff', 'Super Admin')  -- Exclude these roles
+        `, ['Pending']);
+
+        const pendingUsersAndFaculty = result.rows; // Array of users and faculty with 'Pending' mode
+        res.render('rdsorequests', { pendingUsersAndFaculty }); // Pass the data to EJS
+    } catch (err) {
+        console.error('Error fetching pending users and faculty:', err);
+        res.status(500).send('Server error');
+    }
+});
+
+
+
+
+
+
+
+
+// Approve the user and send an email
+app.post("/approve", async (req, res) => {
+    const { idnumber } = req.body;
+
+    try {
+        // Update the user's mode to 'Approved'
+        await pool.query("UPDATE users SET mode = $1 WHERE idnumber = $2", ["Approved", idnumber]);
+
+        // Fetch user's email from the database
+        const result = await pool.query("SELECT email FROM users WHERE idnumber = $1", [idnumber]);
+
+        if (result.rows.length > 0) {
+            const userEmail = result.rows[0].email;
+            const subject = "Approval Notification";
+            const message = `
+                <p>Dear User,</p>
+                <p>Congratulations! You have been <strong style="color:green;">VERIFIED</strong>.</p>
+                <p>You may now upload your researches.</p>
+            `;
+
+            await sendEmail(userEmail, subject, message);
+        }
+
+        res.redirect("/requests");
+    } catch (err) {
+        console.error("Error approving user:", err);
+        res.status(500).send("Server error");
+    }
+});
+
+// Reject the user and send an email
+app.post("/reject", async (req, res) => {
+    const { idnumber } = req.body;
+
+    try {
+        // Update the user's mode to 'Rejected'
+        await pool.query("UPDATE users SET mode = $1 WHERE idnumber = $2", ["Rejected", idnumber]);
+
+        // Fetch user's email from the database
+        const result = await pool.query("SELECT email FROM users WHERE idnumber = $1", [idnumber]);
+
+        if (result.rows.length > 0) {
+            const userEmail = result.rows[0].email;
+            const subject = "Rejection Notification";
+            const message = `
+                <p>Dear User,</p>
+                <p>We regret to inform you that your profile has been <strong style="color:red;">REJECTED</strong>.</p>
+               
+            `;
+
+            await sendEmail(userEmail, subject, message);
+        }
+
+        res.redirect("/requests");
+    } catch (err) {
+        console.error("Error rejecting user:", err);
+        res.status(500).send("Server error");
     }
 });
 

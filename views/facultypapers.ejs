@@ -441,6 +441,12 @@
             background-color: #2e7d32;
         }
 
+        button[disabled] {
+    pointer-events: none; /* Prevent clicking */
+    opacity: 0.6; /* Make it look disabled */
+}
+
+
     </style>
 </head>
 <body>
@@ -489,9 +495,24 @@
                 </div>
                 <div class="aligned-container">
                     <div class="mb-3 text-end">
-                        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#uploadResearchModal">
-                            <i class="fas fa-plus"></i> Upload New Research
-                        </button>
+                        <button class="btn btn-success" 
+        data-bs-toggle="modal" 
+        data-bs-target="#uploadResearchModal"
+        <% if (userMode === 'Pending' || userMode === 'Rejected') { %>
+            style="filter: grayscale(100%); cursor: not-allowed;" 
+            disabled
+        <% } %>
+>
+    <i class="fas fa-plus"></i> Upload New Research
+</button>
+
+<% if (userMode === 'Pending') { %>
+    <p class="text-muted">RDSO Verifying...</p>
+<% } else if (userMode === 'Rejected') { %>
+    <p class="text-muted">Sorry, you have been rejected.</p>
+<% } %>
+
+
                     </div>
                     <div class="sortof">
                         <!-- Campus Sorting Dropdown -->
