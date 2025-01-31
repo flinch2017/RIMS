@@ -1115,6 +1115,33 @@ app.post("/reject", async (req, res) => {
     }
 });
 
+// Route to fetch faculty data with pagination
+router.get('/faculties', async (req, res) => {
+    const page = parseInt(req.query.page) || 1; // Get the current page, default to 1
+    const limit = 10; // Number of items per page
+    const offset = (page - 1) * limit; // Calculate the offset
+
+    try {
+        // Get total count for pagination
+        const total = await pool.query('SELECT COUNT(*) FROM faculty');
+        const totalRows = total.rows[0].count;
+        const totalPages = Math.ceil(totalRows / limit);
+
+        // Fetch paginated faculty data
+        const result = await pool.query(
+            'SELECT idnumber, researcher_id, name, campus, college, designation, department, filename FROM faculty ORDER BY idnumber LIMIT $1 OFFSET $2',
+            [limit, offset]
+        );
+
+        res.render('rdsofaculties', { faculties: result.rows, page, totalPages });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server Error');
+    }
+});
+
+
+
 
 
 // GET route for logout

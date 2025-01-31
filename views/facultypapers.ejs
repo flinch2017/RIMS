@@ -213,63 +213,133 @@
             position: relative;
             width: 100%;
         }
-        .research-table td span {
-            display: inline-block;
-            white-space: nowrap;
-            width: 100%;
-            overflow-x: auto;
-            max-width: 300px;
-            padding-bottom: 2px;
-        }
-        .research-table td {
-            max-width: 300px; /* Adjust as necessary */
-            white-space: nowrap; /* Allow text wrapping */
-            word-wrap: break-word; /* Break long words to fit within cell */
-            overflow: auto; /* Ensure text is visible on scroll */
-        }
+        /* Table container styling */
+.research-table-container {
+    animation: fadeIn 1s ease-in-out;
+}
+
+/* Table Styling */
+#research-table {
+    border-collapse: collapse;
+    width: 100%;
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    animation: slideUp 0.5s ease-out;
+}
+
+/* Header Styling */
+#research-table thead {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+}
+
+/* Table Row Styling */
+#research-table tbody tr {
+    opacity: 0;
+    transition: background-color 0.3s ease, opacity 0.5s ease;
+}
+
+#research-table tbody tr:hover {
+    background-color: rgba(0, 123, 255, 0.1);
+}
+
+/* Row Fade-In Animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+#research-table tbody tr.animate {
+    animation: fadeIn 1s forwards;
+}
+
+/* Pagination Styling */
+.pagination-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.pagination-controls button {
+    padding: 8px 15px;
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.pagination-controls button:hover {
+    background-color: #0056b3;
+}
+
+.pagination-controls button:disabled {
+    background-color: #ccc;
+}
+
+/* Buttons for View, Edit, and other actions */
+/* Keep buttons inline */
 
 
-
-
-            /* Adjust the "Researches" heading size */
-        h1.my-4 {
-            font-size: 1.5rem; /* Decreased from the default size */
-            font-weight: bold;
-            margin-bottom: 1.5rem;
-        }
-
-
-        /* Adjust the size and alignment of the "Upload New Research" button */
-.mb-3.text-end .btn-success {
-    font-size: 0.9rem; /* Make the font smaller */
-    padding: 0.5rem 1rem; /* Reduce padding for a small button */
-    border-radius: 4px; /* Round the corners */
-    margin-left: auto; /* Automatically push the button to the right */
-    margin-left: 0; /* Reset right margin */
-    display: block; /* Ensure it takes the full width available for alignment */
-    text-align: right; /* Align content to the right */
+td button {
+    display: inline-flex; /* Ensures buttons stay inline with flexbox behavior */
+    justify-content: flex-start;
+    align-items: center;
+    gap: 5px; /* Space between buttons */
+    flex-wrap: wrap; /* Allows buttons to wrap if needed */
+    white-space: nowrap; /* Prevents text wrapping */
+    overflow: hidden; /* Prevents text from overflowing */
+    text-overflow: ellipsis; /* Adds an ellipsis (...) when text overflows */
 }
 
 
-        .research-table th:first-child, 
-        .research-table td:first-child {
-            width: 5%; /* Adjust this value to make it smaller */
-            text-align: center; /* Center align content for better appearance */
-        }
+.btn-sm {
+    font-size: 0.8rem;
+    padding: 6px 10px;
+    margin-right: 5px;
+    min-width: 100px; /* Ensures buttons have a minimum width to maintain layout */
+}
 
-        .research-table th:nth-child(4), 
-        .research-table td:nth-child(4) {
-            width: auto; /* Automatically adjusts width to fit content */
-            max-width: 150px; /* Optional: Prevents it from growing too large */
-            text-align: left; /* Centers the text for a neat look */
-        }
 
-        .research-table th:nth-child(5), 
-        .research-table td:nth-child(5) {
-            width: 100px; /* Automatically adjusts width to fit content */
-            max-width: 150px; /* Optional: Prevents it from growing too large */
-            text-align: left; /* Centers the text for a neat look */
-        }
+
+/* Button Specific Styling */
+.btn-info {
+    background-color: #17a2b8;
+}
+
+.btn-info:hover {
+    background-color: #138496;
+}
+
+.btn-warning {
+    background-color: #ffc107;
+}
+
+.btn-warning:hover {
+    background-color: #e0a800;
+}
+
+/* Table Row Slide-Up Animation */
+@keyframes slideUp {
+    from {
+        transform: translateY(10px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
     </style>
     <style>
         #author-suggestions {
@@ -446,6 +516,17 @@
     opacity: 0.6; /* Make it look disabled */
 }
 
+.btn-green {
+  background-color: #008000; /* Green color */
+  border-color: #4caf50;
+  color: white; /* Icon color */
+}
+
+.btn-green:hover {
+  background-color: #45a049; /* Slightly darker green on hover */
+  border-color: #45a049;
+}
+
 
     </style>
 </head>
@@ -480,7 +561,10 @@
                             class="form-control" 
                             placeholder="Search by Title, Author, or Description" 
                             value="<%= searchQuery || '' %>">
-                        <button type="submit" class="btn btn-primary ms-2">Search</button>
+                            <button type="submit" class="btn btn-green ms-2">
+                                <i class="fas fa-search"></i>
+                              </button>
+                              
                        
                         
                     </form>
@@ -1256,9 +1340,10 @@
                     <img id="view-barcode-image" src="" alt="Barcode Image" class="shadow-sm" style="max-width: 150px; height: auto;" />
                 </div>
 
-                <!-- Two-column layout for details -->
+                <!-- Two-column layout for details and PDF preview -->
                 <div class="row">
                     <div class="col-md-6">
+                        <!-- Left Column: Research Details -->
                         <div class="mb-3">
                             <p><strong class="text-muted">Title:</strong> <span id="view-title" class="text-dark"></span></p>
                         </div>
@@ -1278,22 +1363,21 @@
                             <p><strong class="text-muted">Status:</strong> <span id="view-status" class="text-dark"></span></p>
                         </div>
                         <div class="mb-3">
-                            <p><strong class="text-muted">DOI:</strong> <span id="view-doi" class="text-dark"></span></p>
-                        </div>
-                        <div class="mb-3">
-                            <p><strong class="text-muted">Abstract:</strong> <span id="view-abstract" class="text-dark"></span></p>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <p><strong class="text-muted">Funding:</strong> <span id="view-funding" class="text-dark"></span></p>
-                        </div>
-                        <div class="mb-3">
                             <p><strong class="text-muted">Nature:</strong> <span id="view-nature" class="text-dark"></span></p>
                         </div>
                         <div class="mb-3">
                             <p><strong class="text-muted">Origin:</strong> <span id="view-origin" class="text-dark"></span></p>
                         </div>
+                        <div class="mb-3">
+                            <p><strong class="text-muted">DOI:</strong> <span id="view-doi" class="text-dark"></span></p>
+                        </div>
+                        <div class="mb-3">
+                            <p><strong class="text-muted">Abstract:</strong> <span id="view-abstract" class="text-dark"></span></p>
+                        </div>
+                        <div class="mb-3">
+                            <p><strong class="text-muted">Funding:</strong> <span id="view-funding" class="text-dark"></span></p>
+                        </div>
+                        
                         <div class="mb-3">
                             <p><strong class="text-muted">ISBN/ISSN:</strong> <span id="view-isbn" class="text-dark"></span></p>
                         </div>
@@ -1310,18 +1394,20 @@
                             <p><strong class="text-muted">Filename:</strong> <span id="view-filename" class="text-dark"></span></p>
                         </div>
                     </div>
+                    <div class="col-md-6">
+                        <!-- Right Column: PDF Preview -->
+                        <div class="pdf-preview mt-4">
+                            <embed 
+                                id="pdf-preview" 
+                                type="application/pdf" 
+                                width="100%" 
+                                height="500px" 
+                                style="border: none;" 
+                                title="PDF Preview">
+                        </div>
+                    </div>
                 </div>
 
-                <!-- PDF Preview -->
-                <div class="pdf-preview mt-4">
-                    <embed 
-                        id="pdf-preview" 
-                        type="application/pdf" 
-                        width="100%" 
-                        height="500px" 
-                        style="border: none;" 
-                        title="PDF Preview">
-                </div>
             </div>
             <div class="modal-footer border-top-0 d-flex justify-content-end">
                 <button type="button" class="btn btn-outline-light px-4 py-2" data-bs-dismiss="modal">Close</button>
@@ -1329,6 +1415,7 @@
         </div>
     </div>
 </div>
+
 
 
 <script>
@@ -1506,30 +1593,31 @@ document.getElementById('printModalContent').addEventListener('click', function 
                 <td><%= research.status || 'Pending' %></td>
                 <td> <!-- New column for buttons -->
                     <!-- View Button (could trigger a modal or redirect to a details page) -->
-                    <button class="btn btn-info btn-sm" 
-                        data-bs-toggle="modal" 
-                        data-bs-target="#viewResearchModal" 
-                        data-id="<%= research.id %>" 
-                        data-title="<%= research.title %>" 
-                        data-author="<%= research.author_name %>" 
-                        data-publication_date="<%= research.publication_date %>" 
-                        data-journal_publication="<%= research.journal_publication %>" 
-                        data-status="<%= research.status %>" 
-                        data-barcode="<%= research.barcode %>" 
-                        data-barnum="<%= research.barnum %>" 
-                        data-doi="<%= research.doi %>" 
-                        data-abstract="<%= research.abstract %>"
-                        data-funding="<%= research.funding %>"
-                        data-nature="<%= research.nature %>"
-                        data-origin="<%= research.origin %>"
-                        data-isbn="<%= research.isbn %>"
-                        data-startdate="<%= research.startdate %>"
-                        data-enddate="<%= research.enddate %>"
-                        data-keyword="<%= research.keyword %>"
-                        data-filename="<%= research.filename %>"
-                        data-campus="ESSU MAIN">
-                        View
-                    </button>
+                    <button class="btn btn-warning btn-sm" 
+    data-bs-toggle="modal" 
+    data-bs-target="#viewResearchModal" 
+    data-id="<%= research.id %>" 
+    data-title="<%= research.title %>" 
+    data-author="<%= research.author_name %>" 
+    data-publication_date="<%= research.publication_date %>" 
+    data-journal_publication="<%= research.journal_publication %>" 
+    data-status="<%= research.status %>" 
+    data-barcode="<%= research.barcode %>" 
+    data-barnum="<%= research.barnum %>" 
+    data-doi="<%= research.doi %>" 
+    data-abstract="<%= research.abstract %>"
+    data-funding="<%= research.funding %>"
+    data-nature="<%= research.nature %>"
+    data-origin="<%= research.origin %>"
+    data-isbn="<%= research.isbn %>"
+    data-startdate="<%= research.startdate %>"
+    data-enddate="<%= research.enddate %>"
+    data-keyword="<%= research.keyword %>"
+    data-filename="<%= research.filename %>"
+    data-campus="ESSU MAIN">
+    View
+</button>
+
                 
                     <!-- Conditionally Render Edit Button -->
                     <% let buttonText = ''; %>
@@ -1548,7 +1636,7 @@ document.getElementById('printModalContent').addEventListener('click', function 
                 
                     <!-- Add condition to hide button when status is 'Published' -->
                     <% if (research.status !== 'Published') { %>
-                        <button class="btn btn-warning btn-sm" 
+                        <button class="btn btn-success btn-sm" 
                             data-bs-toggle="modal" 
                             data-bs-target="<%= modalTarget %>" 
                             data-id="<%= research.id %>" 
@@ -1930,9 +2018,24 @@ document.getElementById('viewResearchModal').addEventListener('show.bs.modal', f
 });
 
 </script>
+
+<script>
+    // JavaScript to trigger animation after rows are loaded
+document.addEventListener('DOMContentLoaded', function () {
+    const rows = document.querySelectorAll('#research-table tbody tr');
+    rows.forEach((row, index) => {
+        setTimeout(() => {
+            row.classList.add('animate');
+        }, index * 100); // Delay each row's animation slightly
+    });
+});
+
+</script>
     <!-- Include Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 </body>
 </html>

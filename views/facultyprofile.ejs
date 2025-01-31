@@ -281,7 +281,7 @@
 
 .card-details i {
     margin-right: 10px;
-    color: #007bff;
+    color: #008000;
 }
 
 .no-details {
@@ -305,24 +305,68 @@
     background-color: #0056b3;
 }
 
+
+
+/* CSS for Animation */
+.welcome {
+    opacity: 0;
+    animation: fadeIn 1s forwards 0.3s; /* Delay added to create sequential effect */
+}
+
+.profile-cards-container {
+    opacity: 0;
+    animation: fadeIn 1s forwards 0.5s; /* Slightly later for a smooth sequential effect */
+}
+
+.profile-card, .researcher-profile-card, .educational-background-card {
+    opacity: 0;
+    animation: fadeIn 1s forwards 1s; /* Add more delay to create staggered appearance */
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(10px); /* Start from slightly below */
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0); /* End with the element in its final position */
+    }
+}
+
+.profile-pic-container {
+    max-width: 100px;
+    max-height: 100px;
+    overflow: hidden;
+}
+
+.profile-pic {
+    width: 100%;
+    height: auto;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
 .btn-edit {
     position: absolute;
     top: 10px;
     right: 10px;
-    background: transparent;
+    background: none;
     border: none;
-    color: #000000;
-    font-size: 20px;
     cursor: pointer;
-}
-
-.btn-edit i {
-    pointer-events: none; /* Ensure the icon is not clickable */
+    color: #000000;
+    font-size: 1.5rem;
+    transition: color 0.3s;
 }
 
 .btn-edit:hover {
-    color: #0056b3;
+    color: #008000;
 }
+
+.card-details p {
+    margin: 0.5rem 0;
+}
+
 
     </style>
 </head>
@@ -380,38 +424,38 @@
             </div>
             
             <!-- Researcher Profile Card -->
-<div class="researcher-profile-card">
-    <h3>Other Details</h3>
-    <p><i class="fas fa-school"></i> <strong>Campus:</strong> <%= user.campus %></p>
-    <p><i class="fas fa-university"></i> <strong>College:</strong> <%= user.college %></p>
-    <p><i class="fas fa-building"></i> <strong>Department:</strong> <%= user.department %></p>
-    <p><i class="fas fa-user-tie"></i> <strong>Designation:</strong> <%= user.designation %></p>
+            <div class="researcher-profile-card">
+                <h3>Other Details</h3>
+                <p><i class="fas fa-school"></i> <strong>Campus:</strong> <%= user.campus %></p>
+                <p><i class="fas fa-university"></i> <strong>College:</strong> <%= user.college %></p>
+                <p><i class="fas fa-building"></i> <strong>Department:</strong> <%= user.department %></p>
+                <p><i class="fas fa-user-tie"></i> <strong>Designation:</strong> <%= user.designation %></p>
 
-     <!-- Edit Profile Button (Pencil Icon at the top-right) -->
-     <button class="btn-edit" data-bs-toggle="modal" data-bs-target="#editOtherDetailsModal">
-        <i class="fas fa-pencil-alt"></i>
-    </button>
+                <!-- Edit Profile Button (Pencil Icon at the top-right) -->
+                <button class="btn-edit" data-bs-toggle="modal" data-bs-target="#editOtherDetailsModal">
+                    <i class="fas fa-pencil-alt"></i>
+                </button>
 
-  
-</div>
+            
+            </div>
 
         </div>
         <!-- Educational Background Card -->
-<div class="educational-background-card">
-    <h3>Educational Background</h3>
-    <div class="card-details">
-        <p><i class="fas fa-graduation-cap"></i> <strong>Degree:</strong> <%= user.degreex %></p>
-        <p><i class="fas fa-university"></i> <strong>Institution:</strong> <%= user.institution %></p>
-        <p><i class="fas fa-calendar-alt"></i> <strong>Year of Graduation:</strong> <%= user.graduation_year %></p>
-    </div>
+        <div class="educational-background-card">
+            <h3>Educational Background</h3>
+            <div class="card-details">
+                <p><i class="fas fa-graduation-cap"></i> <strong>Degree:</strong> <%= user.degreex %></p>
+                <p><i class="fas fa-university"></i> <strong>Institution:</strong> <%= user.institution %></p>
+                <p><i class="fas fa-calendar-alt"></i> <strong>Year of Graduation:</strong> <%= user.graduation_year %></p>
+            </div>
 
-     <!-- Edit Profile Button (Pencil Icon at the top-right) -->
-     <button class="btn-edit" data-bs-toggle="modal" data-bs-target="#editEducationalBackgroundModal">
-        <i class="fas fa-pencil-alt"></i>
-    </button>
+            <!-- Edit Profile Button (Pencil Icon at the top-right) -->
+            <button class="btn-edit" data-bs-toggle="modal" data-bs-target="#editEducationalBackgroundModal">
+                <i class="fas fa-pencil-alt"></i>
+            </button>
 
-   
-</div>
+        
+        </div>
 
         <!-- Edit Profile Modal -->
 <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">

@@ -277,6 +277,51 @@ body {
 
 
     </style>
+    <style>
+        @keyframes fadeSlideIn {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.offcanvas.show .offcanvas-body {
+    animation: fadeSlideIn 0.3s ease-out;
+}
+
+.offcanvas-body p, 
+.offcanvas-body img, 
+.offcanvas-body iframe {
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fadeSlideIn 0.3s ease-out forwards;
+    animation-delay: 0.1s;
+}
+
+.offcanvas-body p:nth-child(2) { animation-delay: 0.2s; }
+.offcanvas-body p:nth-child(3) { animation-delay: 0.3s; }
+.offcanvas-body p:nth-child(4) { animation-delay: 0.4s; }
+
+.offcanvas.show .offcanvas-body {
+    backdrop-filter: blur(8px);
+}
+
+.offcanvas {
+    border-radius: 15px 0 0 15px; /* Rounded left corners for offcanvas-end */
+    overflow: hidden; /* Ensures content doesn't overflow */
+}
+
+.offcanvas-header, .offcanvas-body {
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+}
+
+
+    </style>
 </head>
 <body>
 
@@ -336,9 +381,10 @@ body {
                         <h5 class="offcanvas-title" id="researchDetailsLabel">Research Details</h5>
                 
                         <% if (result.filename) { %>
-                            <button class="btn btn-primary btn-sm px-2 py-1" onclick="sendToEmail('<%= result.barnum %>', '<%= result.filename %>')">
+                            <button class="btn btn-success btn-sm px-2 py-1" onclick="sendToEmail('<%= result.barnum %>', '<%= result.filename %>')">
                                 <i class="fas fa-paper-plane"></i> Send PDF to my email
                             </button>
+                            
                             
                         <% } %>
                 
@@ -352,29 +398,30 @@ body {
                         <% } %>
                 
                         <% if (result.title) { %>
-                            <p><strong>Title:</strong> <%= result.title %></p>
+                            <p><strong>Title:</strong> <br> <%= result.title %></p>
                         <% } %>
                         <% if (result.author_names) { %>
-                            <p><strong>Author:</strong> <%= result.author_names %></p>
+                            <p><strong>Author:</strong> <br> <%= result.author_names %></p>
                         <% } %>
                         <% if (result.nature) { %>
-                            <p><strong>Type of research by nature:</strong> <%= result.nature %></p>
+                            <p><strong>Type of research by nature:</strong> <br> <%= result.nature %></p>
                         <% } %>
                         <% if (result.origin) { %>
-                            <p><strong>Type of research by origin:</strong> <%= result.origin %></p>
+                            <p><strong>Type of research by origin:</strong> <br> <%= result.origin %></p>
                         <% } %>
                         <% if (result.publication_date) { %>
-                            <p><strong>Publication Date:</strong> <%= result.publication_date %></p>
+                            <p><strong>Publication Date:</strong> <br> <%= result.publication_date %></p>
                         <% } %>
                         <% if (result.status) { %>
-                            <p><strong>Status:</strong> <%= result.status %></p>
+                            <p><strong>Status:</strong> <br> <%= result.status %></p>
                         <% } %>
                         <% if (result.abstract) { %>
-                            <p><strong>Abstract:</strong> <%= result.abstract %></p>
+                            <p><strong>Abstract:</strong> <br> <%= result.abstract %></p>
                         <% } %>
                         <% if (result.keyword) { %>
-                            <p><strong>Keyword(s):</strong> <%= result.keyword %></p>
+                            <p><strong>Keyword(s):</strong> <br> <%= result.keyword %></p>
                         <% } %>
+                        
                         <p><strong>PDF Preview:</strong></p>
                         <% if (result.filename) { %>
                             <iframe 
@@ -405,44 +452,44 @@ body {
                 </script>
 
 
-<!-- Email Modal -->
-<div class="modal fade" id="emailModal" tabindex="-1" aria-labelledby="emailModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="emailModalLabel">Send Research to Email</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="emailForm">
-                    <input type="hidden" id="researchIdInput">
-                    <input type="hidden" id="filenameInput">
-                    
-                    <div class="mb-3">
-                        <label for="emailInput" class="form-label">Enter your email:</label>
-                        <input type="email" id="emailInput" class="form-control" required>
+                    <!-- Email Modal -->
+                    <div class="modal fade" id="emailModal" tabindex="-1" aria-labelledby="emailModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="emailModalLabel">Send Research to Email</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="emailForm">
+                                        <input type="hidden" id="researchIdInput">
+                                        <input type="hidden" id="filenameInput">
+                                        
+                                        <div class="mb-3">
+                                            <label for="emailInput" class="form-label">Enter your email:</label>
+                                            <input type="email" id="emailInput" class="form-control" required>
+                                        </div>
+                                    <!-- Spinner (Hidden by Default) -->
+                    <div id="loadingSpinner" class="text-center d-none">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Sending...</span>
+                        </div>
+                        <p>Sending research file...</p>
                     </div>
-                   <!-- Spinner (Hidden by Default) -->
-<div id="loadingSpinner" class="text-center d-none">
-    <div class="spinner-border text-primary" role="status">
-        <span class="visually-hidden">Sending...</span>
-    </div>
-    <p>Sending research file...</p>
-</div>
 
-<!-- Checkmark Animation (Hidden by Default) -->
-<div id="checkmarkAnimation" class="text-center d-none">
-    <div class="checkmark-container">
-        <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100">
-            <circle cx="50" cy="50" r="45" stroke="green" stroke-width="5" fill="none" />
-            <path class="checkmark" fill="none" stroke="green" stroke-width="5" d="M30 50l15 15l30 -30" />
-        </svg>
-        <p>Email sent successfully!</p>
-    </div>
-</div>
+                    <!-- Checkmark Animation (Hidden by Default) -->
+                    <div id="checkmarkAnimation" class="text-center d-none">
+                        <div class="checkmark-container">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100">
+                                <circle cx="50" cy="50" r="45" stroke="green" stroke-width="5" fill="none" />
+                                <path class="checkmark" fill="none" stroke="green" stroke-width="5" d="M30 50l15 15l30 -30" />
+                            </svg>
+                            <p>Email sent successfully!</p>
+                        </div>
+                    </div>
 
 
-                    <button type="submit" class="btn btn-primary w-100">Send Email</button>
+                    <button type="submit" class="btn btn-success w-100">Send Email</button>
                 </form>
             </div>
         </div>

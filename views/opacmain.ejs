@@ -96,115 +96,137 @@
             align-items: center;
             padding-top: 4rem;
             text-align: center;
+            animation: fadeIn 1s ease-in-out;
         }
 
-        .search-container {
-            background-color: #ffffff;
-            padding: 1rem;
-            border-radius: 25px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 600px;
-            position: relative;
-            margin-bottom: 2rem;
-        }
+    
+
+/* Glassmorphism style for the search container */
+.search-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    padding: 30px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 500px;
+    animation: slideUp 1.5s ease-out;
+}
+
+/* Header styling */
+h1 {
+    color: #000000;
+    font-size: 36px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+/* Search input field */
+.search-input {
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 12px;
+    color: #ffffff;
+    font-size: 16px;
+    outline: none;
+    transition: background 0.3s;
+}
+
+.search-input:focus {
+    background: rgba(255, 255, 255, 0.6);
+}
+
+/* Submit button styling */
+.search-button {
+    padding: 10px 20px;
+    background-color: #34c759;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.search-button:hover {
+    background-color: #28a745;
+}
+
+/* Container for the action buttons */
+.search-action-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 20px;
+}
+
+/* iOS-style container for the 'or using' section */
+.ios-style-container {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    padding: 20px;
+    backdrop-filter: blur(5px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 350px;
+    text-align: center;
+    animation: fadeIn 1s ease-in-out;
+}
+
+/* Text inside the ios-style-container */
+.ios-style-container p {
+    color: #000000;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+/* Barcode scanner button */
+.scan-button {
+    width: 48%;
+    padding: 12px;
+    background-color: #34c759;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.scan-button:hover {
+    background-color: #28a745;
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+/* Slide-up animation for the search container */
+@keyframes slideUp {
+    0% {
+        transform: translateY(30px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
 
 
-        .search-container h1 {
-            margin-bottom: 1.5rem;
-            font-weight: 700;
-            color: #333;
-        }
-
-
-        .search-input {
-            width: 70%;
-            height: 50px;
-            padding: 0.75rem 1.25rem;
-            font-size: 1.25rem;
-            border: 2px solid #66bb6a;
-            border-radius: 25px;
-            box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
-            transition: all 0.3s ease;
-            outline: none;
-        }
-
-        .search-input:focus {
-            border-color: #388e3c;
-            box-shadow: 0 0 0 0.2rem rgba(56, 142, 60, 0.25);
-        }
-
-        .search-button {
-            position: absolute;
-            right: 90px;
-            top: 50%;
-            transform: translateY(-50%);
-            background-color: #388e3c;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            font-size: 1.25rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-        
-
-        .search-button:hover {
-            background-color: #2e7d32;
-        }
-
-        .scan-button {
-            margin-top: 1rem;
-            padding: 0.5rem 1rem;
-            font-size: 1rem;
-            color: #ffffff;
-            background-color: #388e3c;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .scan-button:hover {
-            background-color: #2e7d32;
-        }
-
-        /* Media Queries for mobile optimization */
-        @media (max-width: 768px) {
-            .header {
-                flex-direction: column;
-                align-items: center;
-                padding: 1rem;
-            }
-
-            .header .btn-login {
-                width: 100%;
-                margin-top: 1rem;
-            }
-
-            .search-container {
-                padding: 1rem;
-                margin-top: 2rem;
-            }
-
-            .search-input {
-                width: 100%;
-                margin-bottom: 1rem;
-            }
-
-            .search-button {
-                right: 10px;
-            }
-
-            .scan-button {
-                width: 100%;
-            }
-        }
     </style>
 </head>
 
@@ -212,63 +234,51 @@
 
 
 
-<div class="container">
-    <div class="search-container" style="background: linear-gradient(90deg, #ffffff, #d4edda);">
-        <h1 style="color: #000000;">RIMS</h1>
-        <form action="/search" method="GET" style="position: relative;">
-            <input type="text" class="search-input" placeholder="Search for research topics..." name="query" id="search-input" required>
-            <input type="hidden" name="barcode" id="hidden-barcode-input">
-            <button type="submit" class="search-button">
-                <i class="fas fa-search"></i>
-            </button>
-        </form>
-
-        <div class="container" style="display: flex; justify-content: center; align-items: center; padding: 20px;">
-            <div class="ios-style-container" style="background: #ffffff; border-radius: 20px; padding: 15px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); width: 100%; max-width: 350px;">
-                <!-- Text above buttons -->
-                <p style="margin-top: 10px; margin-bottom: 10px; text-align: center; color: #000000; font-weight: bold; font-size: 14px;">or using</p>
-        
-                <!-- Buttons container -->
-                <div style="display: flex; justify-content: space-between;">
-                    <!-- Camera button -->
-                    <button class="scan-button" data-bs-toggle="modal" data-bs-target="#scanModal" style="width: 48%; padding: 12px; background-color: #007aff; color: white; border: none; border-radius: 10px; font-size: 16px;">
-                        Camera
-                    </button>
-        
-                    <!-- Barcode Scanner button -->
-                    <button class="scan-button" id="startBarcodeScan" style="width: 48%; padding: 12px; background-color: #34c759; color: white; border: none; border-radius: 10px; font-size: 16px;">
+    <div class="container">
+        <div class="search-container">
+            <h1>RIMS</h1>
+            <form action="/search" method="GET">
+                <input type="text" class="search-input" placeholder="Search for research topics..." name="query" id="search-input" required>
+                <input type="hidden" name="barcode" id="hidden-barcode-input">
+                <button type="submit" class="search-button">
+                    <i class="fas fa-search"></i>
+                </button>
+            </form>
+    
+            <div class="search-action-container">
+                <div class="ios-style-container">
+                    <p>or using</p>
+                    <button class="scan-button" id="startBarcodeScan">
                         Barcode Scanner
                     </button>
                 </div>
             </div>
         </div>
-        
-        
-        
     </div>
-</div>
+    
 
 
 
 
 <!-- Modal for Barcode Scanner -->
 <div id="barcodeModal" class="modal">
-    <div class="modal-content" style="position: relative; padding: 20px;">
+    <div class="modal-content">
         <!-- Close Button (X) -->
-        <button onclick="closeModal()" style="position: absolute; top: 10px; right: 10px; background: transparent; border: none; font-size: 20px; color: #333; cursor: pointer;">
+        <button onclick="closeModal()" class="close-button">
             &times;
         </button>
 
         <h2>Please place your barcode properly in the scanner.</h2>
         <div class="modal-animation">
             <!-- Barcode Scanner Icon -->
-            <i class="fas fa-barcode" style="font-size: 50px; color: #333; margin-right: 10px;"></i>
+            <i class="fas fa-barcode"></i>
             <!-- Magnifying Glass Icon -->
-            <i class="fas fa-search" style="font-size: 50px; color: #333;"></i>
+            <i class="fas fa-search"></i>
             <p>Scanning in progress...</p>
         </div>
     </div>
 </div>
+
 
 <script>
     // Close modal function
@@ -299,24 +309,64 @@
     animation: fadeIn 0.5s ease-in-out;
 }
 
+/* Glassmorphism style for modal content */
 .modal-content {
-    background-color: white;
-    padding: 20px;
-    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    padding: 30px;
     text-align: center;
     max-width: 500px;
     width: 80%;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    animation: slideUp 1.5s ease-out;
 }
 
+/* Close button styling */
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: transparent;
+    border: none;
+    font-size: 24px;
+    color: #ffffff;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.close-button:hover {
+    color: #ff4040;
+}
+
+/* Header text styling */
 .modal h2 {
+    color: #ffffff;
+    font-size: 22px;
     margin-bottom: 20px;
-    color: #333;
+    font-weight: bold;
 }
 
+/* Modal animation (icon bouncing effect) */
 .modal .modal-animation {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     animation: bounce 1.5s infinite;
 }
 
+.modal .modal-animation i {
+    font-size: 50px;
+    color: #ffffff;
+    margin-right: 10px;
+}
+
+.modal .modal-animation p {
+    color: #ffffff;
+    font-size: 16px;
+}
+
+/* Bounce animation for scanning icons */
 @keyframes bounce {
     0%, 100% {
         transform: translateY(0);
@@ -326,6 +376,7 @@
     }
 }
 
+/* Fade-in animation */
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -334,6 +385,19 @@
         opacity: 1;
     }
 }
+
+/* Slide-up animation for modal content */
+@keyframes slideUp {
+    0% {
+        transform: translateY(30px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
 
 </style>
 
@@ -409,98 +473,7 @@ document.addEventListener('keydown', (event) => {
 
 
 
-<!-- Modal for barcode scanning -->
-<div class="modal fade" id="scanModal" tabindex="-1" aria-labelledby="scanModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="scanModalLabel">Scan Barcode</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div id="barcode-scanner" style="position: relative; width: 100%; height: 400px; background: #000; overflow: hidden;">
-                    <p id="scan-result" style="position: absolute; bottom: 10px; left: 10px; color: #fff; z-index: 2;">Scanning...</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
-<!-- Include QuaggaJS -->
-<script src="https://cdn.jsdelivr.net/npm/quagga@0.12.1/dist/quagga.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-<script>
-    const scanResult = document.getElementById('scan-result');
-    const searchInput = document.getElementById('search-input'); // Reference to the search input field
-    const searchForm = searchInput.closest('form'); // Reference to the form element
-
-    // Initialize Quagga only once
-    function initializeScanner() {
-        console.log("Initializing Quagga...");
-        // Initialize QuaggaJS for barcode scanning
-        Quagga.init({
-            inputStream: {
-                name: "Live",
-                type: "LiveStream",
-                target: document.querySelector('#barcode-scanner'), // Where to display the video stream
-                constraints: {
-                    facingMode: "environment", // Use the back camera on mobile
-                    width: 640, // Reduce width for faster processing
-                    height: 480, // Reduce height for faster processing
-                }
-            },
-            decoder: {
-                readers: ["code_128_reader", "ean_reader"] // Limit to specific barcode formats you need
-            },
-            locate: true // Improve detection by locating the barcode in the video
-        }, function(err) {
-            if (err) {
-                console.error('Error initializing Quagga:', err);
-                scanResult.textContent = "Error starting scanner.";
-                return;
-            }
-            console.log("Quagga initialized successfully.");
-            Quagga.start(); // Start the barcode scanner
-            scanResult.textContent = "Scanning...";
-        });
-    }
-
-    // Function to start the scanner when the modal is shown
-    function startScanner() {
-        console.log("Starting scanner...");
-        Quagga.onDetected(function(result) {
-            const barcode = result.codeResult.code;
-            scanResult.textContent = `Barcode detected: ${barcode}`;
-            console.log("Barcode detected:", barcode);
-
-            // Populate the search input field with the detected barcode
-            searchInput.value = barcode;
-
-            // Automatically submit the form
-            searchForm.submit();
-
-            // Close the modal immediately after detecting the barcode
-            const modal = new bootstrap.Modal(document.getElementById('scanModal'));
-            modal.hide(); // Close the modal
-        });
-    }
-
-    // Start the scanner when the modal is shown
-    document.getElementById('scanModal').addEventListener('shown.bs.modal', function () {
-        console.log("Modal shown, starting scanner...");
-        if (!Quagga.initialized) {
-            initializeScanner(); // Initialize Quagga only once
-        }
-        startScanner(); // Start scanning
-    });
-
-    // Stop the scanner when the modal is hidden
-    document.getElementById('scanModal').addEventListener('hidden.bs.modal', function () {
-        console.log("Modal hidden, stopping scanner...");
-        Quagga.stop(); // Stop the scanner when modal is closed
-    });
-</script>
 
 </body>
 </html>

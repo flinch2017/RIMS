@@ -154,122 +154,115 @@
             margin-left: 1rem;
         }
 
-        .research-table {
-        table-layout: fixed; /* Prevent columns from resizing based on content */
-        width: 100%; /* Maintain full width within the container */
-        border-collapse: collapse;
-        }
-
-        .research-table th,
-.research-table td {
-    white-space: normal; /* Allow text to wrap */
-    word-wrap: break-word; /* Break long words if needed */
-    word-break: break-word; /* Break words at the end of the line if necessary */
+        /* Table container styling */
+.research-table-container {
+    animation: fadeIn 1s ease-in-out;
 }
 
-.research-table th {
-    background-color: #f8f9fa;
+/* Table Styling */
+#research-table {
+    border-collapse: collapse;
+    width: 100%;
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    animation: slideUp 0.5s ease-out;
+}
+
+/* Header Styling */
+#research-table thead {
+    background-color: #007bff;
+    color: white;
     font-weight: bold;
-    padding: 10px; /* Add padding to th for better readability */
 }
 
-.research-table td {
-    padding: 8px; /* Add padding to td for better readability */
+/* Table Row Styling */
+#research-table tbody tr {
+    opacity: 0;
+    transition: background-color 0.3s ease, opacity 0.5s ease;
 }
 
-        .barcode-cell {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-        .barcode {
-            height: 40px;
-            width: auto;
-        }
-        .button-group {
-            display: flex;
-            flex-direction: row;
-            gap: 0.5rem;
-        }
-        .btn-edit,
-        .btn-print {
-            text-decoration: none;
-            color: white;
-            background-color: #007bff;
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            text-align: center;
-            white-space: nowrap;
-        }
-        .btn-edit:hover,
-        .btn-print:hover {
-            background-color: #0056b3;
-        }
-        footer {
-            background-color: #2e7d32;
-            color: white;
-            padding: 1rem;
-            text-align: center;
-            position: relative;
-            width: 100%;
-        }
-        .research-table td span {
-            display: inline-block;
-            white-space: nowrap;
-            width: 100%;
-            overflow-x: auto;
-            max-width: 300px;
-            padding-bottom: 2px;
-        }
-        .research-table td {
-            max-width: 300px; /* Adjust as necessary */
-            white-space: nowrap; /* Allow text wrapping */
-            word-wrap: break-word; /* Break long words to fit within cell */
-            overflow: auto; /* Ensure text is visible on scroll */
-        }
-
-
-
-
-            /* Adjust the "Researches" heading size */
-        h1.my-4 {
-            font-size: 1.5rem; /* Decreased from the default size */
-            font-weight: bold;
-            margin-bottom: 1.5rem;
-        }
-
-
-        /* Adjust the size and alignment of the "Upload New Research" button */
-.mb-3.text-end .btn-success {
-    font-size: 0.9rem; /* Make the font smaller */
-    padding: 0.5rem 1rem; /* Reduce padding for a small button */
-    border-radius: 4px; /* Round the corners */
-    margin-left: auto; /* Automatically push the button to the right */
-    margin-left: 0; /* Reset right margin */
-    display: block; /* Ensure it takes the full width available for alignment */
-    text-align: right; /* Align content to the right */
+#research-table tbody tr:hover {
+    background-color: rgba(0, 123, 255, 0.1);
 }
 
+/* Row Fade-In Animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
 
-        .research-table th:first-child, 
-        .research-table td:first-child {
-            width: 5%; /* Adjust this value to make it smaller */
-            text-align: center; /* Center align content for better appearance */
-        }
+#research-table tbody tr.animate {
+    animation: fadeIn 1s forwards;
+}
 
-        .research-table th:nth-child(4), 
-        .research-table td:nth-child(4) {
-            width: auto; /* Automatically adjusts width to fit content */
-            max-width: 150px; /* Optional: Prevents it from growing too large */
-            text-align: left; /* Centers the text for a neat look */
-        }
+/* Pagination Styling */
+.pagination-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-top: 20px;
+}
 
-        .research-table th:nth-child(5), 
-        .research-table td:nth-child(5) {
-            width: 100px; /* Automatically adjusts width to fit content */
-            max-width: 150px; /* Optional: Prevents it from growing too large */
-            text-align: left; /* Centers the text for a neat look */
-        }
+.pagination-controls button {
+    padding: 8px 15px;
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.pagination-controls button:hover {
+    background-color: #0056b3;
+}
+
+.pagination-controls button:disabled {
+    background-color: #ccc;
+}
+
+/* Buttons for View, Edit, and other actions */
+.btn-sm {
+    font-size: 0.8rem;
+    padding: 6px 10px;
+    margin-right: 5px;
+}
+
+/* Button Specific Styling */
+.btn-info {
+    background-color: #17a2b8;
+}
+
+.btn-info:hover {
+    background-color: #138496;
+}
+
+.btn-warning {
+    background-color: #ffc107;
+}
+
+.btn-warning:hover {
+    background-color: #e0a800;
+}
+
+/* Table Row Slide-Up Animation */
+@keyframes slideUp {
+    from {
+        transform: translateY(10px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
     </style>
     <style>
         #author-suggestions {
@@ -1455,82 +1448,41 @@ document.getElementById('printModalContent').addEventListener('click', function 
 
 
         
-<table id="research-table" class="table table-striped table-bordered research-table">
-    <thead>
-        <tr>
-            <th>#</th>
-            <th>Title</th>
-            <th>Author</th>
-            <th>Date Uploaded</th>
-            <th>Publication Date</th>
-            <th>Journal Publication</th>
-            <th>Status</th>
-            <th>Actions</th> <!-- New column for actions -->
-        </tr>
-    </thead>
-    <tbody id="research-table-body">
-        <% researches.forEach((research, index) => { %>
+<div class="research-table-container">
+    <table id="research-table" class="table table-striped table-bordered research-table">
+        <thead>
             <tr>
-                <td><%= index + 1 %></td>
-                <td><%= research.title %></td>
-                <td><%= research.author_name %></td>
-                <td>
-                    <%= new Date(research.date_uploaded).toLocaleDateString('en-US', { 
-                        month: 'long', 
-                        day: 'numeric', 
-                        year: 'numeric' 
-                    }) %>
-                </td>
-                <td><%= research.publication_date %></td>
-                <td><%= research.journal_publication %></td>
-                <td><%= research.status || 'Pending' %></td>
-                <td> <!-- New column for buttons -->
-                    <!-- View Button (could trigger a modal or redirect to a details page) -->
-                    <button class="btn btn-info btn-sm" 
-                        data-bs-toggle="modal" 
-                        data-bs-target="#viewResearchModal" 
-                        data-id="<%= research.id %>" 
-                        data-title="<%= research.title %>" 
-                        data-author="<%= research.author_name %>" 
-                        data-publication_date="<%= research.publication_date %>" 
-                        data-journal_publication="<%= research.journal_publication %>" 
-                        data-status="<%= research.status %>" 
-                        data-barcode="<%= research.barcode %>" 
-                        data-barnum="<%= research.barnum %>" 
-                        data-doi="<%= research.doi %>" 
-                        data-abstract="<%= research.abstract %>"
-                        data-funding="<%= research.funding %>"
-                        data-nature="<%= research.nature %>"
-                        data-origin="<%= research.origin %>"
-                        data-isbn="<%= research.isbn %>"
-                        data-startdate="<%= research.startdate %>"
-                        data-enddate="<%= research.enddate %>"
-                        data-keyword="<%= research.keyword %>"
-                        data-filename="<%= research.filename %>"
-                        data-campus="ESSU MAIN">
-                        View
-                    </button>
-                
-                    <!-- Conditionally Render Edit Button -->
-                    <% let buttonText = ''; %>
-                    <% let modalTarget = ''; %>
-                    
-                    <% if (research.status === 'Proposed') { %>
-                        <% buttonText = 'Continue'; %>
-                        <% modalTarget = '#ongoingUpdate'; %>
-                    <% } else if (research.status === 'Ongoing') { %>
-                        <% buttonText = 'Complete'; %>
-                        <% modalTarget = '#completeUpdate'; %>
-                    <% } else if (research.status === 'Completed') { %>
-                        <% buttonText = 'Publish'; %>
-                        <% modalTarget = '#editResearchModal'; %>
-                    <% } %>
-                
-                    <!-- Add condition to hide button when status is 'Published' -->
-                    <% if (research.status !== 'Published') { %>
-                        <button class="btn btn-warning btn-sm" 
+                <th>#</th>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Date Uploaded</th>
+                <th>Publication Date</th>
+                <th>Journal Publication</th>
+                <th>Status</th>
+                <th>Actions</th> <!-- New column for actions -->
+            </tr>
+        </thead>
+        <tbody id="research-table-body">
+            <% researches.forEach((research, index) => { %>
+                <tr>
+                    <td><%= index + 1 %></td>
+                    <td><%= research.title %></td>
+                    <td><%= research.author_name %></td>
+                    <td>
+                        <%= new Date(research.date_uploaded).toLocaleDateString('en-US', { 
+                            month: 'long', 
+                            day: 'numeric', 
+                            year: 'numeric' 
+                        }) %>
+                    </td>
+                    <td><%= research.publication_date %></td>
+                    <td><%= research.journal_publication %></td>
+                    <td><%= research.status || 'Pending' %></td>
+                    <td> <!-- New column for buttons -->
+                        <!-- View Button (could trigger a modal or redirect to a details page) -->
+                        <button class="btn btn-info btn-sm" 
                             data-bs-toggle="modal" 
-                            data-bs-target="<%= modalTarget %>" 
+                            data-bs-target="#viewResearchModal" 
                             data-id="<%= research.id %>" 
                             data-title="<%= research.title %>" 
                             data-author="<%= research.author_name %>" 
@@ -1548,25 +1500,66 @@ document.getElementById('printModalContent').addEventListener('click', function 
                             data-startdate="<%= research.startdate %>"
                             data-enddate="<%= research.enddate %>"
                             data-keyword="<%= research.keyword %>"
-                            data-filename="<%= research.filename %>">
-                            <%= buttonText %>
+                            data-filename="<%= research.filename %>"
+                            data-campus="ESSU MAIN">
+                            View
                         </button>
-                    <% } %>
-                </td>
-                
-            </tr>
-        <% }); %>
-    </tbody>
-</table>
+                    
+                        <!-- Conditionally Render Edit Button -->
+                        <% let buttonText = ''; %>
+                        <% let modalTarget = ''; %>
+                        
+                        <% if (research.status === 'Proposed') { %>
+                            <% buttonText = 'Continue'; %>
+                            <% modalTarget = '#ongoingUpdate'; %>
+                        <% } else if (research.status === 'Ongoing') { %>
+                            <% buttonText = 'Complete'; %>
+                            <% modalTarget = '#completeUpdate'; %>
+                        <% } else if (research.status === 'Completed') { %>
+                            <% buttonText = 'Publish'; %>
+                            <% modalTarget = '#editResearchModal'; %>
+                        <% } %>
+                    
+                        <!-- Add condition to hide button when status is 'Published' -->
+                        <% if (research.status !== 'Published') { %>
+                            <button class="btn btn-warning btn-sm" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="<%= modalTarget %>" 
+                                data-id="<%= research.id %>" 
+                                data-title="<%= research.title %>" 
+                                data-author="<%= research.author_name %>" 
+                                data-publication_date="<%= research.publication_date %>" 
+                                data-journal_publication="<%= research.journal_publication %>" 
+                                data-status="<%= research.status %>" 
+                                data-barcode="<%= research.barcode %>" 
+                                data-barnum="<%= research.barnum %>" 
+                                data-doi="<%= research.doi %>" 
+                                data-abstract="<%= research.abstract %>"
+                                data-funding="<%= research.funding %>"
+                                data-nature="<%= research.nature %>"
+                                data-origin="<%= research.origin %>"
+                                data-isbn="<%= research.isbn %>"
+                                data-startdate="<%= research.startdate %>"
+                                data-enddate="<%= research.enddate %>"
+                                data-keyword="<%= research.keyword %>"
+                                data-filename="<%= research.filename %>">
+                                <%= buttonText %>
+                            </button>
+                        <% } %>
+                    </td>
+                    
+                </tr>
+            <% }); %>
+        </tbody>
+    </table>
 
+    <!-- Pagination Controls -->
+    <div class="pagination-controls">
+        <button id="prev-btn" class="btn btn-secondary" disabled>Previous</button>
+        <button id="next-btn" class="btn btn-secondary">Next</button>
+    </div>
+</div>
 
-                
-                
-                
-                <div class="pagination-controls">
-                    <button id="prev-btn" class="btn btn-secondary" disabled>Previous</button>
-                    <button id="next-btn" class="btn btn-secondary">Next</button>
-                </div>
                 
             </div>
         </div>
@@ -1907,6 +1900,19 @@ document.getElementById('viewResearchModal').addEventListener('show.bs.modal', f
     // Set the barcode image in the modal
     var barcodeImage = document.getElementById('view-barcode-image');
     barcodeImage.src = "data:image/png;base64," + barcode; // Set the base64 barcode image
+});
+
+</script>
+
+<script>
+    // JavaScript to trigger animation after rows are loaded
+document.addEventListener('DOMContentLoaded', function () {
+    const rows = document.querySelectorAll('#research-table tbody tr');
+    rows.forEach((row, index) => {
+        setTimeout(() => {
+            row.classList.add('animate');
+        }, index * 100); // Delay each row's animation slightly
+    });
 });
 
 </script>
