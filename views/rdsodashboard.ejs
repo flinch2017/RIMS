@@ -14,6 +14,7 @@
     display: flex;
     flex-direction: column;
     font-family: 'Arial', sans-serif;
+    overflow-x: hidden; /* Prevent the entire page from scrolling horizontally */
 }
 
 body::before {
@@ -247,21 +248,199 @@ body::before {
     }
 }
 
-/* Adjust card sizes for better stretching */
-.scrolling-tabs .card {
-    width: 180px; /* Adjust width to make them more rectangular */
-    height: auto; /* Allow height to adjust automatically */
-    border-radius: 10px; /* Slightly rounded corners for a sleek look */
-    padding: 0.75rem;
-    display: flex;
-    flex-direction: column; /* Align items vertically */
-    justify-content: space-between; /* Allow items to spread out */
-    align-items: center;
-    text-align: center; /* Align text to the center */
-}
 
 
     </style>
+
+<style>
+ /* Scrolling Tabs Container */
+.scrolling-tabs-container {
+    display: flex;
+    justify-content: center; /* Center the cards horizontally */
+    align-items: center; /* Vertically center the cards */
+    margin: 20px;
+    overflow: hidden; /* Prevent horizontal scrolling */
+}
+
+/* Scrolling Tabs (Card) Container */
+.scrolling-tabs {
+    display: flex;
+    flex-wrap: wrap; /* Wrap cards to the next line if needed */
+    gap: 15px; /* Space between cards */
+    justify-content: center; /* Center the cards horizontally */
+    width: 100%; /* Take full width of container */
+    max-width: 100%; /* Prevent exceeding container width */
+}
+
+/* Card Styling */
+.card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    margin: 10px;
+    flex-shrink: 0; /* Prevent cards from shrinking */
+    opacity: 0;
+    transform: translateY(20px);
+    animation: slideIn 0.6s ease forwards;
+    min-width: 150px; /* Set a minimum width for each card */
+    max-width: 250px; /* Ensure cards don’t get too wide */
+}
+
+/* Animation for each card */
+@keyframes slideIn {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Individual Card Delays (to animate one by one) */
+.card:nth-child(1) {
+    animation-delay: 0.2s;
+}
+
+.card:nth-child(2) {
+    animation-delay: 0.4s;
+}
+
+.card:nth-child(3) {
+    animation-delay: 0.6s;
+}
+
+.card:nth-child(4) {
+    animation-delay: 0.8s;
+}
+
+.card:nth-child(5) {
+    animation-delay: 1s;
+}
+
+/* Card Title Styling */
+.card-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+/* Card Count Styling */
+.card-count {
+    font-size: 20px;
+    font-weight: bold;
+    color: #4CAF50; /* Telegram-like green */
+}
+
+/* Design Elements for Telegram-like Look */
+.card:hover {
+    background-color: #f1f1f1;
+    cursor: pointer;
+}
+
+.card {
+    border: 1px solid #ddd;
+}
+
+/* Responsive Design for Smaller Screens */
+@media screen and (max-width: 768px) {
+    .card {
+        margin: 10px 5px;
+        padding: 15px;
+        min-width: 130px; /* Adjust card size for smaller screens */
+    }
+
+    .card-title {
+        font-size: 14px; /* Adjust font size for smaller screens */
+    }
+
+    .card-count {
+        font-size: 18px; /* Adjust font size for smaller screens */
+    }
+}
+
+
+
+
+   /* Table Styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+    border-radius: 8px;
+    overflow: hidden;
+    opacity: 0;
+    animation: tableAnimation 1s forwards;
+}
+
+/* Noticeable animation for table appearance */
+@keyframes tableAnimation {
+    0% {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    50% {
+        opacity: 0.5;
+        transform: translateY(10px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+th, td {
+    padding: 12px 15px;
+    text-align: left;
+    font-size: 14px;
+    font-family: 'Roboto', sans-serif;
+}
+
+th {
+    background-color: #4CAF50; /* Green background for header */
+    color: white;
+    font-weight: bold;
+    border-bottom: 2px solid #ddd;
+}
+
+tr:nth-child(even) {
+    background-color: #e8f5e9; /* Very light green background for alternating rows */
+}
+
+tr:hover {
+    background-color: #c8e6c9; /* Slight hover effect with a darker green */
+    cursor: pointer;
+}
+
+td {
+    border-bottom: 1px solid #ddd;
+}
+
+/* Responsive Styling for smaller screens */
+@media screen and (max-width: 768px) {
+    table {
+        font-size: 12px;
+    }
+
+    th, td {
+        padding: 10px;
+    }
+}
+
+
+
+
+    
+    
+
+    </style>
+
+    
 </head>
 <body>
 
@@ -320,31 +499,460 @@ body::before {
                 </div>
             </div>
         </div>
-        
-        <style>
-        .scrolling-tabs-container {
-            overflow-x: auto;
-            white-space: nowrap;
-            padding: 10px 0;
-            margin-bottom: 1rem;
+
+        <!-- Sorting Dropdowns Above the Table -->
+<div class="sorting-dropdowns">
+    <!-- Campus Dropdown -->
+    <label for="campus">Select Campus:</label>
+    <select id="campus" onchange="updateColleges()">
+        <option value="">Select Campus</option>
+        <option value="ESSU MAIN">ESSU MAIN</option>
+        <option value="ESSU MAYDOLONG">ESSU MAYDOLONG</option>
+        <!-- Add more campuses as needed -->
+    </select>
+
+    <!-- College Dropdown -->
+    <label for="college">Select College:</label>
+    <select id="college" disabled>
+        <option value="">Select College</option>
+        <!-- Colleges will be dynamically loaded based on the selected campus -->
+    </select>
+
+    <!-- Year Dropdown -->
+    <label for="year">Select Year:</label>
+    <select id="year">
+        <option value="">Select Year</option>
+        <option value="2025">2025</option>
+        <!-- Add more years as needed -->
+    </select>
+
+    <button onclick="filterData()">Filter</button>
+</div>
+
+<!-- Table Display -->
+<table id="researchTable">
+    <thead>
+        <tr>
+            <th>Campus</th>
+            <th>College</th>
+            <th>Year</th>
+            <th>Total Researches</th>
+            <th>Target</th>
+            <th>Percentage Completed</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% researchCounts.forEach(function(count) { %>
+            <tr data-campus="<%= count.campus %>" data-college="<%= count.college %>" data-year="<%= count.year %>">
+                <td><%= count.campus %></td>
+                <td><%= count.college %></td>
+                <td><%= count.year %></td>
+                <td><%= count.research_count %></td>
+                
+                <!-- Display 'Not set yet' if target is 0 -->
+                <td><%= count.target === 0 ? 'Not set yet' : count.target %></td>
+
+                <!-- Display percentage with 'Not set yet' or progress bar -->
+<td>
+    <% if(count.percentageCompleted === 'N/A') { %>
+        Not set yet
+    <% } else { %>
+        <div class="progress-container">
+            <div class="progress-bar" style="width: <%= count.percentageCompleted %>%"></div>
+        </div>
+        <span class="progress-text"><%= count.percentageCompleted %>%</span>
+    <% } %>
+</td>
+
+            </tr>
+        <% }); %>
+    </tbody>
+</table>
+
+<script>
+// JavaScript to update the colleges dropdown based on selected campus
+function updateColleges() {
+    var campus = document.getElementById("campus").value;
+    var collegeDropdown = document.getElementById("college");
+    collegeDropdown.innerHTML = "<option value=''>Select College</option>"; // Reset college options
+
+    var colleges = []; // Array to store colleges for the selected campus
+
+    // Define colleges for each campus
+    if (campus === "ESSU MAIN") {
+        colleges = ["Computer Studies", "Fisheries and Aquatics Sciences", "Hospitality Management"];
+    } else if (campus === "ESSU MAYDOLONG") {
+        colleges = ["Science"];
+    }
+
+    // Populate the college dropdown based on selected campus
+    colleges.forEach(function(college) {
+        var option = document.createElement("option");
+        option.value = college;
+        option.textContent = college;
+        collegeDropdown.appendChild(option);
+    });
+
+    // Enable the college dropdown once the options are populated
+    collegeDropdown.disabled = false;
+}
+
+// JavaScript to filter table based on the selected filters
+function filterData() {
+    var campusFilter = document.getElementById("campus").value;
+    var collegeFilter = document.getElementById("college").value;
+    var yearFilter = document.getElementById("year").value;
+
+    var rows = document.querySelectorAll("#researchTable tbody tr");
+
+    rows.forEach(function(row) {
+        var campus = row.getAttribute("data-campus");
+        var college = row.getAttribute("data-college");
+        var year = row.getAttribute("data-year");
+
+        var matchCampus = (campusFilter === "" || campus === campusFilter);
+        var matchCollege = (collegeFilter === "" || college === collegeFilter);
+        var matchYear = (yearFilter === "" || year === yearFilter);
+
+        // Display the row if all selected filters match
+        if (matchCampus && matchCollege && matchYear) {
+            row.style.display = "";
+        } else {
+            row.style.display = "none";
         }
-        
-        .scrolling-tabs {
-            display: flex;
-            gap: 10px;
-            width: max-content;
-        }
+    });
+}
+</script>
+
+<!-- Optional CSS for styling -->
+<style>
+/* Progress Bar Container */
+.progress-container {
+    width: 100px; /* Adjust width */
+    height: 8px;
+    background-color: #ddd; /* Light gray background */
+    border-radius: 5px;
+    overflow: hidden;
+    position: relative;
+    margin-top: 5px;
+}
+
+/* Progress Bar */
+.progress-bar {
+    height: 100%;
+    background-color: #4CAF50; /* Green color */
+    transition: width 0.5s ease-in-out;
+}
+
+/* Percentage Text */
+.progress-text {
+    font-size: 12px;
+    font-weight: bold;
+    margin-left: 5px;
+    color: #333;
+}
+
+
+  /* Styling for the sorting dropdowns */
+.sorting-dropdowns {
+    display: flex;
+    align-items: center;
+    background-color: #f4f4f4;
+    padding: 10px 20px;
+    border-radius: 50px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 900px;
+    margin: 20px auto;
+    justify-content: flex-start;
+    opacity: 0;  /* Initially hidden for animation */
+    animation: fadeInSorting 1s forwards;
+}
+
+/* Fade-in effect for sorting dropdowns */
+@keyframes fadeInSorting {
+    0% {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Styling for the labels */
+.sorting-dropdowns label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #555;
+    margin-right: 10px;
+    margin-left: 10px; /* Keep label spacing consistent */
+    opacity: 0;  /* Initially hidden */
+    animation: fadeInElement 0.5s forwards;
+}
+
+.sorting-dropdowns label:nth-child(1) {
+    animation-delay: 0.2s; /* Delay for the first label */
+}
+
+.sorting-dropdowns label:nth-child(2) {
+    animation-delay: 0.4s; /* Delay for the second label */
+}
+
+.sorting-dropdowns label:nth-child(3) {
+    animation-delay: 0.6s; /* Delay for the third label */
+}
+
+/* Styling for the select elements (dropdowns) */
+.sorting-dropdowns select {
+    padding: 8px 18px;
+    font-size: 14px;
+    border-radius: 50px;
+    border: 2px solid #ddd;
+    background-color: #fff;
+    color: #333;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+    width: 180px;
+    text-align: center;
+    opacity: 0;  /* Initially hidden */
+    animation: fadeInElement 0.5s forwards;
+}
+
+/* Delay for dropdowns */
+.sorting-dropdowns select:nth-child(1) {
+    animation-delay: 0.4s; /* Delay for the first dropdown */
+}
+
+.sorting-dropdowns select:nth-child(2) {
+    animation-delay: 0.6s; /* Delay for the second dropdown */
+}
+
+.sorting-dropdowns select:nth-child(3) {
+    animation-delay: 0.8s; /* Delay for the third dropdown */
+}
+
+/* Focused dropdown styling */
+.sorting-dropdowns select:focus {
+    border-color: #4CAF50;
+    background-color: #f1fdf3;
+    outline: none;
+}
+
+/* Styling for the button */
+.sorting-dropdowns button {
+    padding: 12px 20px;
+    font-size: 16px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    text-transform: uppercase;
+    font-weight: bold;
+    margin-left: 10px; /* Space between button and dropdown */
+    opacity: 0;  /* Initially hidden */
+    animation: fadeInElement 0.5s forwards;
+    animation-delay: 1s; /* Delay for the button */
+}
+
+/* Button hover effect */
+.sorting-dropdowns button:hover {
+    background-color: #45a049;
+    transform: translateY(-3px);
+}
+
+/* Button active effect */
+.sorting-dropdowns button:active {
+    transform: translateY(1px);
+}
+
+/* Fade-in effect for individual elements (labels, selects, button) */
+@keyframes fadeInElement {
+    0% {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+
+/* Animation for table rows */
+#researchTable tbody tr {
+    opacity: 0;
+    animation: fadeIn 0.5s ease-in-out forwards;
+}
+
+/* FadeIn and FadeOut keyframes */
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    to {
+        opacity: 0;
+    }
+}
+
+/* Class to apply fade-out animation */
+.fadeOut {
+    animation: fadeOut 0.3s ease-in-out forwards;
+}
+
+/* Class to apply fade-in animation */
+.fadeIn {
+    animation: fadeIn 0.5s ease-in-out forwards;
+}
+
+
+    
+</style>
+
+
+<div>
+    <h2>Top Researchers</h2>
+    <div class="researchers-container">
+        <% topResearcher.forEach(function(researcher, index) { %> <!-- Adding 'index' here -->
+            <div class="researcher-card">
+                <div class="rank-number"><%= index + 1 %></div> <!-- Display the rank number -->
+                <div class="profile-picture-wrapper">
+                    <% if (researcher.filename) { %>
+                        <img class="profile-picture" src="/uploads/<%= researcher.filename %>" alt="Profile Picture" />
+                    <% } else { %>
+                        <div class="no-image">No Image</div>
+                    <% } %>
+                </div>
+                <div class="researcher-info">
+                    <p class="researcher-name"><%= researcher.name %></p>
+                    <p class="submission-count"><%= researcher.submission_count %> Research Submissions</p>
+                </div>
+            </div>
+        <% }); %>
+    </div>
+</div>
+
+
+<style>
+   /* Fade-in Animation */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.researchers-container {
+    display: flex;
+    overflow-x: auto;  /* Enable horizontal scrolling only here */
+    padding: 20px 0;
+    gap: 20px;
+    justify-content: flex-start;
+    max-width: 75vw;  /* Prevent container from expanding past the viewport width */
+    width: auto;  /* Ensures it doesn't expand beyond available width */
+    scrollbar-width: thin; /* Optional: customize scrollbar appearance */
+    scrollbar-color: #006400 #eee; /* Green scrollbar color */
+    box-sizing: border-box; /* Prevents any padding from affecting the width */
+}
+
+/* Researcher card styles with gradient background */
+.researcher-card {
+    width: 200px;
+    text-align: center;
+    background: linear-gradient(135deg, #45a049, #5fb584);  /* Green gradient */
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative; /* Added to position the rank number correctly */
+    animation: fadeIn 0.5s ease-in-out; /* Apply fade-in animation */
+}
+
+.researcher-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+}
+
+.rank-number {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.profile-picture-wrapper {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    margin-bottom: 15px;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.profile-picture {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.no-image {
+    font-size: 12px;
+    color: #fff;
+    background-color: #6b8e23;  /* Olive Green for no image */
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+.researcher-info {
+    color: #fff;
+}
+
+.researcher-name {
+    font-size: 16px;
+    font-weight: bold;
+    margin: 5px 0;
+}
+
+.submission-count {
+    font-size: 14px;
+    color: #e0e0e0;  /* Light gray text for submission count */
+}
+
+
+
+</style>
+
+
+
+
+
         
         
 
-        </style>
-        
-        
-        
         
     </div>
     
-
+   
         
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

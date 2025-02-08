@@ -126,7 +126,11 @@ router.get('/signup', async (req, res) => {
 });
 
 // POST route for signup
-router.post('/signup', upload.single('profilePic'), async (req, res) => {
+router.post('/signup', upload.fields([
+    { name: 'profilePic', maxCount: 1 },
+    { name: 'facultyIDPic', maxCount: 1 },
+    { name: 'selfieWithID', maxCount: 1 }
+]), async (req, res) => {
     const { role, fullname, username, birthday, email, contact, password, confirmPassword } = req.body;
 
     if (password !== confirmPassword) {
@@ -149,8 +153,8 @@ router.post('/signup', upload.single('profilePic'), async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 10); // 10 is the salt rounds
 
         await pool.query(
-            `INSERT INTO users (role, fullname, username, birthday, email, contact, password, filename, idnumber, date_created, mode) 
-             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`,
+            `INSERT INTO users (role, fullname, username, birthday, email, contact, password, filename, faculty_id_pic, selfie_with_id, idnumber, date_created, mode) 
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)`,
             [
                 role,
                 fullname,
@@ -159,14 +163,23 @@ router.post('/signup', upload.single('profilePic'), async (req, res) => {
                 email,
                 contact,
                 hashedPassword, // Use the hashed password
-                req.file ? req.file.filename : null,
+                req.files['profilePic'] ? req.files['profilePic'][0].filename : null,
+                req.files['facultyIDPic'] ? req.files['facultyIDPic'][0].filename : null,
+                req.files['selfieWithID'] ? req.files['selfieWithID'][0].filename : null,
                 idnumber,
                 dateCreated,
                 mode,
             ]
         );
 
-        req.session.user = { fullname, idnumber, filename: req.file ? req.file.filename : null, role };
+        req.session.user = { 
+            fullname, 
+            idnumber, 
+            profilePic: req.files['profilePic'] ? req.files['profilePic'][0].filename : null, 
+            facultyIDPic: req.files['facultyIDPic'] ? req.files['facultyIDPic'][0].filename : null, 
+            selfieWithID: req.files['selfieWithID'] ? req.files['selfieWithID'][0].filename : null, 
+            role 
+        };
 
         // Redirect based on role
         if (role === 'RDSO Staff') {
@@ -181,22 +194,28 @@ router.post('/signup', upload.single('profilePic'), async (req, res) => {
 });
 
 
+
 // GET route for /setupaccount
 router.get('/setupaccount', (req, res) => {
     if (!req.session.user) {
         return res.redirect('/signup');
     }
 
-    const { fullname, idnumber, filename } = req.session.user;
-    res.render('setupaccount', { fullname, idnumber, filename });
+    const { fullname, idnumber, profilePic } = req.session.user; // Use profilePic here
+    res.render('setupaccount', { fullname, idnumber, profilePic }); // Pass profilePic to the view
 });
+
 
 router.post("/setupaccount", async (req, res) => {
     const { name, designation, college, department, campus } = req.body;
-    const { idnumber, filename } = req.session.user; // Get ID number from session
+    const { idnumber, profilePic } = req.session.user; // Use profilePic from session
 
     if (!name) {
         return res.status(400).send("Name is required");
+    }
+
+    if (!profilePic) {
+        return res.status(400).send("Profile picture is required"); // Ensure profilePic is available
     }
 
     try {
@@ -212,11 +231,11 @@ router.post("/setupaccount", async (req, res) => {
         // Generate a new UUID for researcher_id
         const researcher_id = uuidv4();
 
-        // Insert data into the faculty table
+        // Insert data into the faculty table with the profilePic filename from the session
         await pool.query(
             `INSERT INTO faculty (name, designation, college, department, campus, idnumber, filename, researcher_id)
              VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
-            [name, designation, college, department, campus, idnumber, filename, researcher_id]
+            [name, designation, college, department, campus, idnumber, profilePic, researcher_id] // Use profilePic here
         );
 
         // Send verification email
@@ -316,7 +335,9 @@ router.get('/facultypapers', async (req, res) => {
         let query = `
             SELECT 
                 e.id, e.title, e.date_uploaded, e.publication_date, 
-                e.journal_publication, e.barcode, e.barnum, e.doi, e.abstract, e.funding, e.nature, e.origin, e.isbn, e.startdate, e.enddate, e.keyword, e.filename, s.name AS status, 
+                e.journal_publication, e.barcode, e.barnum, e.doi, e.abstract, e.funding, e.request, e.nature, e.origin, e.isbn, e.startdate, e.enddate, e.keyword, e.filename, 
+                s.name AS status, 
+                e.status_id,
                 STRING_AGG(r.name, ', ') AS author_name
             FROM globalresearches e
             LEFT JOIN statuses s ON e.status_id = s.id
@@ -336,13 +357,31 @@ router.get('/facultypapers', async (req, res) => {
         query += `
             GROUP BY 
                 e.id, e.title, e.date_uploaded, e.publication_date, 
-                e.journal_publication, e.barcode, e.barnum, e.doi, e.abstract, e.funding, e.nature, e.origin, e.isbn, e.startdate, e.enddate, e.keyword, e.filename, s.name
+                e.journal_publication, e.barcode, e.barnum, e.doi, e.abstract, e.funding, e.nature, e.origin, e.isbn, e.startdate, e.enddate, e.keyword, e.filename, s.name, e.status_id
         `;
 
         const result = await pool.query(query, queryParams);
 
+        // Process the results before passing to the view
+        const researches = result.rows.map(research => {
+            const request = research.request ? research.request.trim() : '';
+
+            // Check if there is a 'request' condition and format accordingly
+            if (request.startsWith('Request for ')) {
+                // If the request starts with "Request for", display the full text
+                research.displayStatus = request;
+            } else if (research.status) {
+                // If the status exists, display the status name (from the `statuses` table)
+                research.displayStatus = research.status; // Use `research.status` here, not `status_id`
+            } else {
+                // Otherwise, display 'Pending'
+                research.displayStatus = 'Pending';
+            }
+            return research;
+        });
+
         res.render('facultypapers', {
-            researches: result.rows,
+            researches,
             statusFilter: status || '',
             searchQuery: search || '',
             statuses: [
@@ -358,6 +397,9 @@ router.get('/facultypapers', async (req, res) => {
         res.status(500).send(err.message); // Return error message for easier debugging
     }
 });
+
+
+
 
 
 
@@ -414,15 +456,35 @@ router.post('/fresearch/add', upload.single('researchFile'), async (req, res) =>
         // Retrieve filename from multer
         const filename = req.file ? req.file.filename : null;
 
-        // Insert into the 'globalresearches' table, including file details
+        // Format the status as "Current <status>"
+        let formattedStatus;
+        switch (status_id) {
+            case "1":
+                formattedStatus = "Request for Completed";
+                break;
+            case "2":
+                formattedStatus = "Request for Ongoing";
+                break;
+            case "3":
+                formattedStatus = "Request for Published";
+                break;
+            case "4":
+                formattedStatus = "Request for Proposed";
+                break;
+            default:
+                formattedStatus = "Request is Undefined"; // Handle unexpected status values
+        }
+
+        // Insert into the 'globalresearches' table, including file details and formatted status
         await pool.query(
-            'INSERT INTO globalresearches (title, author, publication_date, journal_publication, status_id, idnumber, barcode, barnum, date_uploaded, doi, abstract, funding, nature, origin, isbn, startdate, enddate, keyword, filename) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19)',
+            'INSERT INTO globalresearches (title, author, publication_date, journal_publication, status_id, request, idnumber, barcode, barnum, date_uploaded, doi, abstract, funding, nature, origin, isbn, startdate, enddate, keyword, filename) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20)',
             [
                 title, 
                 selected_authors, 
                 finalPublicationDate, 
                 journal_publication, 
                 status_id, 
+                formattedStatus, // Stores "Current <status>"
                 idnumber, 
                 barcodeBase64, 
                 barcodeValue, 
@@ -470,6 +532,9 @@ router.post('/update-paper', upload.single('researchFile'), (req, res) => {
 
     const researchFile = req.file ? req.file.filename : null;
 
+    // Automatically prepend "Request for" to the status
+    const formattedStatus = `Request for ${status}`;
+
     // Map the received status to the corresponding status_id
     let status_id;
     switch (status) {
@@ -502,23 +567,26 @@ router.post('/update-paper', upload.single('researchFile'), (req, res) => {
             publication_date = $3,
             journal_publication = $4,
             status_id = $5,
-            doi = $6,
-            funding = $7,
-            nature = $8,
-            origin = $9,
-            isbn = $10,
-            startdate = $11,
-            enddate = $12,
-            keyword = $13,
-            filename = $14
-        WHERE id = $15
+            request = $6,
+            doi = $7,
+            funding = $8,
+            nature = $9,
+            origin = $10,
+            isbn = $11,
+            startdate = $12,
+            enddate = $13,
+            keyword = $14,
+            filename = $15
+        WHERE id = $16
     `;
+
     const values = [
         title,
         abstract,
         publication_date,
         journal_publication,
         status_id,
+        formattedStatus, // Store "Request for <Status>"
         doi,
         funding,
         nature,
@@ -540,6 +608,7 @@ router.post('/update-paper', upload.single('researchFile'), (req, res) => {
         }
     });
 });
+
 
 // Endpoint to fetch author suggestions
 router.get('/authors/suggestions', async (req, res) => {
@@ -894,20 +963,93 @@ router.get('/rdsodashboard', async (req, res) => {
         const completedCount = completedCountResult.rows[0].count;
         const publishedCount = publishedCountResult.rows[0].count;
 
-        // Render the RDSO dashboard view with user and research counts data
+        // Fetch the total count of researches grouped by campus, college, and year
+        const researchCountsQuery = `
+            SELECT 
+                f.campus, f.college, 
+                EXTRACT(YEAR FROM COALESCE(NULLIF(e.publication_date, 'Not published')::timestamp, e.date_uploaded)) AS year,
+                COUNT(*) AS research_count
+            FROM globalresearches e
+            LEFT JOIN faculty f ON f.researcher_id = ANY(
+                string_to_array(TRIM(BOTH ' ' FROM e.author), ', ')::uuid[] 
+            )
+            GROUP BY f.campus, f.college, year
+            ORDER BY f.campus, f.college, year
+        `;
+        const researchCountsResult = await pool.query(researchCountsQuery);
+
+        // Fetch the target values from the task table for the same campus, college, and year
+        const tasksQuery = `
+            SELECT campus, college, year, target
+            FROM task
+        `;
+        const tasksResult = await pool.query(tasksQuery);
+
+        // Map tasks by campus, college, and year for easy lookup
+        const tasksMap = {};
+        tasksResult.rows.forEach(task => {
+            const key = `${task.campus}-${task.college}-${task.year}`;
+            tasksMap[key] = task.target;
+        });
+
+        // Structure the research counts and calculate the percentage completed
+        const formattedResearchCounts = [];
+        researchCountsResult.rows.forEach(research => {
+            const key = `${research.campus}-${research.college}-${research.year}`;
+            const target = tasksMap[key] || 0; // Get the target from task or default to 0
+            const percentageCompleted = target > 0 ? ((research.research_count / target) * 100).toFixed(2) : 'N/A';
+
+            formattedResearchCounts.push({
+                campus: research.campus,
+                college: research.college,
+                year: research.year,
+                research_count: research.research_count,
+                target: target,
+                percentageCompleted: percentageCompleted
+            });
+        });
+
+       // Query to get the top 10 researchers (researchers with the most submissions)
+const topResearcherQuery = `
+SELECT f.name, COUNT(e.author) AS submission_count, f.filename
+FROM globalresearches e
+LEFT JOIN faculty f ON f.researcher_id = ANY(
+    string_to_array(TRIM(BOTH ' ' FROM e.author), ', ')::uuid[] 
+)
+GROUP BY f.researcher_id, f.name, f.filename
+ORDER BY submission_count DESC
+LIMIT 10;
+`;
+
+const topResearcherResult = await pool.query(topResearcherQuery);
+const topResearcher = topResearcherResult.rows; // All top 10 researchers including their profile picture filenames
+
+// Example: Logging the result
+console.log(topResearcher);
+
+
+
+        // Render the RDSO dashboard view with user, research counts data, and top researcher info
         res.render('rdsodashboard', {
             fullname: fullname, // Use fetched fullname from the database
             totalResearch: totalResearch,
             proposedCount: proposedCount,
             ongoingCount: ongoingCount,
             completedCount: completedCount,
-            publishedCount: publishedCount
+            publishedCount: publishedCount,
+            researchCounts: formattedResearchCounts, // Pass research counts with percentages to the frontend
+            topResearcher: topResearcher // Pass top researcher data to the frontend
         });
     } catch (err) {
         console.error(err);
         res.status(500).send('Server Error');
     }
 });
+
+
+
+
+
 
 // GET route for faculty researches
 router.get('/rdsopapers', async (req, res) => {
@@ -919,13 +1061,14 @@ router.get('/rdsopapers', async (req, res) => {
     console.log('User ID Number from session:', req.session.user.idnumber);
 
     try {
-        const { status, search } = req.query;
+        const { status, search, campus } = req.query;
 
         let query = `
             SELECT 
                 e.id, e.title, e.date_uploaded, e.publication_date, 
                 e.journal_publication, e.barcode, e.barnum, e.doi, e.abstract, e.funding, e.nature, e.origin, e.isbn, e.startdate, e.enddate, e.keyword, e.filename, s.name AS status, 
-                STRING_AGG(r.name, ', ') AS author_name
+                STRING_AGG(DISTINCT r.name, ', ') AS author_name,
+                STRING_AGG(DISTINCT r.campus, ', ') AS campuses
             FROM globalresearches e
             LEFT JOIN statuses s ON e.status_id = s.id
             LEFT JOIN faculty r ON r.researcher_id = ANY(
@@ -936,16 +1079,21 @@ router.get('/rdsopapers', async (req, res) => {
         const queryParams = [];
         let conditions = [];
 
-        if (status) {
-            conditions.push('e.status_id = $1');
+        if (status && !isNaN(status)) {
+            conditions.push(`e.status_id = $${queryParams.length + 1}`);
             queryParams.push(parseInt(status, 10));
+        }
+
+        if (campus) {
+            conditions.push(`r.campus = $${queryParams.length + 1}`);
+            queryParams.push(campus);
         }
 
         if (conditions.length > 0) {
             query += ' WHERE ' + conditions.join(' AND ');
         }
 
-        // Add GROUP BY clause to group by all non-aggregated columns
+        // Add GROUP BY clause
         query += `
             GROUP BY 
                 e.id, e.title, e.date_uploaded, e.publication_date, 
@@ -954,9 +1102,14 @@ router.get('/rdsopapers', async (req, res) => {
 
         const result = await pool.query(query, queryParams);
 
+        // Fetch unique campuses from faculty table for filtering options
+        const campusesResult = await pool.query(`SELECT DISTINCT campus FROM faculty ORDER BY campus ASC`);
+        const campuses = campusesResult.rows.map(row => row.campus);
+
         res.render('rdsopapers', {
             researches: result.rows,
             statusFilter: status || '',
+            campusFilter: campus || '',
             searchQuery: search || '',
             statuses: [
                 { id: 1, name: 'Completed' },
@@ -964,12 +1117,138 @@ router.get('/rdsopapers', async (req, res) => {
                 { id: 3, name: 'Published' },
                 { id: 4, name: 'Proposed' }
             ],
+            campuses, // Pass campus list to frontend
         });
     } catch (err) {
         console.error(err.message);
         res.status(500).send(err.message); // Return error message for easier debugging
     }
 });
+
+
+// GET route for faculty researches
+
+
+
+router.get('/rdsodashreport', async (req, res) => {
+    if (!req.session.user.idnumber) {
+        return res.redirect('/login');
+    }
+
+    console.log('User ID Number from session:', req.session.user.idnumber);
+
+    try {
+        const { status, search, campus } = req.query;
+
+        let query = `
+            SELECT 
+                e.id, e.title, 
+                COALESCE(NULLIF(e.publication_date, 'Not published')::timestamp, e.date_uploaded) AS effective_date,
+                e.date_uploaded, e.publication_date, 
+                e.journal_publication, e.barcode, e.barnum, e.doi, e.abstract, 
+                e.funding, e.nature, e.origin, e.isbn, e.startdate, e.enddate, 
+                e.keyword, e.filename, s.name AS status, 
+                STRING_AGG(DISTINCT f.name, ', ') AS author_name,
+                f.campus, f.college
+            FROM globalresearches e
+            LEFT JOIN statuses s ON e.status_id = s.id
+            LEFT JOIN faculty f ON f.researcher_id = ANY(
+                string_to_array(TRIM(BOTH ' ' FROM e.author), ', ')::uuid[] 
+            )
+            LEFT JOIN task t ON t.campus = f.campus 
+                            AND t.college = f.college 
+                            AND EXTRACT(YEAR FROM COALESCE(NULLIF(e.publication_date, 'Not published')::timestamp, e.date_uploaded)) = t.year
+        `;
+
+        const queryParams = [];
+        let conditions = [];
+
+        if (status && !isNaN(status)) {
+            conditions.push(`e.status_id = $${queryParams.length + 1}`);
+            queryParams.push(parseInt(status, 10));
+        }
+
+        if (campus) {
+            conditions.push(`f.campus = $${queryParams.length + 1}`);
+            queryParams.push(campus);
+        }
+
+        if (conditions.length > 0) {
+            query += ' WHERE ' + conditions.join(' AND ');
+        }
+
+        query += ` 
+            GROUP BY e.id, e.title, e.date_uploaded, e.publication_date, e.journal_publication, 
+                     e.barcode, e.barnum, e.doi, e.abstract, e.funding, e.nature, e.origin, 
+                     e.isbn, e.startdate, e.enddate, e.keyword, e.filename, s.name, f.campus, f.college
+        `;
+
+        const result = await pool.query(query, queryParams);
+
+        // Fetch unique campuses for filter options
+        const campusesResult = await pool.query(`SELECT DISTINCT campus FROM faculty ORDER BY campus ASC`);
+        const campuses = campusesResult.rows.map(row => row.campus);
+
+        // Fetch task targets for publications per campus, college, and year
+        const tasksQuery = `SELECT campus, college, year, target FROM task`;
+        const tasksResult = await pool.query(tasksQuery);
+
+        // Transform task data into an easy-to-use structure
+        const taskTargets = {};
+        tasksResult.rows.forEach(task => {
+            const key = `${task.campus}-${task.college}-${task.year}`;
+            taskTargets[key] = task.target;
+        });
+
+        // Count actual publications per campus, college, and year
+        const actualPublications = {};
+        result.rows.forEach(research => {
+            const key = `${research.campus}-${research.college}-${new Date(research.effective_date).getFullYear()}`;
+            if (!actualPublications[key]) {
+                actualPublications[key] = 0;
+            }
+            actualPublications[key] += 1;
+        });
+
+        // Prepare data for the chart
+        const chartData = [];
+        for (const key in taskTargets) {
+            const [campus, college, year] = key.split('-');
+            chartData.push({
+                campus,
+                college,
+                year,
+                target: taskTargets[key],
+                actual: actualPublications[key] || 0
+            });
+        }
+
+        res.render('rdsodashreport', {
+            researches: result.rows,
+            statusFilter: status || '',
+            campusFilter: campus || '',
+            searchQuery: search || '',
+            statuses: [
+                { id: 1, name: 'Completed' },
+                { id: 2, name: 'Ongoing' },
+                { id: 3, name: 'Published' },
+                { id: 4, name: 'Proposed' }
+            ],
+            campuses,
+            chartData // Send chart data to the frontend
+        });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send(err.message);
+    }
+});
+
+
+
+
+
+
+
 
 
 router.get('/campusescolleges', (req, res) => {
@@ -1033,7 +1312,7 @@ app.get('/requests', async (req, res) => {
     try {
         // Fetch users with 'Pending' mode and faculty information by joining on idnumber
         const result = await pool.query(`
-            SELECT u.idnumber, u.fullname, u.username, u.email, f.designation, f.college, f.department, f.campus
+            SELECT u.idnumber, u.fullname, u.username, u.email, u.filename, u.faculty_id_pic, u.selfie_with_id, f.designation, f.college, f.department, f.campus
             FROM users u
             LEFT JOIN faculty f ON u.idnumber = f.idnumber
             WHERE u.mode = $1
@@ -1122,14 +1401,25 @@ router.get('/faculties', async (req, res) => {
     const offset = (page - 1) * limit; // Calculate the offset
 
     try {
-        // Get total count for pagination
-        const total = await pool.query('SELECT COUNT(*) FROM faculty');
+        // Get total count for pagination (only counting "Approved" users)
+        const total = await pool.query(`
+            SELECT COUNT(*) 
+            FROM faculty f
+            INNER JOIN users u ON f.idnumber = u.idnumber
+            WHERE u.mode = 'Approved'
+        `);
         const totalRows = total.rows[0].count;
         const totalPages = Math.ceil(totalRows / limit);
 
-        // Fetch paginated faculty data
+        // Fetch paginated faculty data where mode is 'Approved'
         const result = await pool.query(
-            'SELECT idnumber, researcher_id, name, campus, college, designation, department, filename FROM faculty ORDER BY idnumber LIMIT $1 OFFSET $2',
+            `SELECT f.idnumber, f.researcher_id, f.name, f.campus, f.college, f.designation, 
+                    f.department, f.filename 
+             FROM faculty f
+             INNER JOIN users u ON f.idnumber = u.idnumber
+             WHERE u.mode = 'Approved'
+             ORDER BY f.idnumber
+             LIMIT $1 OFFSET $2`,
             [limit, offset]
         );
 
@@ -1139,6 +1429,98 @@ router.get('/faculties', async (req, res) => {
         res.status(500).send('Server Error');
     }
 });
+
+
+router.get('/paper-submissions-requests', async (req, res) => {
+    try {
+        const query = `
+            SELECT gr.id, gr.title, gr.author, gr.request, gr.date_uploaded, gr.publication_date,
+                gr.journal_publication, gr.doi, gr.abstract, gr.funding, gr.nature, gr.origin,
+                gr.isbn, gr.startdate, gr.enddate, gr.keyword, gr.filename,
+                STRING_AGG(f.name, ', ') AS author_names
+            FROM globalresearches gr
+            LEFT JOIN faculty f ON f.researcher_id::TEXT = ANY(string_to_array(gr.author, ', '))
+            WHERE gr.request LIKE 'Request for %'
+            GROUP BY gr.id, gr.title, gr.author, gr.request, gr.date_uploaded, gr.publication_date,
+                     gr.journal_publication, gr.doi, gr.abstract, gr.funding, gr.nature, gr.origin,
+                     gr.isbn, gr.startdate, gr.enddate, gr.keyword, gr.filename;
+        `;
+
+        const { rows } = await pool.query(query);
+
+        // Log results to check if data is retrieved
+        console.log("Fetched paper submissions:", rows);
+
+        res.json(rows);
+    } catch (err) {
+        console.error('Error fetching paper submissions:', err);
+        res.status(500).json({ error: 'Server Error' });
+    }
+});
+
+
+
+router.post('/update-paper-status', async (req, res) => {
+    const { id, request } = req.body;
+    try {
+        let updatedRequest = request;
+
+        // Ensure "Request for" is replaced with "Current" only once
+        if (request.startsWith("Request for ")) {
+            updatedRequest = request.replace("Request for ", "Current ");
+        }
+
+        const query = `UPDATE globalresearches SET request = $1 WHERE id = $2`;
+        await pool.query(query, [updatedRequest, id]);
+
+        res.json({ success: true, message: 'Status updated successfully' });
+    } catch (error) {
+        console.error('Error updating paper status:', error);
+        res.status(500).json({ success: false, error: 'Database update failed' });
+    }
+});
+
+
+
+
+router.get('/get-paper-details/:id', async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const query = `
+            SELECT gr.id, gr.title, gr.author, gr.request, gr.date_uploaded, gr.publication_date,
+                gr.journal_publication, gr.doi, gr.abstract, gr.funding, gr.nature, gr.origin,
+                gr.isbn, gr.startdate, gr.enddate, gr.keyword, gr.filename,
+                STRING_AGG(f.name, ', ') AS author_names
+            FROM globalresearches gr
+            LEFT JOIN faculty f ON f.researcher_id::TEXT = ANY(string_to_array(gr.author, ', '))
+            WHERE gr.id = $1
+            GROUP BY gr.id, gr.title, gr.author, gr.request, gr.date_uploaded, gr.publication_date,
+                     gr.journal_publication, gr.doi, gr.abstract, gr.funding, gr.nature, gr.origin,
+                     gr.isbn, gr.startdate, gr.enddate, gr.keyword, gr.filename;
+        `;
+
+        const { rows } = await pool.query(query, [id]);
+
+        if (rows.length > 0) {
+            res.json(rows[0]);
+        } else {
+            res.status(404).json({ error: 'Paper not found' });
+        }
+    } catch (err) {
+        console.error('Error fetching paper details:', err);
+        res.status(500).json({ error: 'Server Error' });
+    }
+});
+
+
+
+
+
+
+
+
+
 
 
 

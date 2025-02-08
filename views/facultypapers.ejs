@@ -1590,7 +1590,9 @@ document.getElementById('printModalContent').addEventListener('click', function 
                 </td>
                 <td><%= research.publication_date %></td>
                 <td><%= research.journal_publication %></td>
-                <td><%= research.status || 'Pending' %></td>
+                <td><%= research.displayStatus || 'Pending' %></td>
+
+                
                 <td> <!-- New column for buttons -->
                     <!-- View Button (could trigger a modal or redirect to a details page) -->
                     <button class="btn btn-warning btn-sm" 
@@ -1620,46 +1622,61 @@ document.getElementById('printModalContent').addEventListener('click', function 
 
                 
                     <!-- Conditionally Render Edit Button -->
-                    <% let buttonText = ''; %>
-                    <% let modalTarget = ''; %>
-                    
-                    <% if (research.status === 'Proposed') { %>
-                        <% buttonText = 'Continue'; %>
-                        <% modalTarget = '#ongoingUpdate'; %>
-                    <% } else if (research.status === 'Ongoing') { %>
-                        <% buttonText = 'Complete'; %>
-                        <% modalTarget = '#completeUpdate'; %>
-                    <% } else if (research.status === 'Completed') { %>
-                        <% buttonText = 'Publish'; %>
-                        <% modalTarget = '#editResearchModal'; %>
-                    <% } %>
-                
-                    <!-- Add condition to hide button when status is 'Published' -->
-                    <% if (research.status !== 'Published') { %>
-                        <button class="btn btn-success btn-sm" 
-                            data-bs-toggle="modal" 
-                            data-bs-target="<%= modalTarget %>" 
-                            data-id="<%= research.id %>" 
-                            data-title="<%= research.title %>" 
-                            data-author="<%= research.author_name %>" 
-                            data-publication_date="<%= research.publication_date %>" 
-                            data-journal_publication="<%= research.journal_publication %>" 
-                            data-status="<%= research.status %>" 
-                            data-barcode="<%= research.barcode %>" 
-                            data-barnum="<%= research.barnum %>" 
-                            data-doi="<%= research.doi %>" 
-                            data-abstract="<%= research.abstract %>"
-                            data-funding="<%= research.funding %>"
-                            data-nature="<%= research.nature %>"
-                            data-origin="<%= research.origin %>"
-                            data-isbn="<%= research.isbn %>"
-                            data-startdate="<%= research.startdate %>"
-                            data-enddate="<%= research.enddate %>"
-                            data-keyword="<%= research.keyword %>"
-                            data-filename="<%= research.filename %>">
-                            <%= buttonText %>
-                        </button>
-                    <% } %>
+<% let buttonText = ''; %>
+<% let modalTarget = ''; %>
+<% let buttonClass = 'btn-success'; %>
+<% let buttonDisabled = false; %>
+
+<% if (research.status === 'Proposed') { %>
+    <% buttonText = 'Continue'; %>
+    <% modalTarget = '#ongoingUpdate'; %>
+<% } else if (research.status === 'Ongoing') { %>
+    <% buttonText = 'Complete'; %>
+    <% modalTarget = '#completeUpdate'; %>
+<% } else if (research.status === 'Completed') { %>
+    <% buttonText = 'Publish'; %>
+    <% modalTarget = '#editResearchModal'; %>
+<% } %>
+
+<!-- Add condition for 'Request for <status>' and 'Current <status>' -->
+<% if (research.displayStatus && research.displayStatus.startsWith('Request for')) { %>
+    <!-- Disable button with greyscale styling for 'Request for' status -->
+    <% buttonClass = 'btn-secondary'; %>
+    <% buttonDisabled = true; %>
+<% } else if (research.displayStatus && research.displayStatus.startsWith('Current')) { %>
+    <!-- Active button for 'Current' status -->
+    <% buttonClass = 'btn-success'; %>
+    <% buttonDisabled = false; %>
+<% } %>
+
+<!-- Add condition to hide button when status is 'Published' -->
+<% if (research.status !== 'Published') { %>
+    <button class="btn <%= buttonClass %> btn-sm" 
+        data-bs-toggle="modal" 
+        data-bs-target="<%= modalTarget %>" 
+        data-id="<%= research.id %>" 
+        data-title="<%= research.title %>" 
+        data-author="<%= research.author_name %>" 
+        data-publication_date="<%= research.publication_date %>" 
+        data-journal_publication="<%= research.journal_publication %>" 
+        data-status="<%= research.status %>" 
+        data-barcode="<%= research.barcode %>" 
+        data-barnum="<%= research.barnum %>" 
+        data-doi="<%= research.doi %>" 
+        data-abstract="<%= research.abstract %>"
+        data-funding="<%= research.funding %>"
+        data-nature="<%= research.nature %>"
+        data-origin="<%= research.origin %>"
+        data-isbn="<%= research.isbn %>"
+        data-startdate="<%= research.startdate %>"
+        data-enddate="<%= research.enddate %>"
+        data-keyword="<%= research.keyword %>"
+        data-filename="<%= research.filename %>"
+        <%= buttonDisabled ? 'disabled' : '' %>>
+        <%= buttonText %>
+    </button>
+<% } %>
+
                 </td>
                 
             </tr>

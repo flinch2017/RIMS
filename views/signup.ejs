@@ -355,9 +355,9 @@ body::before {
                     <option value="+51">+51 (Peru)</option>
                     <option value="+63" selected>+63 (Philippines)</option>
                 </select>
-                <!-- Contact Number Input -->
-                <input type="text" class="form-control" id="contactNumber" placeholder="Enter your number" required 
-                       pattern="\d+" title="Please enter a valid number" />
+                <input type="text" class="form-control" id="contactNumber" name="contact" placeholder="Enter your number" required 
+                pattern="\d+" title="Please enter a valid number" />
+         
             </div>
         </div>
         
@@ -393,7 +393,19 @@ body::before {
                 contactNumber.setAttribute("title", "Please enter a valid " + selectedCode + " number");
             });
         </script>
-        
+
+        <!-- Take a picture of ESSU Faculty ID -->
+        <div class="form-group">
+            <label for="facultyIDPic">Upload a picture of ESSU Faculty ID</label>
+            <input type="file" class="form-control" id="facultyIDPic" name="facultyIDPic" accept="image/*" capture="environment" required>
+        </div>
+
+        <!-- Take a selfie with your ID -->
+        <div class="form-group">
+            <label for="selfieWithID">Upload a selfie with your ESSU Faculty ID</label>
+            <input type="file" class="form-control" id="selfieWithID" name="selfieWithID" accept="image/*" capture="user" required>
+        </div>
+
         
 
         <div class="form-group">

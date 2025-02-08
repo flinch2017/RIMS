@@ -434,6 +434,25 @@
             background-color: #2e7d32;
         }
 
+        .sortof {
+    display: flex;  
+    gap: 10px;  /* Space between dropdowns */
+    align-items: center; /* Aligns items vertically */
+}
+
+.sortof form {
+    display: flex;
+    gap: 10px;
+}
+
+.form-select {
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+}
+
+
     </style>
 </head>
 <body>
@@ -461,7 +480,7 @@
                 <!-- Filter and Search Section -->
                 <div class="d-flex align-items-center mb-4">
                     <!-- Search Bar -->
-                    <form method="GET" action="/facultypapers" class="d-flex me-3">
+                    <form method="GET" action="/rdsopapers" class="d-flex me-3">
                         <input 
                             type="text" 
                             name="search" 
@@ -483,733 +502,201 @@
                 </div>
                 <div class="aligned-container">
                     <div class="mb-3 text-end">
-                        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#uploadResearchModal">
-                            <i class="fas fa-plus"></i> Upload New Research
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#managePapersModal">
+                            <i class="fas fa-file-alt"></i> Manage Paper Submissions
                         </button>
                     </div>
+                    
                     <div class="sortof">
-                        <!-- Campus Sorting Dropdown -->
-                        <form method="GET" action="/facultypapers">
+                        <!-- Sorting Dropdowns for Status & Campus -->
+                        <form method="GET" action="/rdsopapers">
+                            <!-- Status Filter -->
                             <label for="status" class="visually-hidden">Filter by Status:</label>
                             <select name="status" id="status" class="form-select" onchange="this.form.submit()">
-                                <option value="">All</option>
+                                <option value="">All Statuses</option>
                                 <% statuses.forEach(status => { %>
                                     <option value="<%= status.id %>" <%= status.id == statusFilter ? 'selected' : '' %>><%= status.name %></option>
                                 <% }); %>
                             </select>
+                    
+                            <!-- Campus Filter -->
+                            <label for="campus" class="visually-hidden">Filter by Campus:</label>
+                            <select name="campus" id="campus" class="form-select" onchange="this.form.submit()">
+                                <option value="">All Campuses</option>
+                                <% campuses.forEach(campus => { %>
+                                    <option value="<%= campus %>" <%= campus == campusFilter ? 'selected' : '' %>><%= campus %></option>
+                                <% }); %>
+                            </select>
                         </form>
                     </div>
+                    
 
                 </div>
-        
 
-
-               <!-- Modal Structure -->
-<div class="modal fade" id="uploadResearchModal" tabindex="-1" aria-labelledby="uploadResearchModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg"> <!-- Add modal-lg here for larger width -->
+                <!-- Manage Paper Submissions Modal -->
+<div class="modal fade" id="managePapersModal" tabindex="-1" aria-labelledby="managePapersModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <div class="modal-header" style="background-color: #4CAF50; color: white;">
-                <h5 class="modal-title" id="uploadResearchModalLabel">Add New Research</h5>
+            <div class="modal-header">
+                <h5 class="modal-title" id="managePapersModalLabel">Manage Paper Submissions</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="/fresearch/add" method="POST" enctype="multipart/form-data">
-                    <div class="row">
-                        <!-- Left Column -->
-                        <div class="col-md-6 form-group mb-3">
-                            <label for="title" class="form-label">Title</label>
-                            <input type="text" name="title" id="title" class="form-control" required style="border-color: #4CAF50;">
-                        </div>
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Title</th>
+                            <th>Author(s)</th>
+                            <th>Status</th>
+                            <th>Date Uploaded</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="paperSubmissionsTable">
+                        <!-- Data will be inserted here via JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 
-                        <div class="col-md-6 form-group mb-3">
-                            <label for="author" class="form-label">Author</label>
-                            <input type="text" name="author" id="author" class="form-control" autocomplete="off" style="border-color: #4CAF50;">
-                            <ul id="author-suggestions" class="dropdown-menu"></ul>
-                        </div>
-
-                        <input type="hidden" name="selected_authors" id="selected_authors">
-                        <div id="selected-authors" class="mb-3"></div> <!-- Container for selected authors -->
-                    </div>
-
-                   <!-- Type of Research by Nature -->
-                   
-                        <div class="col-md-6 form-group mb-3">
-                            <label for="nature" class="form-label">Type of Research by Nature</label>
-                            <select name="nature" id="nature" class="form-control" style="border-color: #4CAF50;">
-                                <option value="" disabled selected>Select type of research by nature</option>
-                                <option value="Basic Research">Basic Research</option>
-                                <option value="Applied Research">Applied Research</option>
-                                <option value="Experimental Development">Experimental Development</option>
-                                <option value="Theoretical Research">Theoretical Research</option>
-                                <option value="Empirical Research">Empirical Research</option>
-                            </select>
-                        </div>
-
-                        <div class="col-md-6 form-group mb-3">
-                            <label for="origin" class="form-label">Type of Research by Source/Origin</label>
-                            <select name="origin" id="origin" class="form-control" style="border-color: #4CAF50;">
-                                <option value="" disabled selected>Select type of research by source/origin</option>
-                                <option value="Internal">Internal</option>
-                                <option value="External">External</option>
-                            </select>
-                        </div>
-                    
+<!-- View Paper Details Modal -->
+<div class="modal fade" id="viewPaperModal" tabindex="-1" aria-labelledby="viewPaperModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="viewPaperModalLabel">View Paper Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="viewPaperDetails">
+                <!-- Paper details will be inserted here via JavaScript -->
+            </div>
+        </div>
+    </div>
+</div>
 
 
-                    <!-- Abstract (Shown for Ongoing, Completed, and Published) -->
-                    <div class="row" id="abstract-row" style="display: none;">
-                        <div class="col-md-6 form-group mb-3">
-                            <label for="abstract" class="form-label">Abstract</label>
-                            <textarea name="abstract" id="abstract" class="form-control" placeholder="Enter abstract here" style="border-color: #4CAF50;"></textarea>
-                        </div>
-                    </div>
+<script>
+   document.addEventListener('DOMContentLoaded', () => {
+    fetch('/paper-submissions-requests')
+        .then(response => response.json())
+        .then(data => {
+            const tableBody = document.getElementById('paperSubmissionsTable');
+            tableBody.innerHTML = '';
 
-                     <!-- Funding Source -->
-                     <div class="row" id="fundingsource-row" style="display: none;">
-                        <div class="col-md-6 form-group mb-3">
-                            <label for="funding" class="form-label">Funding Source</label>
-                            <select name="funding" id="funding" class="form-control" style="border-color: #4CAF50;">
-                                <option value="" disabled selected>Select funding source</option>
-                                <option value="Government">Government</option>
-                                <option value="Private">Private</option>
-                                <option value="University">University</option>
-                                <option value="NGO">Non-Governmental Organization (NGO)</option>
-                                <option value="International">International</option>
-                            </select>
-                        </div>
-                    </div>
+            if (data.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="8" class="text-center">No paper submission requests found</td></tr>';
+            } else {
+                data.forEach(paper => {
+                    const row = `
+                        <tr>
+                            <td>${paper.id}</td>
+                            <td>${paper.title}</td>
+                            <td>${paper.author_names || 'Unknown'}</td>
+                            <td>${paper.request || 'No Request Data'}</td> 
+                            <td>${new Date(paper.date_uploaded).toLocaleDateString()}</td>
+                            <td>
+                                <button class="btn btn-info btn-sm view-paper-btn" data-id="${paper.id}">View</button>
+                                <button class="btn btn-success btn-sm update-status-btn" data-id="${paper.id}" data-status="${paper.request}">Approve</button>
+                                <button class="btn btn-danger btn-sm reject-status-btn" data-id="${paper.id}">Reject</button>
+                            </td>
+                        </tr>
+                    `;
+                    tableBody.innerHTML += row;
+                });
 
-                    <!-- Journal Publication (Shown for Published) -->
-                    <div class="row" id="journal-publication-row" style="display: none;">
-                        <div class="col-md-6 form-group mb-3">
-                            <label for="journal_publication" class="form-label">Journal Publication</label>
-                            <input type="text" name="journal_publication" id="journal_publication" class="form-control" style="border-color: #4CAF50;">
-                        </div>
-                    </div>
-
-                    <!-- Publication Date (Shown for Published) -->
-                    <div class="row" id="publication-date-row" style="display: none;">
-                        <div class="col-md-6 form-group mb-3">
-                            <label for="publication_date" class="form-label">Publication Date</label>
-                            <input type="date" name="publication_date" id="publication_date" class="form-control" style="border-color: #4CAF50;">
-                        </div>
-                    </div>
-
-                   <!-- Project/Study Duration -->
-                    <div class="row justify-content-center" id="duration-row" style="display: none;">
-                        <div class="col-md-8" style="border: 1px solid #4CAF50; border-radius: 8px; padding: 15px;">
-                            <div class="row">
-                                <div class="col-12 form-group mb-3">
-                                    <label for="duration" class="form-label">Project/Study Duration</label>
-                                </div>
-                                <div class="col-md-6 form-group mb-3">
-                                    <label for="start" class="form-label">Start</label>
-                                    <input type="date" name="start" id="start" class="form-control" style="border-color: #4CAF50;">
-                                </div>
-                                <div class="col-md-6 form-group mb-3">
-                                    <label for="end" class="form-label">End</label>
-                                    <input type="date" name="end" id="end" class="form-control" style="border-color: #4CAF50;">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
-
-
-
-
-                    
-
-                    <!--  ISBN (Shown for Published) -->
-                    <div class="row" id="isbn-row" style="display: none;">
-                        <div class="col-md-6 form-group mb-3">
-                            <label for="isbn" class="form-label">ISBN/ISSN</label>
-                            <input type="text" name="isbn" id="isbn" class="form-control" style="border-color: #4CAF50;">
-                        </div>
-                    </div>
-
-
-                   <!-- Keyword Input (Shown for Published) -->
-                    <div class="row" id="keyword-row" style="display: none;">
-                        <div class="col-md-12 form-group mb-3">
-                            <label for="keyword-input" class="form-label">Keywords (Maximum 5)</label>
-                            <div class="d-flex">
-                                <input type="text" id="keyword-input" class="form-control me-2" placeholder="Enter a keyword" style="border-color: #4CAF50;">
-                                <button type="button" id="add-keyword" class="btn btn-success">Add</button>
-                            </div>
-                            <small class="text-muted">Press "Add" to save each keyword.</small>
-                            <ul id="keyword-list" class="mt-2" style="list-style-type: none; padding-left: 0;"></ul>
-                        </div>
-                    </div>
-
-                <script>
-                    const keywordInput = document.getElementById("keyword-input");
-                    const addKeywordButton = document.getElementById("add-keyword");
-                    const keywordList = document.getElementById("keyword-list");
-                    const maxKeywords = 5;
-                    let keywords = [];
-
-                    addKeywordButton.addEventListener("click", () => {
-                        const keyword = keywordInput.value.trim();
-                        if (keyword === "") {
-                            alert("Keyword cannot be empty.");
-                            return;
-                        }
-                        if (keywords.length >= maxKeywords) {
-                            alert(`You can only add up to ${maxKeywords} keywords.`);
-                            return;
-                        }
-                        if (keywords.includes(keyword)) {
-                            alert("This keyword has already been added.");
-                            return;
-                        }
-                        keywords.push(keyword);
-                        const listItem = document.createElement("li");
-                        listItem.textContent = keyword;
-                        listItem.className = "keyword-item d-flex justify-content-between align-items-center border p-2 mb-1 rounded";
-                        listItem.style.borderColor = "#4CAF50";
-                        const removeButton = document.createElement("button");
-                        removeButton.textContent = "Remove";
-                        removeButton.className = "btn btn-danger btn-sm";
-                        removeButton.addEventListener("click", () => {
-                            keywordList.removeChild(listItem);
-                            keywords = keywords.filter(k => k !== keyword);
-                        });
-                        listItem.appendChild(removeButton);
-                        keywordList.appendChild(listItem);
-                        keywordInput.value = "";
+                // View button event listener
+                document.querySelectorAll('.view-paper-btn').forEach(button => {
+                    button.addEventListener('click', function () {
+                        const paperId = this.getAttribute('data-id');
+                        viewPaperDetails(paperId);
                     });
+                });
 
-                    // Select the form using querySelector (based on action attribute or other selector)
-                    const form = document.querySelector('form[action="/fresearch/add"]'); // Select the form by its action URL
+                // Approve button event listener
+                document.querySelectorAll('.update-status-btn').forEach(button => {
+                    button.addEventListener('click', function () {
+                        const paperId = this.getAttribute('data-id');
+                        let currentStatus = this.getAttribute('data-status');
 
-                    form.addEventListener('submit', (event) => {
-                        event.preventDefault(); // Prevent the default form submission
-
-                        // Join keywords into a comma-separated string
-                        const keywordString = keywords.join(', ');
-
-                        // If there are keywords, add them to a hidden input field
-                        if (keywordString) {
-                            const keywordField = document.createElement('input');
-                            keywordField.type = 'hidden';
-                            keywordField.name = 'keywords'; // Ensure this matches the name in the backend
-                            keywordField.value = keywordString;
-                            form.appendChild(keywordField); // Append the hidden field to the form
+                        if (currentStatus.startsWith("Request for ")) {
+                            const newStatus = currentStatus.replace("Request for ", "Current ");
+                            updatePaperStatus(paperId, newStatus);
+                        } else {
+                            alert("This request has already been approved.");
                         }
-
-                        // Now submit the form with the updated keyword field
-                        form.submit(); // This will now include the keywords as a comma-separated string
                     });
-                </script>
+                });
 
+                // Reject button event listener
+                document.querySelectorAll('.reject-status-btn').forEach(button => {
+                    button.addEventListener('click', function () {
+                        alert("Request rejected."); // Modify as needed
+                    });
+                });
+            }
+        })
+        .catch(error => console.error('Error fetching paper submissions:', error));
+});
 
-
-
-                     
-
-                    <!-- DOI (Shown for Published) -->
-                    <div class="row" id="doi-row" style="display: none;">
-                        <div class="col-md-6 form-group mb-3">
-                            <label for="doi" class="form-label">DOI</label>
-                            <input type="text" name="doi" id="doi" class="form-control" placeholder="Enter DOI (if available)" style="border-color: #4CAF50;">
-                        </div>
-                    </div>
-
-                
-                    <!-- Research File (Shown for Published) -->
-                    <div class="form-group mb-3" id="research-file-row" style="display: none;">
-                        <label for="researchFile" class="form-label">Research Document</label>
-                        <input type="file" name="researchFile" id="researchFile" class="form-control" accept=".pdf,.doc,.docx" style="border-color: #4CAF50;">
-                    </div>
-
-                    
-
-                    <!-- Status Selection -->
-                    <div class="row">
-                        <div class="col-md-6 form-group mb-3">
-                            <label for="status_id" class="form-label">Status</label>
-                            <select name="status_id" id="status_id" class="form-control" required onchange="toggleFields()" style="border-color: #4CAF50;">
-                                <option value="4">Proposed</option>
-                                <option value="2">Ongoing</option>
-                                <option value="1">Completed</option>
-                                <option value="3">Published</option>
-                                
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="background-color: #888;">Close</button>
-                        <button type="submit" class="btn btn-primary" style="background-color: #4CAF50; border-color: #4CAF50;">Submit</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-    function toggleFields() {
-        const status = document.getElementById('status_id').value;
-        
-        // Reset the display of fields
-        document.getElementById('abstract-row').style.display = 'none';
-        document.getElementById('journal-publication-row').style.display = 'none';
-        document.getElementById('publication-date-row').style.display = 'none';
-        document.getElementById('isbn-row').style.display = 'none';
-        document.getElementById('duration-row').style.display = 'none';
-        document.getElementById('doi-row').style.display = 'none';
-        document.getElementById('research-file-row').style.display = 'none';
-        document.getElementById('fundingsource-row').style.display = 'none';
-        document.getElementById('keyword-row').style.display = 'none';
-
-       
-       
-
-        // Show fields based on status selection
-        if (status === '1') {  // Ongoing or Completed
-            document.getElementById('abstract-row').style.display = 'block';
-            document.getElementById('fundingsource-row').style.display = 'block';
-            document.getElementById('research-file-row').style.display = 'block';
-            document.getElementById('duration-row').style.display = 'block';
-            document.getElementById('keyword-row').style.display = 'block';
-            
-            
+// Function to update paper submission status
+function updatePaperStatus(id, newStatus) {
+    fetch('/update-paper-status', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ id, request: newStatus })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            location.reload(); // Refresh to update the table
+        } else {
+            alert('Error updating status');
         }
+    })
+    .catch(error => console.error('Error updating paper status:', error));
+}
 
-          // Show fields based on status selection
-          if (status === '2') {  // Ongoing or Completed
-            document.getElementById('abstract-row').style.display = 'block';
-            document.getElementById('fundingsource-row').style.display = 'block';
-            document.getElementById('duration-row').style.display = 'block';
-            document.getElementById('keyword-row').style.display = 'block';
-        }
+
+
+
+// Function to fetch and display paper details
+function viewPaperDetails(id) {
+    fetch(`/get-paper-details/${id}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data) {
+                const modalBody = document.getElementById('viewPaperDetails');
+                modalBody.innerHTML = `
+                    <h4>Title: ${data.title}</h4>
+                    <p><strong>Author(s):</strong> ${data.author_names || 'Unknown'}</p>
+                    <p><strong>Status:</strong> ${data.request}</p>
+                    <p><strong>Uploaded Date:</strong> ${new Date(data.date_uploaded).toLocaleDateString()}</p>
+                    <p><strong>Abstract:</strong> ${data.abstract || 'No abstract available'}</p>
+                    <p><strong>DOI:</strong> ${data.doi || 'Not available'}</p>
+                    <p><strong>Publication Date:</strong> ${data.publication_date || 'Not available'}</p>
+                    <p><strong>Journal:</strong> ${data.journal_publication || 'Not available'}</p>
+                    <p><strong>Funding:</strong> ${data.funding || 'Not available'}</p>
+                    <p><strong>ISBN:</strong> ${data.isbn || 'Not available'}</p>
+                    <p><strong>Keywords:</strong> ${data.keyword || 'Not available'}</p>
+                `;
+
+                // Show the modal
+                new bootstrap.Modal(document.getElementById('viewPaperModal')).show();
+            }
+        })
+        .catch(error => console.error('Error fetching paper details:', error));
+}
+
+    </script>
+    
+
+
         
-        if (status === '3') {  // Published
-            document.getElementById('abstract-row').style.display = 'block';
-            document.getElementById('journal-publication-row').style.display = 'block';
-            document.getElementById('publication-date-row').style.display = 'block';
-            document.getElementById('isbn-row').style.display = 'block';
-            document.getElementById('doi-row').style.display = 'block';
-            document.getElementById('fundingsource-row').style.display = 'block';
-            document.getElementById('research-file-row').style.display = 'block';
-            document.getElementById('duration-row').style.display = 'block';
-            document.getElementById('keyword-row').style.display = 'block';
-
-            
-        }
-        if (status === '4') {  // Proposed
-            // Only title, author, and status fields will be shown
-        }
-    }
-
-    // Initialize field visibility on page load
-    window.onload = function() {
-        toggleFields(); // Ensure correct fields are displayed on initial load
-    };
-</script>
-
-
-                
-                
-                
-
-         <!-- Modal for editing research -->
-<div class="modal fade" id="editResearchModal" tabindex="-1" aria-labelledby="editResearchModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editResearchModalLabel">Edit Research</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <form action="/update-paper" method="POST" enctype="multipart/form-data">
-                <div class="modal-body">
-                    <!-- Hidden input for researchId -->
-                    <input type="hidden" id="researchId" name="id">
-                    <input type="hidden" id="author_id" name="author_id"> <!-- Hidden input for author_id -->
-                    
-                    <!-- Two-column layout using Bootstrap grid system -->
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="title" class="form-label">Research Title</label>
-                                <input type="text" class="form-control" id="title" name="title" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="abstract" class="form-label">Abstract</label>
-                                <textarea class="form-control" id="abstract" name="abstract" required></textarea>
-                            </div>
-                            <div class="mb-3">
-                                <label for="author" class="form-label">Author</label>
-                                <input type="text" class="form-control" id="author" name="author" required disabled> <!-- Disable text input -->
-                            </div>
-                            <div class="mb-3">
-                                <label for="publication_date" class="form-label">Publication Date</label>
-                                <input type="date" class="form-control" id="publication_date" name="publication_date" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="journal_publication" class="form-label">Journal Publication</label>
-                                <input type="text" class="form-control" id="journal_publication" name="journal_publication" required>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="status_id" class="form-label">Current Phase</label>
-                                <input type="text" class="form-control" id="status_id" name="status_id" readonly style="background-color: #e9ecef; color: #6c757d; border: 1px solid #d6d8db;">
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="status" class="form-label">Next Phase</label>
-                                <input type="text" class="form-control" id="status" name="status" value="Published" readonly style="background-color: #e9ecef; color: #6c757d; border: 1px solid #d6d8db;">
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label for="doi" class="form-label">DOI</label>
-                                <input type="text" class="form-control" id="doi" name="doi">
-                            </div>
-                            <div class="mb-3">
-                                <label for="funding" class="form-label">Funding</label>
-                                <input type="text" class="form-control" id="funding" name="funding">
-                            </div>
-                            <div class="mb-3">
-                                <label for="nature" class="form-label">Nature</label>
-                                <input type="text" class="form-control" id="nature" name="nature">
-                            </div>
-                            <div class="mb-3">
-                                <label for="origin" class="form-label">Origin</label>
-                                <input type="text" class="form-control" id="origin" name="origin">
-                            </div>
-                            <div class="mb-3">
-                                <label for="isbn" class="form-label">ISBN</label>
-                                <input type="text" class="form-control" id="isbn" name="isbn">
-                            </div>
-                            <div class="mb-3">
-                                <label for="startdate" class="form-label">Start Date</label>
-                                <input type="date" class="form-control" id="startdate" name="startdate">
-                            </div>
-                            <div class="mb-3">
-                                <label for="enddate" class="form-label">End Date</label>
-                                <input type="date" class="form-control" id="enddate" name="enddate">
-                            </div>
-                            <div class="mb-3">
-                                <label for="keyword" class="form-label">Keyword</label>
-                                <input type="text" class="form-control" id="keyword" name="keyword">
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Research File (Shown for Published) -->
-                    <div class="form-group mb-3">
-                        <label for="researchFile" class="form-label">Upload published manuscript</label>
-                        <input type="file" name="researchFile" id="researchFile" class="form-control" accept=".pdf,.doc,.docx" style="border-color: #4CAF50;">
-                    </div>
-                </div>
-                
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save changes</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-
-
-<!-- Modal for editing research -->
-<div class="modal fade" id="ongoingUpdate" tabindex="-1" aria-labelledby="ongoingUpdateLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="ongoingUpdateLabel">Edit Research</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <form action="/update-paper" method="POST" enctype="multipart/form-data">
-                <div class="modal-body">
-                    <input type="hidden" id="researchId" name="id">
-                    <input type="hidden" id="author_id" name="author_id"> <!-- Hidden input for author_id -->
-                
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="title" class="form-label">Research Title</label>
-                            <input type="text" class="form-control" id="title" name="title" required>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="author" class="form-label">Author</label>
-                            <input type="text" class="form-control" id="author" name="author" required disabled> <!-- Disable text input -->
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="abstract" class="form-label">Abstract</label>
-                        <textarea class="form-control" id="abstract" name="abstract" required></textarea>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="status_id" class="form-label">Current Phase</label>
-                            <input type="text" class="form-control" id="status_id" name="status_id" readonly style="background-color: #e9ecef; color: #6c757d; border: 1px solid #d6d8db;">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="status" class="form-label">Next Phase</label>
-                            <input type="text" class="form-control" id="status" name="status" value="Ongoing" readonly style="background-color: #e9ecef; color: #6c757d; border: 1px solid #d6d8db;">
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="funding" class="form-label">Funding</label>
-                            <input type="text" class="form-control" id="funding" name="funding">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="nature" class="form-label">Nature</label>
-                            <input type="text" class="form-control" id="nature" name="nature">
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="origin" class="form-label">Origin</label>
-                            <input type="text" class="form-control" id="origin" name="origin">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="startdate" class="form-label">Start Date</label>
-                            <input type="date" class="form-control" id="startdate" name="startdate">
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="enddate" class="form-label">End Date</label>
-                            <input type="date" class="form-control" id="enddate" name="enddate">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="keyword" class="form-label">Keyword</label>
-                            <input type="text" class="form-control" id="keyword" name="keyword">
-                        </div>
-                    </div>
-
-                    <!-- Research File (Shown for Published) -->
-                </div>
-                
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save changes</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-
-<!-- Modal for editing research -->
-<div class="modal fade" id="completeUpdate" tabindex="-1" aria-labelledby="completeUpdateLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="completeUpdateLabel">Edit Research</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <form action="/update-paper" method="POST" enctype="multipart/form-data">
-                <div class="modal-body">
-                    <input type="hidden" id="researchId" name="id">
-                    <input type="hidden" id="author_id" name="author_id"> <!-- Hidden input for author_id -->
-
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="title" class="form-label">Research Title</label>
-                                <input type="text" class="form-control" id="title" name="title" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="abstract" class="form-label">Abstract</label>
-                                <textarea class="form-control" id="abstract" name="abstract" required></textarea>
-                            </div>
-                            <div class="mb-3">
-                                <label for="author" class="form-label">Author</label>
-                                <input type="text" class="form-control" id="author" name="author" required disabled> <!-- Disable text input -->
-                            </div>
-                            <div class="mb-3">
-                                <label for="status_id" class="form-label">Current Phase</label>
-                                <input type="text" class="form-control" id="status_id" name="status_id" readonly style="background-color: #e9ecef; color: #6c757d; border: 1px solid #d6d8db;">
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="status" class="form-label">Next Phase</label>
-                                <input type="text" class="form-control" id="status" name="status" value="Completed" readonly style="background-color: #e9ecef; color: #6c757d; border: 1px solid #d6d8db;">
-                            </div>
-                            <div class="mb-3">
-                                <label for="funding" class="form-label">Funding</label>
-                                <input type="text" class="form-control" id="funding" name="funding">
-                            </div>
-                            <div class="mb-3">
-                                <label for="nature" class="form-label">Nature</label>
-                                <input type="text" class="form-control" id="nature" name="nature">
-                            </div>
-                            <div class="mb-3">
-                                <label for="origin" class="form-label">Origin</label>
-                                <input type="text" class="form-control" id="origin" name="origin">
-                            </div>
-                            <div class="mb-3">
-                                <label for="startdate" class="form-label">Start Date</label>
-                                <input type="date" class="form-control" id="startdate" name="startdate">
-                            </div>
-                            <div class="mb-3">
-                                <label for="enddate" class="form-label">End Date</label>
-                                <input type="date" class="form-control" id="enddate" name="enddate">
-                            </div>
-                            <div class="mb-3">
-                                <label for="keyword" class="form-label">Keyword</label>
-                                <input type="text" class="form-control" id="keyword" name="keyword">
-                            </div>
-                            <div class="form-group mb-3">
-                                <label for="researchFile" class="form-label">Upload complete manuscript</label>
-                                <input type="file" name="researchFile" id="researchFile" class="form-control" accept=".pdf,.doc,.docx" style="border-color: #4CAF50;">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save changes</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-
-
-
-
-
-
-
-<script>
-    // Listen for the 'show.bs.modal' event to populate the modal fields
-    document.getElementById('editResearchModal').addEventListener('show.bs.modal', function (event) {
-        var button = event.relatedTarget; // Button that triggered the modal
-        var researchId = button.getAttribute('data-id');
-        var title = button.getAttribute('data-title');
-        var author = button.getAttribute('data-author');
-        var abstract = button.getAttribute('data-abstract');
-        var publicationDate = button.getAttribute('data-publication_date');
-        var journalPublication = button.getAttribute('data-journal_publication');
-        var statusName = button.getAttribute('data-status');
-        var doi = button.getAttribute('data-doi');
-        var funding = button.getAttribute('data-funding');
-        var nature = button.getAttribute('data-nature');
-        var origin = button.getAttribute('data-origin');
-        var isbn = button.getAttribute('data-isbn');
-        var startdate = button.getAttribute('data-startdate');
-        var enddate = button.getAttribute('data-enddate');
-        var keyword = button.getAttribute('data-keyword');
-        var filename = button.getAttribute('data-filename');
-        
-        // Set modal title dynamically
-        var modalTitle = document.querySelector('#editResearchModal .modal-title');
-        modalTitle.innerHTML = `Edit Research: ${title} <br> Current Status: ${statusName}`;
-
-        // Populate the modal fields with the data from the button
-        var modalBody = document.querySelector('#editResearchModal .modal-body');
-
-        modalBody.querySelector('#researchId').value = researchId;
-        modalBody.querySelector('#title').value = title;
-        modalBody.querySelector('#author').value = author;
-        modalBody.querySelector('#abstract').value = abstract;
-        modalBody.querySelector('#publication_date').value = publicationDate;
-        modalBody.querySelector('#journal_publication').value = journalPublication;
-        modalBody.querySelector('#status_id').value = statusName; // For read-only
-        modalBody.querySelector('#doi').value = doi;
-        modalBody.querySelector('#funding').value = funding;
-        modalBody.querySelector('#nature').value = nature;
-        modalBody.querySelector('#origin').value = origin;
-        modalBody.querySelector('#isbn').value = isbn;
-        modalBody.querySelector('#startdate').value = startdate;
-        modalBody.querySelector('#enddate').value = enddate;
-        modalBody.querySelector('#keyword').value = keyword;
-        modalBody.querySelector('#filename').value = filename;
-    });
-</script>
-
-
-<script>
-    document.getElementById('ongoingUpdate').addEventListener('show.bs.modal', function (event) {
-        var button = event.relatedTarget; // Button that triggered the modal
-        var researchId = button.getAttribute('data-id');
-        var title = button.getAttribute('data-title');
-        var author = button.getAttribute('data-author');
-        var abstract = button.getAttribute('data-abstract');
-        var statusName = button.getAttribute('data-status');
-        var funding = button.getAttribute('data-funding');
-        var nature = button.getAttribute('data-nature');
-        var origin = button.getAttribute('data-origin');
-        var startdate = button.getAttribute('data-startdate');
-        var enddate = button.getAttribute('data-enddate');
-        var keyword = button.getAttribute('data-keyword');
-        var modalTitle = document.querySelector('#ongoingUpdateLabel');
-        var modalBody = document.querySelector('#ongoingUpdate .modal-body');
-
-        modalTitle.innerHTML = `Edit Research: ${title} <br> Current Status: ${statusName}`;
-        modalBody.querySelector('#status_id').value = statusName;
-        modalBody.querySelector('#researchId').value = researchId;
-        modalBody.querySelector('#title').value = title;
-        modalBody.querySelector('#author').value = author;
-        modalBody.querySelector('#abstract').value = abstract;
-        modalBody.querySelector('#funding').value = funding;
-        modalBody.querySelector('#nature').value = nature;
-        modalBody.querySelector('#origin').value = origin;
-        modalBody.querySelector('#startdate').value = startdate;
-        modalBody.querySelector('#enddate').value = enddate;
-        modalBody.querySelector('#keyword').value = keyword;
-    });
-</script>
-
-<script>
-    document.getElementById('completeUpdate').addEventListener('show.bs.modal', function (event) {
-        var button = event.relatedTarget; // Button that triggered the modal
-        var researchId = button.getAttribute('data-id');
-        var title = button.getAttribute('data-title');
-        var author = button.getAttribute('data-author');
-        var abstract = button.getAttribute('data-abstract');
-        var statusName = button.getAttribute('data-status');
-        var funding = button.getAttribute('data-funding');
-        var nature = button.getAttribute('data-nature');
-        var origin = button.getAttribute('data-origin');
-        var startdate = button.getAttribute('data-startdate');
-        var enddate = button.getAttribute('data-enddate');
-        var keyword = button.getAttribute('data-keyword');
-        
-        var modalTitle = document.querySelector('#completeUpdateLabel');
-        var modalBody = document.querySelector('#completeUpdate .modal-body');
-
-        modalTitle.innerHTML = `Edit Research: ${title} <br> Current Status: ${statusName}`;
-
-        modalBody.querySelector('#researchId').value = researchId;
-        modalBody.querySelector('#status_id').value = statusName;
-        modalBody.querySelector('#title').value = title;
-        modalBody.querySelector('#author').value = author;
-        modalBody.querySelector('#abstract').value = abstract;
-        modalBody.querySelector('#funding').value = funding;
-        modalBody.querySelector('#nature').value = nature;
-        modalBody.querySelector('#origin').value = origin;
-        modalBody.querySelector('#startdate').value = startdate;
-        modalBody.querySelector('#enddate').value = enddate;
-        modalBody.querySelector('#keyword').value = keyword;
-    });
-</script>
-
-
-
-
-
-
-                            
 
 
 <!-- Modal for Viewing Research Details -->
@@ -1229,9 +716,10 @@
                     <img id="view-barcode-image" src="" alt="Barcode Image" class="shadow-sm" style="max-width: 150px; height: auto;" />
                 </div>
 
-                <!-- Two-column layout for details -->
+                <!-- Two-column layout for details and PDF preview -->
                 <div class="row">
                     <div class="col-md-6">
+                        <!-- Left Column: Research Details -->
                         <div class="mb-3">
                             <p><strong class="text-muted">Title:</strong> <span id="view-title" class="text-dark"></span></p>
                         </div>
@@ -1251,22 +739,21 @@
                             <p><strong class="text-muted">Status:</strong> <span id="view-status" class="text-dark"></span></p>
                         </div>
                         <div class="mb-3">
-                            <p><strong class="text-muted">DOI:</strong> <span id="view-doi" class="text-dark"></span></p>
-                        </div>
-                        <div class="mb-3">
-                            <p><strong class="text-muted">Abstract:</strong> <span id="view-abstract" class="text-dark"></span></p>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <p><strong class="text-muted">Funding:</strong> <span id="view-funding" class="text-dark"></span></p>
-                        </div>
-                        <div class="mb-3">
                             <p><strong class="text-muted">Nature:</strong> <span id="view-nature" class="text-dark"></span></p>
                         </div>
                         <div class="mb-3">
                             <p><strong class="text-muted">Origin:</strong> <span id="view-origin" class="text-dark"></span></p>
                         </div>
+                        <div class="mb-3">
+                            <p><strong class="text-muted">DOI:</strong> <span id="view-doi" class="text-dark"></span></p>
+                        </div>
+                        <div class="mb-3">
+                            <p><strong class="text-muted">Abstract:</strong> <span id="view-abstract" class="text-dark"></span></p>
+                        </div>
+                        <div class="mb-3">
+                            <p><strong class="text-muted">Funding:</strong> <span id="view-funding" class="text-dark"></span></p>
+                        </div>
+                        
                         <div class="mb-3">
                             <p><strong class="text-muted">ISBN/ISSN:</strong> <span id="view-isbn" class="text-dark"></span></p>
                         </div>
@@ -1283,18 +770,20 @@
                             <p><strong class="text-muted">Filename:</strong> <span id="view-filename" class="text-dark"></span></p>
                         </div>
                     </div>
+                    <div class="col-md-6">
+                        <!-- Right Column: PDF Preview -->
+                        <div class="pdf-preview mt-4">
+                            <embed 
+                                id="pdf-preview" 
+                                type="application/pdf" 
+                                width="100%" 
+                                height="500px" 
+                                style="border: none;" 
+                                title="PDF Preview">
+                        </div>
+                    </div>
                 </div>
 
-                <!-- PDF Preview -->
-                <div class="pdf-preview mt-4">
-                    <embed 
-                        id="pdf-preview" 
-                        type="application/pdf" 
-                        width="100%" 
-                        height="500px" 
-                        style="border: none;" 
-                        title="PDF Preview">
-                </div>
             </div>
             <div class="modal-footer border-top-0 d-flex justify-content-end">
                 <button type="button" class="btn btn-outline-light px-4 py-2" data-bs-dismiss="modal">Close</button>
@@ -1302,6 +791,7 @@
         </div>
     </div>
 </div>
+
 
 
 <script>
@@ -1325,78 +815,6 @@
         }
     });
 </script>
-
-
-<script>
-  // Function to format the publication date
-function formatDate(dateString) {
-    if (!dateString || isNaN(Date.parse(dateString))) {
-        return 'Not published yet'; // Return this if the date is not available or invalid
-    }
-
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', options);
-}
-
-// Print only the selected content
-document.getElementById('printModalContent').addEventListener('click', function () {
-    // Create a hidden iframe
-    var iframe = document.createElement('iframe');
-    iframe.style.position = 'absolute';
-    iframe.style.top = '-10000px'; // Hide it off-screen
-    document.body.appendChild(iframe);
-
-    // Get the iframe's document
-    var doc = iframe.contentDocument || iframe.contentWindow.document;
-
-    // Create the printable content
-    var barcode = document.getElementById('view-barcode-image').outerHTML;
-    
-    // Make the barcode a reasonable size by adding style
-    barcode = barcode.replace('<img', '<img style="width: 200px; height: 50px;"');  // Adjust width and height as needed
-
-    var campus = '<p style="font-size: 18px; margin-bottom: 60px; line-height: 1.5;">' + document.getElementById('view-campus').textContent + '</p>';
-    var title = '<p style="font-size: 26px; font-weight: bold; margin-bottom: 60px; line-height: 1.5;">' + document.getElementById('view-title').textContent + '</p>';
-    var journal = '<p style="font-size: 18px; margin-bottom: 60px; line-height: 1.5;">' + document.getElementById('view-journal-publication').textContent + '</p>';
-    var author = '<p style="font-size: 18px; margin-bottom: 60px; line-height: 1.5;">' + document.getElementById('view-author').textContent + '</p>';
-    var publicationDate = '<p style="font-size: 18px; margin-bottom: 60px; line-height: 1.5;">' + formatDate(document.getElementById('view-publication-date').textContent) + '</p>';
-
-    // Combine the content into a printable format
-    var printContent = `
-        <div style="padding: 60px; font-family: Arial, sans-serif; width: 100%; height: 100%; box-sizing: border-box;">
-            <div style="position: absolute; top: 20px; right: 20px;">
-                ${barcode}
-            </div>
-            <div style="margin-top: 250px; text-align: center;">
-                ${campus}
-                ${title}
-                ${journal}
-                ${author}
-                ${publicationDate}
-            </div>
-        </div>
-    `;
-
-    // Write the content into the iframe
-    doc.open();
-    doc.write('<html><head><title>Print</title></head><body>');
-    doc.write(printContent);
-    doc.write('</body></html>');
-    doc.close();
-
-    // Trigger the print
-    iframe.contentWindow.focus();
-    iframe.contentWindow.print();
-
-    // Remove the iframe after printing
-    setTimeout(() => document.body.removeChild(iframe), 1000);
-});
-
-
-</script>
-
-
 
 <style>
     /* Contemporary green-themed modal design */
@@ -1443,6 +861,7 @@ document.getElementById('printModalContent').addEventListener('click', function 
         box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
     }
 </style>
+
 
 
 
@@ -1505,47 +924,8 @@ document.getElementById('printModalContent').addEventListener('click', function 
                             View
                         </button>
                     
-                        <!-- Conditionally Render Edit Button -->
-                        <% let buttonText = ''; %>
-                        <% let modalTarget = ''; %>
                         
-                        <% if (research.status === 'Proposed') { %>
-                            <% buttonText = 'Continue'; %>
-                            <% modalTarget = '#ongoingUpdate'; %>
-                        <% } else if (research.status === 'Ongoing') { %>
-                            <% buttonText = 'Complete'; %>
-                            <% modalTarget = '#completeUpdate'; %>
-                        <% } else if (research.status === 'Completed') { %>
-                            <% buttonText = 'Publish'; %>
-                            <% modalTarget = '#editResearchModal'; %>
-                        <% } %>
-                    
-                        <!-- Add condition to hide button when status is 'Published' -->
-                        <% if (research.status !== 'Published') { %>
-                            <button class="btn btn-warning btn-sm" 
-                                data-bs-toggle="modal" 
-                                data-bs-target="<%= modalTarget %>" 
-                                data-id="<%= research.id %>" 
-                                data-title="<%= research.title %>" 
-                                data-author="<%= research.author_name %>" 
-                                data-publication_date="<%= research.publication_date %>" 
-                                data-journal_publication="<%= research.journal_publication %>" 
-                                data-status="<%= research.status %>" 
-                                data-barcode="<%= research.barcode %>" 
-                                data-barnum="<%= research.barnum %>" 
-                                data-doi="<%= research.doi %>" 
-                                data-abstract="<%= research.abstract %>"
-                                data-funding="<%= research.funding %>"
-                                data-nature="<%= research.nature %>"
-                                data-origin="<%= research.origin %>"
-                                data-isbn="<%= research.isbn %>"
-                                data-startdate="<%= research.startdate %>"
-                                data-enddate="<%= research.enddate %>"
-                                data-keyword="<%= research.keyword %>"
-                                data-filename="<%= research.filename %>">
-                                <%= buttonText %>
-                            </button>
-                        <% } %>
+                
                     </td>
                     
                 </tr>
@@ -1558,12 +938,23 @@ document.getElementById('printModalContent').addEventListener('click', function 
         <button id="prev-btn" class="btn btn-secondary" disabled>Previous</button>
         <button id="next-btn" class="btn btn-secondary">Next</button>
     </div>
+
+    
 </div>
+
+
+
+
+
 
                 
             </div>
+            
+
         </div>
     </div>
+
+    
 
 
     <script>
