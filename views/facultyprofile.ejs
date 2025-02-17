@@ -84,6 +84,7 @@
         .dashboard-container {
             margin-top: 60px;
             display: flex;
+            flex-wrap: wrap;
         }
         .sidebar {
             width: 220px;
@@ -94,22 +95,41 @@
             left: 0;
             height: calc(100% - 60px);
             overflow-y: auto;
+            z-index: 900;
         }
+
         .sidebar a {
-            display: block;
-            color: white;
-            padding: 0.8rem;
-            text-decoration: none;
-            font-size: 1rem;
-            transition: background-color 0.3s ease;
-        }
-        .sidebar a:hover {
-            background-color: #388e3c;
-        }
-        .sidebar i {
-            margin-right: 8px;
-            font-size: 1rem;
-        }
+    display: flex;
+    align-items: center;
+    color: white;
+    padding: 0.8rem;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: background-color 0.3s ease, color 0.15s ease; /* Faster color transition */
+}
+
+/* Ensure both icon and text get the hover effect */
+.sidebar a i, 
+.sidebar a span {
+    transition: transform 0.25s cubic-bezier(0.25, 1, 0.5, 1), color 0.15s ease; /* Faster color transition */
+    display: inline-block; /* Smooth scaling */
+}
+
+/* Add spacing between icon and text */
+.sidebar a i {
+    margin-right: 12px; /* Adjust as needed */
+    font-size: 1.2rem;  /* Slightly larger for balance */
+}
+
+/* More subtle enlarge & push to right effect, plus color change */
+.sidebar a:hover {
+    color: rgb(255, 255, 255); /* Change text & icon color */
+}
+
+.sidebar a:hover i, 
+.sidebar a:hover span {
+    transform: scale(1.08) translateX(4px); /* Gentle scaling & movement */
+}
         .main-content {
             margin-left: 220px;
             padding: 1.5rem;
@@ -374,7 +394,12 @@
 
 <div class="header">
     
-    <div class="brand">ESSU Research and Information Management System</div>
+    <div class="brand" style="display: flex; align-items: center; gap: 10px;">
+        <div style="width: 40px; height: 40px; border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center; background-color: white;">
+            <img src="/images/essu_logo.png" alt="ESSU Logo" style="width: 100%; height: auto; object-fit: contain;">
+        </div>
+        ESSU RIMS
+    </div>
     <div class="d-flex">
         <button class="btn-logout" onclick="window.location.href='/logout'">Logout</button>
     </div>
@@ -382,9 +407,12 @@
 
 <div class="dashboard-container">
     <div class="sidebar">
-        <a href="/facultydashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-        <a href="/facultypapers"><i class="fas fa-book"></i> Researches</a>
-       
+        <a href="/facultydashboard">
+            <i class="fas fa-tachometer-alt"></i> <span>Dashboard</span>
+        </a>
+        <a href="/facultypapers">
+            <i class="fas fa-book"></i> <span>Researches</span>
+        </a>
     </div>
 
     <div class="main-content">

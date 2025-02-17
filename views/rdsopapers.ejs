@@ -98,9 +98,9 @@
             color: #2e7d32;
         }
         .dashboard-container {
-            display: flex;
-            flex-grow: 1;
             margin-top: 60px;
+            display: flex;
+            flex-wrap: wrap;
         }
         .sidebar {
             width: 220px;
@@ -111,18 +111,41 @@
             left: 0;
             height: calc(100% - 60px);
             overflow-y: auto;
+            z-index: 900;
         }
+
         .sidebar a {
-            display: block;
-            color: white;
-            padding: 0.8rem;
-            text-decoration: none;
-            font-size: 1rem;
-            transition: background-color 0.3s ease;
-        }
-        .sidebar a:hover {
-            background-color: #388e3c;
-        }
+    display: flex;
+    align-items: center;
+    color: white;
+    padding: 0.8rem;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: background-color 0.3s ease, color 0.15s ease; /* Faster color transition */
+}
+
+/* Ensure both icon and text get the hover effect */
+.sidebar a i, 
+.sidebar a span {
+    transition: transform 0.25s cubic-bezier(0.25, 1, 0.5, 1), color 0.15s ease; /* Faster color transition */
+    display: inline-block; /* Smooth scaling */
+}
+
+/* Add spacing between icon and text */
+.sidebar a i {
+    margin-right: 12px; /* Adjust as needed */
+    font-size: 1.2rem;  /* Slightly larger for balance */
+}
+
+/* More subtle enlarge & push to right effect, plus color change */
+.sidebar a:hover {
+    color: rgb(255, 255, 255); /* Change text & icon color */
+}
+
+.sidebar a:hover i, 
+.sidebar a:hover span {
+    transform: scale(1.08) translateX(4px); /* Gentle scaling & movement */
+}
         .main-content {
             margin-left: 220px;
             padding: 1rem;
@@ -434,49 +457,218 @@
             background-color: #2e7d32;
         }
 
-        .sortof {
-    display: flex;  
-    gap: 10px;  /* Space between dropdowns */
-    align-items: center; /* Aligns items vertically */
+        /* Smooth fade-in animation */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
+.aligned-container {
+    animation: fadeIn 0.4s ease-out;
+}
+
+/* Modern button style */
+.btn-primary {
+    background: linear-gradient(135deg, #0088cc, #005f99);
+    border: none;
+    border-radius: 10px;
+    padding: 10px 18px;
+    font-weight: 500;
+    transition: all 0.3s ease-in-out;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #0077b5, #004f80);
+    transform: scale(1.05);
+}
+
+/* Sorting container with horizontal layout */
+.sortof {
+    display: flex;
+    align-items: center;
+    gap: 12px; /* Space between dropdowns */
+    padding: 12px;
+    background: #f8f9fa;
+    border-radius: 12px;
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease-in-out;
+}
+
+/* Form styles */
 .sortof form {
     display: flex;
-    gap: 10px;
+    align-items: center;
+    gap: 12px;
 }
 
+/* Stylish dropdowns */
 .form-select {
-    padding: 8px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
+    padding: 10px 15px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    background: white;
+    font-size: 14px;
     cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    min-width: 180px;
 }
+
+.form-select:hover {
+    border-color: #0088cc;
+}
+
+/* Loading animation */
+.sortof.loading {
+    opacity: 0.5;
+    pointer-events: none;
+    transition: opacity 0.2s ease-in-out;
+}
+
+.loading-spinner {
+    width: 20px;
+    height: 20px;
+    border: 3px solid #ccc;
+    border-top: 3px solid #0088cc;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    display: none;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Animation for expanding the button into the modal */
+@keyframes expandButton {
+    0% {
+        width: 200px; /* Start with the original button size */
+        height: 50px;
+        border-radius: 8px;
+    }
+    100% {
+        width: 100vw; /* Expand the width */
+        height: 100vh; /* Expand the height to cover the screen */
+        border-radius: 0; /* No rounded corners */
+    }
+}
+
+/* Class for the button that will animate */
+.manage-btn {
+    position: relative;
+    display: inline-block;
+    padding: 10px 20px;
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+    overflow: hidden;
+    z-index: 2;
+}
+
+/* When the button is clicked, it will expand */
+.manage-btn.expanded {
+    animation: expandButton 1s forwards; /* Button expands */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+}
+
+/* Modal becomes visible after animation */
+#managePapersModal.show {
+    display: block;
+    opacity: 1;
+    transition: opacity 0.5s ease-in-out;
+}
+
+#managePapersModal {
+    display: none;
+}
+
+
+/* Researches Heading Styling */
+.researches-heading {
+    font-size: 1.75rem; /* Prominent size */
+    font-weight: bold;
+    color: #2e7d32; /* Deep green for consistency */
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Space between icon and text */
+    margin-bottom: 30px;
+    opacity: 0;
+    transform: translateY(-10px);
+    animation: fadeSlideIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Icon Styling */
+.researches-heading i {
+    font-size: 2rem; /* Larger for emphasis */
+    color: #2e7d32; /* Matches the heading */
+    opacity: 0;
+    transform: scale(0.8);
+    animation: popIn 0.4s ease-out 0.2s forwards;
+}
+
+/* Smooth Fade & Slide Animation (Telegram Vibe) */
+@keyframes fadeSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Pop-in Effect for Icon */
+@keyframes popIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
 
 
     </style>
+
+
 </head>
 <body>
 
     <div class="header">
-        <div class="brand">ESSU Research and Information Management System</div>
+        <div class="brand" style="display: flex; align-items: center; gap: 10px;">
+            <div style="width: 40px; height: 40px; border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center; background-color: white;">
+                <img src="/images/essu_logo.png" alt="ESSU Logo" style="width: 100%; height: auto; object-fit: contain;">
+            </div>
+            ESSU RIMS
+        </div>
         <div class="d-flex">
-            <span class="btn-profile" onclick="window.location.href='/facultyprofile'">Profile</span>
+            
             <button class="btn-logout" onclick="window.location.href='/logout'">Logout</button>
         </div>
     </div>
 
     <div class="dashboard-container">
         <div class="sidebar">
-            <a href="/rdsodashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-            <a href="/rdsopapers"><i class="fas fa-file-alt"></i> Researches</a>
-            <a href="/campusescolleges"><i class="fas fa-university"></i> Campuses & Colleges</a>
-            <a href="/faculties"><i class="fas fa-user-graduate"></i> Faculties/Researchers</a>
-            <a href="/requests"><i class="fas fa-envelope"></i> Verification Requests</a>
+            <a href="/rdsodashboard"><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a>
+            <a href="/rdsopapers"><i class="fas fa-file-alt"></i> <span>Researches</span></a>
+            <a href="/campusescolleges"><i class="fas fa-university"></i> <span>Campuses & Colleges</span></a>
+            <a href="/faculties"><i class="fas fa-user-graduate"></i> <span>Faculties/Researchers</span></a>
+            <a href="/requests"><i class="fas fa-envelope"></i> <span>Verification Requests</span></a>
         </div>
 
         <div class="main-content">
             <div class="container">
-                <h1 class="my-4">Researches</h1>
+                <h1 class="researches-heading">
+                    <i class="fas fa-flask"></i> Researches
+                </h1>
+                
                 <!-- Filter and Search Section -->
                 <div class="d-flex align-items-center mb-4">
                     <!-- Search Bar -->
@@ -484,13 +676,26 @@
                         <input 
                             type="text" 
                             name="search" 
-                            class="form-control" 
+                            class="form-control rounded-pill" 
                             placeholder="Search by Title, Author, or Description" 
                             value="<%= searchQuery || '' %>">
-                        <button type="submit" class="btn btn-primary ms-2">Search</button>
-                       
-                        
+                        <button type="submit" class="btn btn-success ms-2 rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                            <i class="fas fa-search"></i>
+                        </button>
                     </form>
+                    
+                    <style>
+                        .form-control {
+    border-radius: 50px; /* More rounded */
+    padding: 10px 20px; /* Adjust padding */
+}
+
+.btn-success {
+    border-radius: 50px; /* Match the input field */
+    padding: 8px 15px; /* Adjust button size */
+}
+
+                    </style>
 
 
 
@@ -502,10 +707,11 @@
                 </div>
                 <div class="aligned-container">
                     <div class="mb-3 text-end">
-                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#managePapersModal">
+                        <button class="btn btn-success rounded-pill px-4 py-2" data-bs-toggle="modal" data-bs-target="#managePapersModal">
                             <i class="fas fa-file-alt"></i> Manage Paper Submissions
                         </button>
                     </div>
+                    
                     
                     <div class="sortof">
                         <!-- Sorting Dropdowns for Status & Campus -->
@@ -536,13 +742,13 @@
                 <!-- Manage Paper Submissions Modal -->
 <div class="modal fade" id="managePapersModal" tabindex="-1" aria-labelledby="managePapersModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
+        <div class="modal-content modal-animation rounded-4 shadow-lg">
+            <div class="modal-header custom-modal-header">
                 <h5 class="modal-title" id="managePapersModalLabel">Manage Paper Submissions</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close custom-close-btn" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <table class="table table-bordered table-hover">
+                <table class="table table-striped table-custom">
                     <thead>
                         <tr>
                             <th>ID</th>
@@ -561,6 +767,129 @@
         </div>
     </div>
 </div>
+
+<style>
+    /* Custom Modal Animation */
+    .modal-animation {
+        opacity: 0;
+        transform: scale(0.9);
+        animation: fadeInUp 0.6s forwards ease-in-out;
+    }
+
+    /* Modal Animation Keyframes */
+    @keyframes fadeInUp {
+        0% {
+            opacity: 0;
+            transform: scale(0.9) translateY(20px);
+        }
+        100% {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+    }
+
+    /* Custom Modal Header Styling */
+    .modal-header.custom-modal-header {
+        background-color: #4caf50; /* Green background */
+        color: white;
+        padding: 15px 25px; /* Reduced padding */
+        border-radius: 10px 10px 0 0;
+        font-size: 1.125rem; /* Reduced font size */
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Custom Close Button */
+    .custom-close-btn {
+        border: none;
+        background: transparent;
+        color: #ffffff;
+        font-size: 1.25rem; /* Reduced size */
+        transition: color 0.3s ease;
+    }
+
+    .custom-close-btn:hover {
+        color: #ffeb3b; /* Yellow color on hover */
+    }
+
+    /* Modal Content Styling */
+    .modal-content {
+        background-color: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 6px 25px rgba(0, 0, 0, 0.1);
+        padding: 25px; /* Reduced padding */
+    }
+
+    /* Table Styling */
+    .table-custom {
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .table-custom th,
+    .table-custom td {
+        text-align: center;
+        vertical-align: middle;
+        padding: 10px 15px; /* Reduced padding */
+        font-size: 0.95rem; /* Slightly smaller font size */
+        font-family: 'Arial', sans-serif;
+    }
+
+    .table-custom th {
+        background-color: #e8f5e9; /* Light green */
+        color: #388e3c; /* Darker green */
+        font-weight: 500;
+    }
+
+    .table-custom tbody tr {
+        background-color: #f1f8e9; /* Very light green */
+        transition: background-color 0.3s ease;
+    }
+
+    .table-custom tbody tr:hover {
+        background-color: #c8e6c9; /* Slightly darker green */
+    }
+
+    .table-custom tbody tr:nth-child(odd) {
+        background-color: #f9fbe7; /* Very pale green */
+    }
+
+    /* Table Hover Effect */
+    .table-custom tbody tr:hover {
+        background-color: #c8e6c9;
+    }
+
+    /* Button Styling */
+    .btn {
+        background-color: #66bb6a; /* Green button */
+        color: white;
+        border: none;
+        padding: 8px 12px; /* Reduced padding */
+        font-size: 0.9rem; /* Smaller font size */
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .btn:hover {
+        background-color: #388e3c; /* Dark green on hover */
+        transform: translateY(-2px);
+    }
+
+    .btn:active {
+        transform: translateY(2px);
+    }
+
+    /* Rounded corners for the modal */
+    .modal-dialog {
+        border-radius: 15px;
+    }
+</style>
+
+
+
 
 <!-- View Paper Details Modal -->
 <div class="modal fade" id="viewPaperModal" tabindex="-1" aria-labelledby="viewPaperModalLabel" aria-hidden="true">
@@ -785,12 +1114,114 @@ function viewPaperDetails(id) {
                 </div>
 
             </div>
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    function hideEmptyFields() {
+                        document.querySelectorAll(".modal-body p").forEach((element) => {
+                            let span = element.querySelector("span");
+                            if (!span || !span.textContent.trim()) {
+                                element.closest(".mb-3").style.display = "none"; // Hide the entire mb-3 div
+                            } else {
+                                element.closest(".mb-3").style.display = ""; // Show if not empty
+                            }
+                        });
+            
+                        // Hide barcode image if empty
+                        let barcodeImage = document.getElementById("view-barcode-image");
+                        if (!barcodeImage.src || barcodeImage.src.trim() === "" || barcodeImage.src.includes("blank")) {
+                            barcodeImage.style.display = "none";
+                        } else {
+                            barcodeImage.style.display = "block";
+                        }
+            
+                        // Hide PDF preview if no file is available
+                        let pdfPreview = document.getElementById("pdf-preview");
+                        if (!pdfPreview.src || pdfPreview.src.trim() === "") {
+                            pdfPreview.style.display = "none";
+                        } else {
+                            pdfPreview.style.display = "block";
+                        }
+                    }
+            
+                    // Run the function when modal is opened
+                    document.getElementById("viewResearchModal").addEventListener("show.bs.modal", function () {
+                        setTimeout(hideEmptyFields, 100); // Delay ensures content is loaded
+                    });
+                });
+            </script>
+            
             <div class="modal-footer border-top-0 d-flex justify-content-end">
                 <button type="button" class="btn btn-outline-light px-4 py-2" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
 </div>
+
+<style>
+    /* Modal Design with Green Palette */
+.modal-content {
+    background-color: #1B4D3E; /* Deep green background */
+    border-radius: 12px; /* Rounded corners */
+}
+
+.modal-header {
+    background-color: #14532D; /* Darker green for header */
+    color: #fff; /* White text for contrast */
+    border-bottom: none;
+}
+
+.modal-title {
+    font-weight: bold;
+    color: #A9F3D1; /* Light green for title */
+}
+
+.modal-body {
+    color: #A9F3D1; /* Light green text for the body */
+}
+
+.modal-footer {
+    background-color: #14532D; /* Dark footer */
+}
+
+.btn-light {
+    background-color: #2E8B57; /* A slightly lighter green for the buttons */
+    color: white;
+    border-radius: 50px; /* Circular button for a sleek look */
+}
+
+.btn-light:hover {
+    background-color: #3C9C74; /* Hover effect for the button */
+}
+
+/* Highlight important elements */
+strong {
+    color: #9AE99E; /* Lighter green for important labels */
+}
+
+/* Custom Styling for Barcode Image */
+#view-barcode-image {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+}
+
+/* PDF Preview Section */
+.pdf-preview embed {
+    border-radius: 8px;
+}
+
+/* When empty fields are detected, hide them */
+.modal-body p {
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.modal-body .mb-3 {
+    border-bottom: 1px solid #2F6E4F;
+}
+
+</style>
+
+
 
 
 
@@ -815,6 +1246,75 @@ function viewPaperDetails(id) {
         }
     });
 </script>
+
+<script>
+    // Function to format the publication date
+  function formatDate(dateString) {
+      if (!dateString || isNaN(Date.parse(dateString))) {
+          return 'Not published yet'; // Return this if the date is not available or invalid
+      }
+  
+      const options = { year: 'numeric', month: 'long', day: 'numeric' };
+      const date = new Date(dateString);
+      return date.toLocaleDateString('en-US', options);
+  }
+  
+  // Print only the selected content
+  document.getElementById('printModalContent').addEventListener('click', function () {
+      // Create a hidden iframe
+      var iframe = document.createElement('iframe');
+      iframe.style.position = 'absolute';
+      iframe.style.top = '-10000px'; // Hide it off-screen
+      document.body.appendChild(iframe);
+  
+      // Get the iframe's document
+      var doc = iframe.contentDocument || iframe.contentWindow.document;
+  
+      // Create the printable content
+      var barcode = document.getElementById('view-barcode-image').outerHTML;
+      
+      // Make the barcode a reasonable size by adding style
+      barcode = barcode.replace('<img', '<img style="width: 200px; height: 50px;"');  // Adjust width and height as needed
+  
+      var campus = '<p style="font-size: 18px; margin-bottom: 60px; line-height: 1.5;">' + document.getElementById('view-campus').textContent + '</p>';
+      var title = '<p style="font-size: 26px; font-weight: bold; margin-bottom: 60px; line-height: 1.5;">' + document.getElementById('view-title').textContent + '</p>';
+      var journal = '<p style="font-size: 18px; margin-bottom: 60px; line-height: 1.5;">' + document.getElementById('view-journal-publication').textContent + '</p>';
+      var author = '<p style="font-size: 18px; margin-bottom: 60px; line-height: 1.5;">' + document.getElementById('view-author').textContent + '</p>';
+      var publicationDate = '<p style="font-size: 18px; margin-bottom: 60px; line-height: 1.5;">' + formatDate(document.getElementById('view-publication-date').textContent) + '</p>';
+  
+      // Combine the content into a printable format
+      var printContent = `
+          <div style="padding: 60px; font-family: Arial, sans-serif; width: 100%; height: 100%; box-sizing: border-box;">
+              <div style="position: absolute; top: 20px; right: 20px;">
+                  ${barcode}
+              </div>
+              <div style="margin-top: 250px; text-align: center;">
+                  ${campus}
+                  ${title}
+                  ${journal}
+                  ${author}
+                  ${publicationDate}
+              </div>
+          </div>
+      `;
+  
+      // Write the content into the iframe
+      doc.open();
+      doc.write('<html><head><title>Print</title></head><body>');
+      doc.write(printContent);
+      doc.write('</body></html>');
+      doc.close();
+  
+      // Trigger the print
+      iframe.contentWindow.focus();
+      iframe.contentWindow.print();
+  
+      // Remove the iframe after printing
+      setTimeout(() => document.body.removeChild(iframe), 1000);
+  });
+  
+  
+  </script>
 
 <style>
     /* Contemporary green-themed modal design */
@@ -877,6 +1377,7 @@ function viewPaperDetails(id) {
                 <th>Date Uploaded</th>
                 <th>Publication Date</th>
                 <th>Journal Publication</th>
+                <th>Campus</th>
                 <th>Status</th>
                 <th>Actions</th> <!-- New column for actions -->
             </tr>
@@ -896,6 +1397,9 @@ function viewPaperDetails(id) {
                     </td>
                     <td><%= research.publication_date %></td>
                     <td><%= research.journal_publication %></td>
+                    <td><%= research.campuses %></td>
+
+
                     <td><%= research.status || 'Pending' %></td>
                     <td> <!-- New column for buttons -->
                         <!-- View Button (could trigger a modal or redirect to a details page) -->
@@ -920,7 +1424,7 @@ function viewPaperDetails(id) {
                             data-enddate="<%= research.enddate %>"
                             data-keyword="<%= research.keyword %>"
                             data-filename="<%= research.filename %>"
-                            data-campus="ESSU MAIN">
+                            data-campus="<%= research.campuses %>">
                             View
                         </button>
                     
@@ -942,7 +1446,23 @@ function viewPaperDetails(id) {
     
 </div>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+    // Listen for the modal show event
+    document.getElementById('viewResearchModal').addEventListener('show.bs.modal', function () {
+        // Add the bounce class to the modal content when the modal is shown
+        var modalContent = this.querySelector('.modal-content');
+        modalContent.classList.add('modal-bounce');
+    });
 
+    // Remove bounce class after the animation ends (to reset for next time)
+    document.getElementById('viewResearchModal').addEventListener('hidden.bs.modal', function () {
+        var modalContent = this.querySelector('.modal-content');
+        modalContent.classList.remove('modal-bounce');
+    });
+});
+
+</script>
 
 
 

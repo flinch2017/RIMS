@@ -76,99 +76,329 @@ body::before {
             background-color: #f1f1f1; /* Light grey on hover */
             color: #2e7d32; /* Dark green text on hover */
         }
-        .signup-container {
-            background-color: #ffffff; /* White background for the sign-up container */
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 400px;
-            margin: 5rem auto 2rem; /* Added top margin to avoid header overlap */
-        }
-        .signup-container h2 {
-            margin-bottom: 1.5rem;
-            text-align: center;
-            font-weight: 600;
-            color: #2e7d32; /* Dark green for the title */
-        }
-        .form-group {
-            margin-bottom: 1.2rem;
-        }
-        .form-control {
-            height: 45px;
-            font-size: 1rem;
-            border-color: #66bb6a; /* Medium green border */
-        }
-        .form-control:focus {
-            border-color: #388e3c; /* Darker green when focused */
-            box-shadow: 0 0 0 0.25rem rgba(56, 142, 60, 0.25); /* Green shadow on focus */
-        }
-        .btn-signup {
-            background-color: #388e3c; /* Dark green button */
-            color: white;
-            font-size: 1rem;
-            font-weight: bold;
-        }
-        .btn-signup:hover {
-            background-color: #2e7d32; /* Darker green on hover */
-        }
-        .login-link {
-            text-align: center;
-            margin-top: 1rem;
-        }
-        .login-link a {
-            color: #388e3c;
-            text-decoration: none;
-            font-weight: bold;
-        }
-        .login-link a:hover {
-            text-decoration: underline;
-        }
+        /* Signup Container */
+.signup-container {
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 420px;
+    margin: 5rem auto 2rem;
+    transition: all 0.3s ease-in-out;
+}
+
+.signup-container:hover {
+    transform: translateY(-5px);
+}
+
+/* Title Styling */
+.signup-container h2 {
+    margin-bottom: 1.5rem;
+    text-align: center;
+    font-weight: 600;
+    color: #000000; /* Telegram-like blue */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+ 
+}
+
+/* Form Group Styling */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+/* Form Control Styling */
+.form-control {
+    height: 45px;
+    font-size: 1rem;
+    padding: 0.8rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    width: 100%;
+    transition: all 0.3s ease;
+    background-color: #f9f9f9;
+}
+
+/* Focused Form Control Styling */
+.form-control:focus {
+    border-color: #0088cc; /* Telegram blue */
+    box-shadow: 0 0 5px rgba(0, 136, 204, 0.5);
+    background-color: #ffffff;
+    outline: none;
+}
+
+/* Override Bootstrap's Button Styles */
+.btn-signup {
+    background-color: #388e3c !important; /* Dark Green */
+    color: white !important;
+    font-size: 1rem;
+    font-weight: bold;
+    padding: 0.6rem 1.5rem; /* Smaller padding for a smaller capsule */
+    border-radius: 50px; /* Capsule shape */
+    border: none !important;
+    width: 180px !important; /* Explicitly set width to control the button's size */
+    height: 40px; /* Smaller height for the button */
+    display: inline-block;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    position: relative;
+    text-align: center; /* Ensures text is centered inside the button */
+}
+/* Hover Effect: Expands into a square with a bounce effect and increases width */
+.btn-signup:hover {
+    border-radius: 8px !important; /* More square-like on hover */
+    width: 100% !important; /* Increase width on hover */
+    transform: scale(1); /* Expands the button */
+    animation: bounce 0.6s ease-out;
+    background: #000000 !important;
+    color: yellow !important;
+}
+
+/* Bouncy Animation for Hover */
+@keyframes bounce {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1); /* Slightly more expansion during bounce */
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+
+
+
+
+/* Login Link Styling */
+.login-link {
+    text-align: center;
+    margin-top: 1rem;
+}
+
+.login-link a {
+    color: #2e7d32;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1rem;
+    transition: color 0.3s ease;
+}
+
+.login-link a:hover {
+    color: #2e7d32; /* Darker blue */
+    text-decoration: underline;
+}
+
+/* Password Container */
+.password-container {
+    position: relative;
+}
+
+/* Toggle Password Icon */
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+
+/* Optional: Ticks for password strength */
+#lengthTick, #uppercaseTick, #numberTick, #specialCharTick, #confirmPasswordTick {
+    color: #4caf50; /* Green for valid */
+}
+
+#lengthTick, #uppercaseTick, #numberTick, #specialCharTick {
+    color: #f44336; /* Red for invalid */
+}
+
+/* Profile Container */
+.profile-container {
+    text-align: center;
+}
+
+.profile-container label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+}
+
+.profile-container input[type="file"] {
+    display: none;
+}
+
+.profile-container #imagePreview {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    overflow: hidden;
+    
+    display: inline-block;
+    background-color: #f0f0f0;
+    cursor: pointer;
+    position: relative;
+    transition: transform 0.3s ease;
+}
+
+.profile-container #imagePreview:hover {
+    transform: scale(1.05);
+}
+
+.profile-container #previewImg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+
+
+/* Add Subtle Animations on Page Load */
+.signup-container {
+    opacity: 0;
+    animation: fadeIn 0.5s forwards;
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+    }
+}
+
+/* Adjust the width of the country code dropdown */
+#countryCode {
+    width: 50px; /* Set width to fit country code and flag */
+    padding-right: 20px; /* Space for the dropdown icon */
+    text-align: center; /* Center-align the country code */
+}
+
+/* Adjust the input field for the contact number */
+#contactNumber {
+    width: calc(100% - 120px); /* Ensure it takes the remaining width */
+    display: inline-block;
+    padding-left: 10px; /* Padding for the left side of the input field */
+}
+
+/* Adjust the input group layout */
+.input-group {
+    display: flex;
+    align-items: center;
+}
+
+.password-container {
+    width: 500px;
+}
+
+
+
+  /* Input Container */
+  .input-container {
+        position: relative;
+        display: flex;
+        align-items: center;
+        background: #f2f2f2;
+        border-radius: 8px;
+        padding: 10px;
+        transition: 0.3s;
+    }
+
+    .input-container:focus-within {
+        box-shadow: 0px 0px 10px rgba(0, 136, 204, 0.3);
+        padding: 20px;
+    }
+
+    .input-container i {
+        color: gray;
+        margin-right: 20px;
+    }
+
+    .input-container input {
+        border: none;
+        outline: none;
+        background: transparent;
+        width: 100%;
+        font-size: 16px;
+     
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+
+/* Remove the dropdown symbol (arrow) */
+.form-select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: none; /* Removes the default dropdown arrow */
+}
+
+/* Style the horizontal line */
+.divider {
+    border: none;
+    border-top: 3px solid #ccc;
+    margin: 20px 0; /* Adjust the spacing as needed */
+    color: #000000;
+    background-color: #000000;
+}
+
+
     </style>
 </head>
 <body>
 
 <div class="header">
-    <div class="brand">ESSU Research and Information Management System</div>
+    <div class="brand" style="display: flex; align-items: center; gap: 10px;">
+        <div style="width: 40px; height: 40px; border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center; background-color: white;">
+            <img src="/images/essu_logo.png" alt="ESSU Logo" style="width: 100%; height: auto; object-fit: contain;">
+        </div>
+        ESSU RIMS
+    </div>
     <button class="btn-back-home" onclick="window.location.href='/'">Go back to homepage</button>
 </div>
 
-<div class="signup-container" style="background: linear-gradient(90deg, #ffffff, #d4edda);">
+<div class="signup-container">
     <h2>Sign Up</h2>
     <form action="/signup" method="POST" enctype="multipart/form-data">
         <div class="form-group">
             <label for="role">Sign up as</label>
             <select class="form-select" id="role" name="role" required>
                 <option value="Faculty">Faculty</option>
-                <option value="RDSO Staff">RDSO Staff</option>
-                <!-- Disable Super Admin option if one already exists -->
-                <option value="Super Admin">Super Admin</option>
+                
 
             </select>
         </div>
 
-        <div style="text-align: center;">
-            <label for="profilePic" style="display: block; margin-bottom: 10px; font-size: 16px; font-weight: bold;">Profile Picture</label>
-            <input type="file" id="profilePic" name="profilePic" accept="image/*" style="display: none;">
-            <div id="imagePreview" 
-                 style="width: 150px; height: 150px; border-radius: 50%; overflow: hidden; border: 2px solid #ccc; display: inline-block; background-color: #f0f0f0; cursor: pointer; position: relative;">
-                <img id="previewImg" src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="Default Profile Icon" 
-                     style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0;">
+        <div class="profile-container">
+            <label for="profilePic">Profile Picture</label>
+            <input type="file" id="profilePic" name="profilePic" accept="image/*">
+            <div id="imagePreview">
+                <img id="previewImg" src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="Default Profile Icon">
             </div>
         </div>
+        
     
         <!-- Full Name Field -->
         <div class="form-group">
-            <label for="fullname">Full Name</label>
-            <input type="text" class="form-control" id="fullname" name="fullname" placeholder="Enter full name" required>
+            <div class="input-container">
+                <i class="fas fa-user"></i>
+                <input type="text" class="form-control" id="fullname" name="fullname" placeholder="Enter full name" required>
+            </div>
+           
         </div>
     
         <div class="form-group">
-            <label for="username">Username</label>
-            <input type="text" class="form-control" id="username" name="username" placeholder="Enter username" required>
+            <div class="input-container">
+                <i class="fas fa-user-circle"></i>
+                <input type="text" class="form-control" id="username" name="username" placeholder="Enter username" required>
             <div id="usernameFeedback" class="text-danger" style="display: none;">
                 Username must be in lowercase and cannot contain spaces.
             </div>
+            </div>
+            
         </div>
     
         <% if (typeof errorMessage !== 'undefined') { %>
@@ -185,235 +415,106 @@ body::before {
         
     
         <div class="form-group">
-            <label for="birthday">Birthday</label>
+            <div class="input-container">
+                <i class="fas fa-birthday-cake"></i>
+                
             <input type="date" class="form-control" id="birthday" name="birthday" required>
+            </div>
+            
         </div>
     
         <div class="form-group">
-            <label for="email">Email</label>
+            <div class="input-container">
+                <i class="fas fa-envelope"></i>
             <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" required>
+            </div>
+            
         </div>
     
         <div class="form-group">
-            <label for="contact">Contact Number</label>
-            <div class="input-group">
-                <!-- Country Code Dropdown -->
-                <select id="countryCode" class="form-select" required>
-                    <option value="+1">+1 (USA/Canada)</option>
-                    <option value="+93">+93 (Afghanistan)</option>
-                    <option value="+355">+355 (Albania)</option>
-                    <option value="+213">+213 (Algeria)</option>
-                    <option value="+376">+376 (Andorra)</option>
-                    <option value="+244">+244 (Angola)</option>
-                    <option value="+1264">+1264 (Anguilla)</option>
-                    <option value="+1268">+1268 (Antigua and Barbuda)</option>
-                    <option value="+54">+54 (Argentina)</option>
-                    <option value="+374">+374 (Armenia)</option>
-                    <option value="+297">+297 (Aruba)</option>
-                    <option value="+61">+61 (Australia)</option>
-                    <option value="+43">+43 (Austria)</option>
-                    <option value="+994">+994 (Azerbaijan)</option>
-                    <option value="+1242">+1242 (Bahamas)</option>
-                    <option value="+973">+973 (Bahrain)</option>
-                    <option value="+880">+880 (Bangladesh)</option>
-                    <option value="+1246">+1246 (Barbados)</option>
-                    <option value="+375">+375 (Belarus)</option>
-                    <option value="+32">+32 (Belgium)</option>
-                    <option value="+501">+501 (Belize)</option>
-                    <option value="+229">+229 (Benin)</option>
-                    <option value="+975">+975 (Bhutan)</option>
-                    <option value="+591">+591 (Bolivia)</option>
-                    <option value="+387">+387 (Bosnia and Herzegovina)</option>
-                    <option value="+267">+267 (Botswana)</option>
-                    <option value="+55">+55 (Brazil)</option>
-                    <option value="+246">+246 (British Indian Ocean Territory)</option>
-                    <option value="+673">+673 (Brunei Darussalam)</option>
-                    <option value="+359">+359 (Bulgaria)</option>
-                    <option value="+226">+226 (Burkina Faso)</option>
-                    <option value="+257">+257 (Burundi)</option>
-                    <option value="+855">+855 (Cambodia)</option>
-                    <option value="+237">+237 (Cameroon)</option>
-                    <option value="+1-345">+1-345 (Cayman Islands)</option>
-                    <option value="+236">+236 (Central African Republic)</option>
-                    <option value="+56">+56 (Chile)</option>
-                    <option value="+86">+86 (China)</option>
-                    <option value="+61">+61 (Christmas Island)</option>
-                    <option value="+57">+57 (Colombia)</option>
-                    <option value="+269">+269 (Comoros)</option>
-                    <option value="+242">+242 (Congo)</option>
-                    <option value="+243">+243 (Congo, Democratic Republic of the)</option>
-                    <option value="+682">+682 (Cook Islands)</option>
-                    <option value="+506">+506 (Costa Rica)</option>
-                    <option value="+385">+385 (Croatia)</option>
-                    <option value="+53">+53 (Cuba)</option>
-                    <option value="+357">+357 (Cyprus)</option>
-                    <option value="+420">+420 (Czech Republic)</option>
-                    <option value="+45">+45 (Denmark)</option>
-                    <option value="+253">+253 (Djibouti)</option>
-                    <option value="+1767">+1767 (Dominica)</option>
-                    <option value="+1809">+1809 (Dominican Republic)</option>
-                    <option value="+593">+593 (Ecuador)</option>
-                    <option value="+20">+20 (Egypt)</option>
-                    <option value="+503">+503 (El Salvador)</option>
-                    <option value="+240">+240 (Equatorial Guinea)</option>
-                    <option value="+291">+291 (Eritrea)</option>
-                    <option value="+372">+372 (Estonia)</option>
-                    <option value="+251">+251 (Ethiopia)</option>
-                    <option value="+500">+500 (Falkland Islands)</option>
-                    <option value="+298">+298 (Faroe Islands)</option>
-                    <option value="+679">+679 (Fiji)</option>
-                    <option value="+358">+358 (Finland)</option>
-                    <option value="+33">+33 (France)</option>
-                    <option value="+241">+241 (Gabon)</option>
-                    <option value="+220">+220 (Gambia)</option>
-                    <option value="+995">+995 (Georgia)</option>
-                    <option value="+49">+49 (Germany)</option>
-                    <option value="+233">+233 (Ghana)</option>
-                    <option value="+350">+350 (Gibraltar)</option>
-                    <option value="+30">+30 (Greece)</option>
-                    <option value="+299">+299 (Greenland)</option>
-                    <option value="+1473">+1473 (Grenada)</option>
-                    <option value="+502">+502 (Guatemala)</option>
-                    <option value="+224">+224 (Guinea)</option>
-                    <option value="+245">+245 (Guinea-Bissau)</option>
-                    <option value="+592">+592 (Guyana)</option>
-                    <option value="+509">+509 (Haiti)</option>
-                    <option value="+504">+504 (Honduras)</option>
-                    <option value="+852">+852 (Hong Kong)</option>
-                    <option value="+36">+36 (Hungary)</option>
-                    <option value="+354">+354 (Iceland)</option>
-                    <option value="+91">+91 (India)</option>
-                    <option value="+62">+62 (Indonesia)</option>
-                    <option value="+98">+98 (Iran)</option>
-                    <option value="+964">+964 (Iraq)</option>
-                    <option value="+353">+353 (Ireland)</option>
-                    <option value="+972">+972 (Israel)</option>
-                    <option value="+39">+39 (Italy)</option>
-                    <option value="+1-876">+1-876 (Jamaica)</option>
-                    <option value="+81">+81 (Japan)</option>
-                    <option value="+962">+962 (Jordan)</option>
-                    <option value="+7">+7 (Kazakhstan/Kyrgyzstan)</option>
-                    <option value="+254">+254 (Kenya)</option>
-                    <option value="+686">+686 (Kiribati)</option>
-                    <option value="+850">+850 (Korea, North)</option>
-                    <option value="+82">+82 (Korea, South)</option>
-                    <option value="+965">+965 (Kuwait)</option>
-                    <option value="+996">+996 (Kyrgyzstan)</option>
-                    <option value="+856">+856 (Laos)</option>
-                    <option value="+371">+371 (Latvia)</option>
-                    <option value="+961">+961 (Lebanon)</option>
-                    <option value="+266">+266 (Lesotho)</option>
-                    <option value="+231">+231 (Liberia)</option>
-                    <option value="+218">+218 (Libya)</option>
-                    <option value="+423">+423 (Liechtenstein)</option>
-                    <option value="+370">+370 (Lithuania)</option>
-                    <option value="+352">+352 (Luxembourg)</option>
-                    <option value="+853">+853 (Macau)</option>
-                    <option value="+389">+389 (Macedonia)</option>
-                    <option value="+261">+261 (Madagascar)</option>
-                    <option value="+265">+265 (Malawi)</option>
-                    <option value="+60">+60 (Malaysia)</option>
-                    <option value="+960">+960 (Maldives)</option>
-                    <option value="+223">+223 (Mali)</option>
-                    <option value="+356">+356 (Malta)</option>
-                    <option value="+692">+692 (Marshall Islands)</option>
-                    <option value="+596">+596 (Martinique)</option>
-                    <option value="+222">+222 (Mauritania)</option>
-                    <option value="+230">+230 (Mauritius)</option>
-                    <option value="+262">+262 (Mayotte)</option>
-                    <option value="+52">+52 (Mexico)</option>
-                    <option value="+691">+691 (Micronesia)</option>
-                    <option value="+373">+373 (Moldova)</option>
-                    <option value="+377">+377 (Monaco)</option>
-                    <option value="+976">+976 (Mongolia)</option>
-                    <option value="+382">+382 (Montenegro)</option>
-                    <option value="+1664">+1664 (Montserrat)</option>
-                    <option value="+212">+212 (Morocco)</option>
-                    <option value="+258">+258 (Mozambique)</option>
-                    <option value="+95">+95 (Myanmar)</option>
-                    <option value="+264">+264 (Namibia)</option>
-                    <option value="+674">+674 (Nauru)</option>
-                    <option value="+977">+977 (Nepal)</option>
-                    <option value="+31">+31 (Netherlands)</option>
-                    <option value="+599">+599 (Netherlands Antilles)</option>
-                    <option value="+687">+687 (New Caledonia)</option>
-                    <option value="+64">+64 (New Zealand)</option>
-                    <option value="+505">+505 (Nicaragua)</option>
-                    <option value="+227">+227 (Niger)</option>
-                    <option value="+234">+234 (Nigeria)</option>
-                    <option value="+683">+683 (Niue)</option>
-                    <option value="+672">+672 (Norfolk Island)</option>
-                    <option value="+1-670">+1-670 (Northern Mariana Islands)</option>
-                    <option value="+47">+47 (Norway)</option>
-                    <option value="+968">+968 (Oman)</option>
-                    <option value="+92">+92 (Pakistan)</option>
-                    <option value="+680">+680 (Palau)</option>
-                    <option value="+970">+970 (Palestine)</option>
-                    <option value="+507">+507 (Panama)</option>
-                    <option value="+675">+675 (Papua New Guinea)</option>
-                    <option value="+595">+595 (Paraguay)</option>
-                    <option value="+51">+51 (Peru)</option>
-                    <option value="+63" selected>+63 (Philippines)</option>
-                </select>
-                <input type="text" class="form-control" id="contactNumber" name="contact" placeholder="Enter your number" required 
-                pattern="\d+" title="Please enter a valid number" />
-         
+            <div class="input-container">
+                <i class="fas fa-phone"></i>
+                <div class="input-group">
+                    <!-- Country Code Dropdown -->
+                    <select id="countryCode" class="form-select" required>
+                        <option value="+63" selected>🇵🇭 +63</option>
+                    </select>
+                    <input type="text" class="form-control" id="contactNumber" name="contact" placeholder="Enter your number here" required 
+                    pattern="\d+" title="Please enter a valid number" />
+                </div>
             </div>
         </div>
         
-        <script>
-            const countryCode = document.getElementById('countryCode');
-            const contactNumber = document.getElementById('contactNumber');
         
-            // Function to update the pattern based on country code
-            countryCode.addEventListener('change', function() {
-                const selectedCode = countryCode.value;
-                let pattern = "";
-        
-                switch (selectedCode) {
-                    case "+63":
-                        // Philippines: 9 digits after +63
-                        pattern = "^09\d{9}$"; 
-                        break;
-                    case "+1":
-                        // USA/Canada: 10 digits after +1
-                        pattern = "^\d{10}$";
-                        break;
-                    case "+44":
-                        // UK: 10 digits after +44
-                        pattern = "^\d{10}$";
-                        break;
-                    // Add more cases as needed
-                    default:
-                        pattern = "\d+";  // General fallback
-                }
-        
-                // Update the pattern attribute dynamically
-                contactNumber.setAttribute("pattern", pattern);
-                contactNumber.setAttribute("title", "Please enter a valid " + selectedCode + " number");
-            });
-        </script>
+        <!-- Line Above -->
+        <hr class="divider">
 
-        <!-- Take a picture of ESSU Faculty ID -->
+        <style>
+            .preview-container {
+                display: none; /* Hide preview containers initially */
+                width: 250px;
+                height: 250px;
+                border: 2px dashed #ccc;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+                font-size: 14px;
+                color: #666;
+                background-color: #f9f9f9;
+                border-radius: 10px;
+                overflow: hidden;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                transition: all 0.3s ease-in-out;
+            }
+        
+            .preview-container img {
+                max-width: 100%;
+                max-height: 100%;
+                object-fit: cover;
+                border-radius: 10px;
+            }
+        </style>
+        
+        <!-- Upload ESSU Faculty ID -->
         <div class="form-group">
-            <label for="facultyIDPic">Upload a picture of ESSU Faculty ID</label>
-            <input type="file" class="form-control" id="facultyIDPic" name="facultyIDPic" accept="image/*" capture="environment" required>
-        </div>
-
-        <!-- Take a selfie with your ID -->
-        <div class="form-group">
-            <label for="selfieWithID">Upload a selfie with your ESSU Faculty ID</label>
-            <input type="file" class="form-control" id="selfieWithID" name="selfieWithID" accept="image/*" capture="user" required>
-        </div>
-
-        
-
-        <div class="form-group">
-            <label for="password">Password</label>
-            <div class="password-container">
-                <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" required>
-                <span class="toggle-password" id="togglePassword" onclick="togglePasswordVisibility()">👁️</span>
+            <label for="facultyIDPic">Upload ESSU Faculty ID</label>
+            <div class="input-container">
+                <i class="fas fa-id-card"></i>
+                <input type="file" class="form-control" id="facultyIDPic" name="facultyIDPic" accept="image/*" required>
             </div>
+            
+        </div>
+        
+        <!-- Selfie with the uploaded ESSU Faculty ID -->
+        <div class="form-group">
+            <label for="selfieWithID">Selfie with the uploaded ESSU Faculty ID</label>
+            <div class="input-container">
+                <i class="fas fa-check-circle"></i>
+                <input type="file" class="form-control" id="selfieWithID" name="selfieWithID" accept="image/*" capture="user" required>
+            </div>
+            
+        </div>
+        
+        
+        
+
+<!-- Canvas for Face Detection -->
+<canvas id="canvas" style="display:none;"></canvas>
+
+
+          <!-- Line Above -->
+          <hr class="divider">
+
+        <div class="form-group">
+            <div class="input-container">
+                <i class="fas fa-lock"></i>
+                <div class="password-container">
+                    <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" required>
+                    <span class="toggle-password" id="togglePassword" onclick="togglePasswordVisibility()">👁️</span>
+                </div>
+            </div>
+           
     
             <div id="passwordRequirementsList">
                 <h>Password must have:</h>
@@ -427,11 +528,15 @@ body::before {
         </div>
     
         <div class="form-group">
-            <label for="confirmPassword">Confirm Password</label>
-            <div class="password-container">
-                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Confirm your password" required>
-                <span class="toggle-password" id="toggleConfirmPassword" onclick="toggleConfirmPasswordVisibility()">👁️</span>
+            <div class="input-container">
+                <i class="fas fa-lock"></i>
+                <div class="password-container">
+                    <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Confirm your password" required>
+                    <span class="toggle-password" id="toggleConfirmPassword" onclick="toggleConfirmPasswordVisibility()">👁️</span>
+                </div>
             </div>
+            
+           
             <div id="confirmPasswordError" class="text-danger" style="display: none;">
                 Passwords do not match.
             </div>
@@ -441,226 +546,6 @@ body::before {
             <button type="submit" class="btn btn-signup w-100" id="submitButton">Sign Up</button>
         </div>
     </form>
-    
-    
-    
-    
-    <script>
-        // Enforce lowercase and no spaces for username
-        function validateUsername() {
-
-            var fullnameField = document.getElementById('fullname');
-    var fullname = fullnameField.value.trim();
-
-    // Check if the Full Name field is empty
-    if (fullname === "") {
-        alert("Full Name is required.");
-        return false; // Prevent form submission
-    }
-            var usernameField = document.getElementById('username');
-            var username = usernameField.value;
-    
-            // Convert to lowercase
-            username = username.toLowerCase();
-    
-            // Remove spaces
-            username = username.replace(/\s+/g, '');
-    
-            // Update the field value
-            usernameField.value = username;
-    
-            // Prevent form submission if there are spaces
-            if (/\s/.test(username)) {
-                alert("Username cannot contain spaces.");
-                return false; // Prevent form submission
-            }
-    
-            return true; // Allow form submission
-
-            
-        }
-
-       
-
-
-
-    
-        // Real-time username checker
-        document.getElementById('username').addEventListener('input', function() {
-            var username = this.value;
-    
-            // Convert to lowercase
-            username = username.toLowerCase();
-    
-            // Remove spaces
-            var formattedUsername = username.replace(/\s+/g, '');
-    
-            // Update the input field value
-            this.value = formattedUsername;
-    
-            // Show or hide the feedback message
-            var feedback = document.getElementById('usernameFeedback');
-            if (/\s/.test(formattedUsername) || formattedUsername !== username) {
-                feedback.style.display = 'block'; // Show feedback if there are spaces or it's not lowercase
-            } else {
-                feedback.style.display = 'none'; // Hide feedback if username is valid
-            }
-        });
-    </script>
-
-<script>
-    const profilePicInput = document.getElementById('profilePic');
-    const imagePreview = document.getElementById('imagePreview');
-    const previewImg = document.getElementById('previewImg');
-
-    imagePreview.addEventListener('click', () => {
-        profilePicInput.click();
-    });
-
-    profilePicInput.addEventListener('change', (event) => {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                previewImg.src = e.target.result;
-                previewImg.style.display = 'block';
-            };
-            reader.readAsDataURL(file);
-        }
-    });
-</script>
-
-
-
-    
-    
-    
-    <script>
-        // Toggle password visibility for the password field
-        function togglePasswordVisibility() {
-            const passwordField = document.getElementById('password');
-            const toggleIcon = document.getElementById('togglePassword');
-            if (passwordField.type === 'password') {
-                passwordField.type = 'text';
-                toggleIcon.textContent = '🙈';  // Change icon to "hide"
-            } else {
-                passwordField.type = 'password';
-                toggleIcon.textContent = '👁️';  // Change icon to "show"
-            }
-        }
-    
-        // Toggle password visibility for the confirm password field
-        function toggleConfirmPasswordVisibility() {
-            const confirmPasswordField = document.getElementById('confirmPassword');
-            const toggleIcon = document.getElementById('toggleConfirmPassword');
-            if (confirmPasswordField.type === 'password') {
-                confirmPasswordField.type = 'text';
-                toggleIcon.textContent = '🙈';  // Change icon to "hide"
-            } else {
-                confirmPasswordField.type = 'password';
-                toggleIcon.textContent = '👁️';  // Change icon to "show"
-            }
-        }
-    
-        // Password validation
-        const passwordRequirements = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-        const lengthTick = document.getElementById('lengthTick');
-        const uppercaseTick = document.getElementById('uppercaseTick');
-        const numberTick = document.getElementById('numberTick');
-        const specialCharTick = document.getElementById('specialCharTick');
-        const confirmPasswordTick = document.getElementById('confirmPasswordTick');
-        const confirmPasswordError = document.getElementById('confirmPasswordError');
-    
-        // Check each password requirement
-        document.getElementById('password').addEventListener('input', function() {
-            const password = this.value;
-    
-            // Check length requirement
-            if (password.length >= 8) {
-                lengthTick.textContent = '✔️';
-            } else {
-                lengthTick.textContent = '❌';
-            }
-    
-            // Check uppercase letter
-            if (/[A-Z]/.test(password)) {
-                uppercaseTick.textContent = '✔️';
-            } else {
-                uppercaseTick.textContent = '❌';
-            }
-    
-            // Check number
-            if (/\d/.test(password)) {
-                numberTick.textContent = '✔️';
-            } else {
-                numberTick.textContent = '❌';
-            }
-    
-            // Check special character
-            if (/[@$!%*?&]/.test(password)) {
-                specialCharTick.textContent = '✔️';
-            } else {
-                specialCharTick.textContent = '❌';
-            }
-        });
-    
-        // Confirm password check
-        document.getElementById('confirmPassword').addEventListener('input', function() {
-            const password = document.getElementById('password').value;
-            const confirmPassword = this.value;
-    
-            // Check if confirm password matches the password
-            if (password === confirmPassword) {
-                confirmPasswordTick.textContent = '✔️';
-                confirmPasswordError.style.display = 'none';
-            } else {
-                confirmPasswordTick.textContent = '❌';
-                confirmPasswordError.style.display = 'block';
-            }
-        });
-    
-        // Prevent form submission if validation fails
-        document.querySelector('form').addEventListener('submit', function(event) {
-            const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
-    
-            const isPasswordValid = passwordRequirements.test(password);
-            const isConfirmPasswordValid = password === confirmPassword;
-    
-            if (!isPasswordValid || !isConfirmPasswordValid) {
-                event.preventDefault();  // Prevent form submission
-            }
-        });
-    </script>
-    
-    <style>
-        /* Styling for password input containers */
-        .password-container {
-            position: relative;
-        }
-    
-        .toggle-password {
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            cursor: pointer;
-        }
-    
-        /* Optional: Style the tick icons */
-        #lengthTick, #uppercaseTick, #numberTick, #specialCharTick, #confirmPasswordTick {
-            color: green;
-        }
-    
-        #lengthTick, #uppercaseTick, #numberTick, #specialCharTick {
-            color: red;
-        }
-    </style>
-    
-    
-    
-    
-    
 
     <div class="login-link">
         <p>Already have an account? <a href="/login">Login</a></p>
@@ -670,8 +555,380 @@ body::before {
 
 
 
+<script>
+// Handle ESSU Faculty ID upload
+document.getElementById('facultyIDPic').addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    const previewContainer = document.getElementById('uploadedIDPreview');
+    
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const imgElement = document.createElement('img');
+            imgElement.src = e.target.result;
+            imgElement.style.maxWidth = '200px'; // Resize the preview image
+            previewContainer.innerHTML = ''; // Clear previous preview
+            previewContainer.appendChild(imgElement);
+        };
+        reader.readAsDataURL(file);
+    } else {
+        previewContainer.innerHTML = '<p>No file uploaded</p>';
+    }
+});
+
+// Handle Selfie upload
+document.getElementById('selfieWithID').addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    const previewContainer = document.getElementById('selfiePreview');
+    
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const imgElement = document.createElement('img');
+            imgElement.src = e.target.result;
+            imgElement.style.maxWidth = '200px'; // Resize the preview image
+            previewContainer.innerHTML = ''; // Clear previous preview
+            previewContainer.appendChild(imgElement);
+        };
+        reader.readAsDataURL(file);
+    } else {
+        previewContainer.innerHTML = '<p>No selfie taken</p>';
+    }
+});
+
+    // Load face-api.js library (ensure you include the script in your HTML)
+const script = document.createElement('script');
+script.src = 'https://cdn.jsdelivr.net/npm/face-api.js';
+document.head.appendChild(script);
+
+script.onload = () => {
+    // Load models for face-api.js
+    Promise.all([
+        faceapi.nets.ssdMobilenetv1.loadFromUri('/models'),
+        faceapi.nets.faceLandmark68Net.loadFromUri('/models'),
+        faceapi.nets.faceRecognitionNet.loadFromUri('/models')
+    ]).then(startApp);
+};
+
+function startApp() {
+    // Handle ESSU Faculty ID upload
+    document.getElementById('facultyIDPic').addEventListener('change', async function(event) {
+        const file = event.target.files[0];
+        const previewContainer = document.getElementById('uploadedIDPreview');
+        
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                const img = new Image();
+                img.src = e.target.result;
+                
+                img.onload = async () => {
+                    previewContainer.innerHTML = '';
+                    previewContainer.appendChild(img);
+                    
+                    // Detect faces in the uploaded image
+                    const detections = await faceapi.detectAllFaces(img).withFaceLandmarks().withFaceDescriptors();
+                    if (detections.length > 0) {
+                        console.log("Face detected in ESSU Faculty ID");
+                    } else {
+                        console.log("No face detected in ESSU Faculty ID");
+                    }
+                };
+            };
+            reader.readAsDataURL(file);
+        } else {
+            previewContainer.innerHTML = '<p>No file uploaded</p>';
+        }
+    });
+
+    // Handle Selfie upload
+    document.getElementById('selfieWithID').addEventListener('change', async function(event) {
+        const file = event.target.files[0];
+        const previewContainer = document.getElementById('selfiePreview');
+        
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                const img = new Image();
+                img.src = e.target.result;
+                
+                img.onload = async () => {
+                    previewContainer.innerHTML = '';
+                    previewContainer.appendChild(img);
+
+                    // Detect faces in the selfie
+                    const detections = await faceapi.detectAllFaces(img).withFaceLandmarks().withFaceDescriptors();
+                    if (detections.length > 0) {
+                        console.log("Face detected in selfie");
+
+                        // Compare the faces of the ESSU Faculty ID and the selfie
+                        compareFaces(detections, file);
+                    } else {
+                        console.log("No face detected in selfie");
+                    }
+                };
+            };
+            reader.readAsDataURL(file);
+        } else {
+            previewContainer.innerHTML = '<p>No selfie taken</p>';
+        }
+    });
+
+    // Function to compare faces
+    async function compareFaces(detections, selfieFile) {
+        // Get the descriptors from the uploaded ESSU Faculty ID image
+        const img = document.getElementById('uploadedIDPreview').querySelector('img');
+        const idDetections = await faceapi.detectAllFaces(img).withFaceLandmarks().withFaceDescriptors();
+
+        if (idDetections.length > 0 && detections.length > 0) {
+            // Compare the face descriptors
+            const faceMatcher = new faceapi.FaceMatcher(idDetections, 0.6);
+            const bestMatch = faceMatcher.findBestMatch(detections[0].descriptor);
+            
+            if (bestMatch.label === 'unknown') {
+                alert('No matching face detected. Please retake the selfie.');
+            } else {
+                alert('Face match confirmed!');
+            }
+        } else {
+            alert('No faces detected in the uploaded ESSU Faculty ID or the selfie.');
+        }
+    }
+}
+
+</script>
+
+<script>
+    // Enforce lowercase and no spaces for username
+    function validateUsername() {
+
+        var fullnameField = document.getElementById('fullname');
+var fullname = fullnameField.value.trim();
+
+// Check if the Full Name field is empty
+if (fullname === "") {
+    alert("Full Name is required.");
+    return false; // Prevent form submission
+}
+        var usernameField = document.getElementById('username');
+        var username = usernameField.value;
+
+        // Convert to lowercase
+        username = username.toLowerCase();
+
+        // Remove spaces
+        username = username.replace(/\s+/g, '');
+
+        // Update the field value
+        usernameField.value = username;
+
+        // Prevent form submission if there are spaces
+        if (/\s/.test(username)) {
+            alert("Username cannot contain spaces.");
+            return false; // Prevent form submission
+        }
+
+        return true; // Allow form submission
+
+        
+    }
+
+   
+
+
+
+
+    // Real-time username checker
+    document.getElementById('username').addEventListener('input', function() {
+        var username = this.value;
+
+        // Convert to lowercase
+        username = username.toLowerCase();
+
+        // Remove spaces
+        var formattedUsername = username.replace(/\s+/g, '');
+
+        // Update the input field value
+        this.value = formattedUsername;
+
+        // Show or hide the feedback message
+        var feedback = document.getElementById('usernameFeedback');
+        if (/\s/.test(formattedUsername) || formattedUsername !== username) {
+            feedback.style.display = 'block'; // Show feedback if there are spaces or it's not lowercase
+        } else {
+            feedback.style.display = 'none'; // Hide feedback if username is valid
+        }
+    });
+</script>
+
+<script>
+const profilePicInput = document.getElementById('profilePic');
+const imagePreview = document.getElementById('imagePreview');
+const previewImg = document.getElementById('previewImg');
+
+imagePreview.addEventListener('click', () => {
+    profilePicInput.click();
+});
+
+profilePicInput.addEventListener('change', (event) => {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            previewImg.src = e.target.result;
+            previewImg.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+    }
+});
+</script>
+
+
+
+
+
+
+<script>
+    // Toggle password visibility for the password field
+    function togglePasswordVisibility() {
+        const passwordField = document.getElementById('password');
+        const toggleIcon = document.getElementById('togglePassword');
+        if (passwordField.type === 'password') {
+            passwordField.type = 'text';
+            toggleIcon.textContent = '🙈';  // Change icon to "hide"
+        } else {
+            passwordField.type = 'password';
+            toggleIcon.textContent = '👁️';  // Change icon to "show"
+        }
+    }
+
+    // Toggle password visibility for the confirm password field
+    function toggleConfirmPasswordVisibility() {
+        const confirmPasswordField = document.getElementById('confirmPassword');
+        const toggleIcon = document.getElementById('toggleConfirmPassword');
+        if (confirmPasswordField.type === 'password') {
+            confirmPasswordField.type = 'text';
+            toggleIcon.textContent = '🙈';  // Change icon to "hide"
+        } else {
+            confirmPasswordField.type = 'password';
+            toggleIcon.textContent = '👁️';  // Change icon to "show"
+        }
+    }
+
+    // Password validation
+    const passwordRequirements = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    const lengthTick = document.getElementById('lengthTick');
+    const uppercaseTick = document.getElementById('uppercaseTick');
+    const numberTick = document.getElementById('numberTick');
+    const specialCharTick = document.getElementById('specialCharTick');
+    const confirmPasswordTick = document.getElementById('confirmPasswordTick');
+    const confirmPasswordError = document.getElementById('confirmPasswordError');
+
+    // Check each password requirement
+    document.getElementById('password').addEventListener('input', function() {
+        const password = this.value;
+
+        // Check length requirement
+        if (password.length >= 8) {
+            lengthTick.textContent = '✔️';
+        } else {
+            lengthTick.textContent = '❌';
+        }
+
+        // Check uppercase letter
+        if (/[A-Z]/.test(password)) {
+            uppercaseTick.textContent = '✔️';
+        } else {
+            uppercaseTick.textContent = '❌';
+        }
+
+        // Check number
+        if (/\d/.test(password)) {
+            numberTick.textContent = '✔️';
+        } else {
+            numberTick.textContent = '❌';
+        }
+
+        // Check special character
+        if (/[@$!%*?&]/.test(password)) {
+            specialCharTick.textContent = '✔️';
+        } else {
+            specialCharTick.textContent = '❌';
+        }
+    });
+
+    // Confirm password check
+    document.getElementById('confirmPassword').addEventListener('input', function() {
+        const password = document.getElementById('password').value;
+        const confirmPassword = this.value;
+
+        // Check if confirm password matches the password
+        if (password === confirmPassword) {
+            confirmPasswordTick.textContent = '✔️';
+            confirmPasswordError.style.display = 'none';
+        } else {
+            confirmPasswordTick.textContent = '❌';
+            confirmPasswordError.style.display = 'block';
+        }
+    });
+
+    // Prevent form submission if validation fails
+    document.querySelector('form').addEventListener('submit', function(event) {
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+
+        const isPasswordValid = passwordRequirements.test(password);
+        const isConfirmPasswordValid = password === confirmPassword;
+
+        if (!isPasswordValid || !isConfirmPasswordValid) {
+            event.preventDefault();  // Prevent form submission
+        }
+    });
+</script>
+
+
+<script>
+    const countryCode = document.getElementById('countryCode');
+    const contactNumber = document.getElementById('contactNumber');
+
+    // Function to update the pattern based on country code
+    countryCode.addEventListener('change', function() {
+        const selectedCode = countryCode.value;
+        let pattern = "";
+
+        switch (selectedCode) {
+            case "+63":
+                // Philippines: 9 digits after +63
+                pattern = "^09\d{9}$"; 
+                break;
+            case "+1":
+                // USA/Canada: 10 digits after +1
+                pattern = "^\d{10}$";
+                break;
+            case "+44":
+                // UK: 10 digits after +44
+                pattern = "^\d{10}$";
+                break;
+            // Add more cases as needed
+            default:
+                pattern = "\d+";  // General fallback
+        }
+
+        // Update the pattern attribute dynamically
+        contactNumber.setAttribute("pattern", pattern);
+        contactNumber.setAttribute("title", "Please enter a valid " + selectedCode + " number");
+    });
+</script>
+
+
+
+
+
+
 
 <!-- Bootstrap JS for responsiveness -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>

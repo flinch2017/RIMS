@@ -105,22 +105,40 @@ body::before {
         }
 
         .sidebar a {
-            display: block;
-            color: white;
-            padding: 0.8rem;
-            text-decoration: none;
-            font-size: 1rem;
-            transition: background-color 0.3s ease;
-        }
+    display: flex;
+    align-items: center;
+    color: white;
+    padding: 0.8rem;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: background-color 0.3s ease, color 0.15s ease; /* Faster color transition */
+}
 
-        .sidebar a:hover {
-            background-color: #388e3c;
-        }
+/* Ensure both icon and text get the hover effect */
+.sidebar a i, 
+.sidebar a span {
+    transition: transform 0.25s cubic-bezier(0.25, 1, 0.5, 1), color 0.15s ease; /* Faster color transition */
+    display: inline-block; /* Smooth scaling */
+}
 
-        .sidebar i {
-            margin-right: 8px;
-            font-size: 1rem;
-        }
+/* Add spacing between icon and text */
+.sidebar a i {
+    margin-right: 12px; /* Adjust as needed */
+    font-size: 1.2rem;  /* Slightly larger for balance */
+}
+
+/* More subtle enlarge & push to right effect, plus color change */
+.sidebar a:hover {
+    color: rgb(255, 255, 255); /* Change text & icon color */
+}
+
+.sidebar a:hover i, 
+.sidebar a:hover span {
+    transform: scale(1.08) translateX(4px); /* Gentle scaling & movement */
+}
+
+
+
 
         .main-content {
             margin-left: 220px; /* Increased to account for the sidebar */
@@ -130,7 +148,7 @@ body::before {
         }
 
         .welcome {
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             color: #2e7d32;
             font-weight: bold;
             margin-bottom: 1rem;
@@ -274,17 +292,23 @@ body::before {
 
 /* Card Styling */
 .card {
-    background-color: #ffffff;
     border-radius: 12px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
     padding: 15px;
     margin: 10px;
-    flex-shrink: 0; /* Prevent cards from shrinking */
+    flex-shrink: 0;
     opacity: 0;
     transform: translateY(20px);
     animation: slideIn 0.6s ease forwards;
-    min-width: 150px; /* Set a minimum width for each card */
-    max-width: 250px; /* Ensure cards don’t get too wide */
+    min-width: 150px;
+    max-width: 250px;
+    
+    /* Gradient Background */
+    background: linear-gradient(135deg, #a3ffa8 0%, #1d9224 100%);
+    
+    border: none;
+    color: white; /* Ensure text is readable */
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
 }
 
 /* Animation for each card */
@@ -324,26 +348,56 @@ body::before {
 .card-title {
     font-size: 16px;
     font-weight: bold;
-    color: #333;
+    color: #1B5E20;
     margin-bottom: 10px;
 }
 
-/* Card Count Styling */
+/* Capsule Label for Each Card Title */
+.capsule-label {
+    display: inline-flex;
+    align-items: center;
+    background-color: #ffffff; /* Dark Green */
+    color: rgb(0, 0, 0);
+    font-size: 14px;
+    font-weight: bold;
+    padding: 6px 14px;
+    border-radius: 15px; /* Capsule shape */
+    text-align: center;
+    white-space: nowrap;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Adjust icon inside capsule */
+.capsule-label i {
+    margin-right: 6px;
+    font-size: 14px;
+}
+
+/* Hover effect */
+.card:hover .capsule-label {
+    background-color: #4c6928; /* Darker Green */
+    transform: translateY(-2px);
+    color: white;
+    
+}
+
+
+
+/* Card Count */
 .card-count {
+    color: #ffffff; /* Medium Green */
     font-size: 20px;
     font-weight: bold;
-    color: #4CAF50; /* Telegram-like green */
 }
 
-/* Design Elements for Telegram-like Look */
+
+/* Hover effect for cards */
 .card:hover {
-    background-color: #f1f1f1;
-    cursor: pointer;
+    /* Gradient Background */
+    background: linear-gradient(135deg, #ffffff 0%, #1d9224 100%);
 }
 
-.card {
-    border: 1px solid #ddd;
-}
+
 
 /* Responsive Design for Smaller Screens */
 @media screen and (max-width: 768px) {
@@ -445,60 +499,153 @@ td {
 <body>
 
 <div class="header">
-    <div class="brand">ESSU Research and Information Management System</div>
+    <div class="brand" style="display: flex; align-items: center; gap: 10px;">
+        <div style="width: 40px; height: 40px; border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center; background-color: white;">
+            <img src="/images/essu_logo.png" alt="ESSU Logo" style="width: 100%; height: auto; object-fit: contain;">
+        </div>
+        ESSU RIMS
+    </div>
     <div class="d-flex">
-        <span class="btn-profile" onclick="window.location.href='/facultyprofile'">Profile</span>
+        
         <button class="btn-logout" onclick="window.location.href='/logout'">Logout</button>
     </div>
 </div>
 
 <div class="dashboard-container">
     <div class="sidebar">
-        <a href="/rdsodashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-        <a href="/rdsopapers"><i class="fas fa-file-alt"></i> Researches</a>
-        <a href="/campusescolleges"><i class="fas fa-university"></i> Campuses & Colleges</a>
-        <a href="/faculties"><i class="fas fa-user-graduate"></i> Faculties/Researchers</a>
-        <a href="/requests"><i class="fas fa-envelope"></i> Verification Requests</a>
+        <a href="/rdsodashboard"><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a>
+        <a href="/rdsopapers"><i class="fas fa-file-alt"></i> <span>Researches</span></a>
+        <a href="/campusescolleges"><i class="fas fa-university"></i> <span>Campuses & Colleges</span></a>
+        <a href="/faculties"><i class="fas fa-user-graduate"></i> <span>Faculties/Researchers</span></a>
+        <a href="/requests"><i class="fas fa-envelope"></i> <span>Verification Requests</span></a>
     </div>
     
 
     <div class="main-content">
-        <div class="welcome">Hi, <%= fullname %>!</div>
-        <h1 class="my-4">Dashboard</h1>
+        <div class="welcome">
+            <i id="greeting-icon" class="fas"></i> <span id="greeting-text">Good day, <%= fullname %>!</span>
+        </div>
+        
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const hour = new Date().getHours();
+                const icon = document.getElementById("greeting-icon");
+                const text = document.getElementById("greeting-text");
+        
+                if (hour >= 6 && hour < 18) {
+                    // Daytime: Show Sun
+                    icon.classList.add("fas", "fa-sun");
+                    text.innerHTML = "Good day, <%= fullname %>!";
+                } else {
+                    // Nighttime: Show Moon
+                    icon.classList.add("fas", "fa-moon");
+                    text.innerHTML = "Good evening, <%= fullname %>!";
+                }
+            });
+        </script>
+        
+        
+        
+        <h1 class="my-4">
+            <i class="fas fa-tachometer-alt"></i> Dashboard
+        </h1>
+        
+        
+        <style>
+            /* Dashboard Heading Styling */
+.my-4 {
+    font-size: 1.5rem; /* Adjust size to make it prominent */
+    font-weight: bold;
+    color: #28a745; /* Green color palette */
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Space between icon and text */
+    opacity: 0;
+    transform: translateY(-20px);
+    animation: fadeSlideIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Icon Styling */
+.my-4 i {
+    font-size: 1.5rem; /* Slightly larger for emphasis */
+    color: #28a745; /* Matches text */
+    opacity: 0;
+    transform: scale(0.8);
+    animation: popIn 0.4s ease-out 0.2s forwards;
+}
+
+/* Smooth Fade & Slide Animation */
+@keyframes fadeSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Pop-in Effect for Icon */
+@keyframes popIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+        </style>
+        
+        
     
         <div class="scrolling-tabs-container">
             <div class="scrolling-tabs">
-                <!-- Total Research Card -->
+                <!-- Total Research -->
                 <div class="card total-research">
-                    <h2 class="card-title">Total Research</h2>
+                    <h2 class="card-title">
+                        <span class="capsule-label"><i class="fas fa-file-alt"></i> Total Research</span>
+                    </h2>
                     <p class="card-count"><%= totalResearch %></p>
                 </div>
-            
-                <!-- Proposed Research Card -->
+        
+                <!-- Proposed Research -->
                 <div class="card proposed-research">
-                    <h2 class="card-title">Proposed</h2>
+                    <h2 class="card-title">
+                        <span class="capsule-label"><i class="fas fa-lightbulb"></i> Proposed</span>
+                    </h2>
                     <p class="card-count"><%= proposedCount %></p>
                 </div>
-            
-                <!-- Completed Research Card -->
+        
+                <!-- Completed Research -->
                 <div class="card completed-research">
-                    <h2 class="card-title">Completed</h2>
+                    <h2 class="card-title">
+                        <span class="capsule-label"><i class="fas fa-check-circle"></i> Completed</span>
+                    </h2>
                     <p class="card-count"><%= completedCount %></p>
                 </div>
-            
-                <!-- Ongoing Research Card -->
+        
+                <!-- Ongoing Research -->
                 <div class="card ongoing-research">
-                    <h2 class="card-title">Ongoing</h2>
+                    <h2 class="card-title">
+                        <span class="capsule-label"><i class="fas fa-spinner"></i> Ongoing</span>
+                    </h2>
                     <p class="card-count"><%= ongoingCount %></p>
                 </div>
-            
-                <!-- Published Research Card -->
+        
+                <!-- Published Research -->
                 <div class="card published-research">
-                    <h2 class="card-title">Published</h2>
+                    <h2 class="card-title">
+                        <span class="capsule-label"><i class="fas fa-book-open"></i> Published</span>
+                    </h2>
                     <p class="card-count"><%= publishedCount %></p>
                 </div>
             </div>
         </div>
+        
 
         <!-- Sorting Dropdowns Above the Table -->
 <div class="sorting-dropdowns">
@@ -953,7 +1100,11 @@ function filterData() {
     </div>
     
    
-        
+
+
+
+
+</script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

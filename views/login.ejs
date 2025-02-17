@@ -76,54 +76,7 @@ body::before {
             background-color: #f1f1f1; /* Light grey on hover */
             color: #2e7d32; /* Dark green text on hover */
         }
-        .login-container {
-            background-color: #ffffff; /* White background for the login container */
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 400px;
-            margin: 5rem auto 2rem; /* Added top margin to avoid header overlap */
-        }
-        .login-container h2 {
-            margin-bottom: 1.5rem;
-            text-align: center;
-            font-weight: 600;
-            color: #2e7d32; /* Dark green for the title */
-        }
-        .form-group {
-            margin-bottom: 1.2rem;
-        }
-        .form-select, .form-control {
-            height: 45px;
-            font-size: 1rem;
-            border-color: #66bb6a; /* Medium green border */
-        }
-        .form-select:focus, .form-control:focus {
-            border-color: #388e3c; /* Darker green when focused */
-            box-shadow: 0 0 0 0.25rem rgba(56, 142, 60, 0.25); /* Green shadow on focus */
-        }
-        .btn-login {
-            background-color: #388e3c; /* Dark green button */
-            color: white;
-            font-size: 1rem;
-            font-weight: bold;
-        }
-        .btn-login:hover {
-            background-color: #2e7d32; /* Darker green on hover */
-        }
-        .signup-link {
-            text-align: center;
-            margin-top: 1rem;
-        }
-        .signup-link a {
-            color: #388e3c;
-            text-decoration: none;
-            font-weight: bold;
-        }
-        .signup-link a:hover {
-            text-decoration: underline;
-        }
+        
     </style>
 </head>
 <body>
@@ -133,106 +86,208 @@ body::before {
         <div style="width: 40px; height: 40px; border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center; background-color: white;">
             <img src="/images/essu_logo.png" alt="ESSU Logo" style="width: 100%; height: auto; object-fit: contain;">
         </div>
-        ESSU Research and Information Management System
+        ESSU RIMS
     </div>
     <button class="btn-back-home" onclick="window.location.href='/'">Go back to homepage</button>
 </div>
 
-<div class="login-container" style="background: linear-gradient(90deg, #ffffff, #d4edda);">
-    <h2>Login</h2>
+<div class="login-container">
+    <h2 class="login-title">Login</h2>
+
     <form action="/login" method="POST" autocomplete="off">
         <div class="form-group">
-            <label for="username">Username</label>
-            <input type="text" class="form-control" id="username" name="username" placeholder="Enter username" required autocomplete="off">
-        </div>
-    
-        <div class="form-group">
-            <label for="password">Password</label>
-            <div class="password-container">
-                <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" required autocomplete="off">
-                <span class="toggle-password" id="togglePassword" onclick="togglePasswordVisibility()">👁️</span>
+            
+            <div class="input-container">
+                <i class="fas fa-user"></i>
+                <input type="text" class="form-control" id="username" name="username" placeholder="Enter username" required autocomplete="off">
             </div>
         </div>
-    
+
+        <div class="form-group">
+           
+            <div class="input-container">
+                <i class="fas fa-lock"></i>
+                <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" required autocomplete="off">
+                <span class="toggle-password" id="togglePassword" onclick="togglePasswordVisibility()">
+                    <i class="fas fa-eye"></i>
+                </span>
+            </div>
+        </div>
+
         <% if (typeof errorMessage !== 'undefined') { %>
             <div class="form-group text-center text-danger">
                 <p><%= errorMessage %></p>
             </div>
         <% } %>
-    
+
         <div class="form-group text-center">
-            <button type="submit" class="btn btn-login w-100">Login</button>
+            <button type="submit" class="btn btn-login">Login</button>
         </div>
     </form>
-    
-    
-    
-    
-    
-
-
-
 
     <div class="signup-link">
         <p>Don't have an account? <a href="/signup">Sign Up</a></p>
     </div>
 </div>
 
+<!-- FontAwesome Icons -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js" crossorigin="anonymous"></script>
 
-
-
-<script>
-    // Clear form fields when the page loads
-    window.onload = function() {
-        document.getElementById('username').value = '';
-        document.getElementById('password').value = '';
-    };
-
-    // Toggle password visibility for the password field
-    function togglePasswordVisibility() {
-        const passwordField = document.getElementById('password');
-        const toggleIcon = document.getElementById('togglePassword');
-        if (passwordField.type === 'password') {
-            passwordField.type = 'text';
-            toggleIcon.textContent = '🙈';  // Change icon to "hide"
-        } else {
-            passwordField.type = 'password';
-            toggleIcon.textContent = '👁️';  // Change icon to "show"
-        }
-    }
-</script>
-
-
-
-<script>
-    // Toggle password visibility for the password field
-    function togglePasswordVisibility() {
-        const passwordField = document.getElementById('password');
-        const toggleIcon = document.getElementById('togglePassword');
-        if (passwordField.type === 'password') {
-            passwordField.type = 'text';
-            toggleIcon.textContent = '🙈';  // Change icon to "hide"
-        } else {
-            passwordField.type = 'password';
-            toggleIcon.textContent = '👁️';  // Change icon to "show"
-        }
-    }
-</script>
-
+<!-- Styles -->
 <style>
-    /* Styling for password input containers */
-    .password-container {
-        position: relative;
+    /* Background */
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background: linear-gradient(90deg, #ffffff, #d4edda);
+        font-family: 'Arial', sans-serif;
     }
 
+    /* Login Container */
+    .login-container {
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.1);
+        width: 350px;
+        text-align: center;
+        animation: fadeIn 0.5s ease-in-out;
+    }
+
+    .login-title {
+        font-size: 22px;
+        font-weight: bold;
+        color: #000000;
+        margin-bottom: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    /* Input Container */
+    .input-container {
+        position: relative;
+        display: flex;
+        align-items: center;
+        background: #f2f2f2;
+        border-radius: 8px;
+        padding: 10px;
+        transition: 0.3s;
+    }
+
+    .input-container:focus-within {
+        box-shadow: 0px 0px 10px rgba(0, 136, 204, 0.3);
+        padding: 20px;
+    }
+
+    .input-container i {
+        color: gray;
+        margin-right: 20px;
+    }
+
+    .input-container input {
+        border: none;
+        outline: none;
+        background: transparent;
+        width: 100%;
+        font-size: 16px;
+     
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+
+    /* Toggle Password */
     .toggle-password {
-        position: absolute;
-        right: 10px;
-        top: 50%;
-        transform: translateY(-50%);
         cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .toggle-password:hover {
+        color: #0088cc;
+    }
+
+   /* Login Button */
+.btn-login {
+    width: 120px; /* Initially small */
+    padding: 10px;
+    border: none;
+    border-radius: 50px; /* Capsule shape */
+    background: #2e7d32;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Hover Effect with Bouncy Animation */
+.btn-login:hover {
+    width: 100%; /* Expands to full width */
+    border-radius: 8px; /* Turns into a square */
+    background: #000000;
+    color: yellow;
+    animation: bounceEffect 0.4s ease-out;
+}
+
+/* Bouncy Animation */
+@keyframes bounceEffect {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); } /* Slightly bigger */
+    100% { transform: scale(1); } /* Back to normal */
+}
+
+
+
+    /* Signup Link */
+    .signup-link {
+        margin-top: 15px;
+        font-size: 14px;
+    }
+
+    .signup-link a {
+        color: #2e7d32;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .signup-link a:hover {
+        text-decoration: underline;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 </style>
+
+<!-- Password Toggle Script -->
+<script>
+    function togglePasswordVisibility() {
+        let passwordInput = document.getElementById("password");
+        let toggleIcon = document.getElementById("togglePassword").querySelector("i");
+
+        if (passwordInput.type === "password") {
+            passwordInput.type = "text";
+            toggleIcon.classList.remove("fa-eye");
+            toggleIcon.classList.add("fa-eye-slash");
+        } else {
+            passwordInput.type = "password";
+            toggleIcon.classList.remove("fa-eye-slash");
+            toggleIcon.classList.add("fa-eye");
+        }
+    }
+</script>
+
 
 <!-- Bootstrap JS for responsiveness -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

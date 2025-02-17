@@ -124,39 +124,74 @@ h1 {
     margin-bottom: 20px;
 }
 
+/* Search container */
+.search-wrapper {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 300px; /* Default size */
+    max-width: 800px;
+    transition: width 0.5s ease-in-out;
+    border-radius: 50px; /* Fully rounded */
+    overflow: hidden; /* Prevent overflow */
+}
+
+/* Expanding effect */
+.search-wrapper.expanded {
+    width: 400px; /* Fully expanded */
+    animation: bounceExpand 0.5s ease-in-out;
+}
+
 /* Search input field */
 .search-input {
     width: 100%;
-    padding: 15px;
-    margin-bottom: 15px;
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 15px 50px 15px 15px;
+    border: 1px solid rgba(0, 0, 0, 0.3);
     background: rgba(255, 255, 255, 0.4);
-    border-radius: 12px;
+    border-radius: 50px; /* Fully rounded */
     color: #000000;
     font-size: 16px;
     outline: none;
-    transition: background 0.3s;
+    transition: background 0.3s, transform 0.3s ease-in-out;
 }
 
+/* Focus effect */
 .search-input:focus {
     background: rgba(255, 255, 255, 0.6);
+    transform: scale(1.07);
 }
 
-/* Submit button styling */
+
+/* Search button inside input */
 .search-button {
-    padding: 10px 20px;
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
     background-color: #34c759;
     color: white;
     border: none;
-    border-radius: 12px;
+    border-radius: 50px;
+    padding: 10px 15px;
     font-size: 16px;
     cursor: pointer;
     transition: background-color 0.3s;
 }
 
+/* Button hover effect */
 .search-button:hover {
     background-color: #28a745;
 }
+
+/* Bigger Bounce Animation */
+@keyframes bounceExpand {
+    0% { transform: scale(1); }
+    40% { transform: scale(1.1); }
+    100% { transform: scale(1,1); }
+}
+
+
 
 /* Container for the action buttons */
 .search-action-container {
@@ -189,7 +224,7 @@ h1 {
 
 /* Barcode scanner button */
 .scan-button {
-    width: 48%;
+    width: 80%;
     padding: 12px;
     background-color: #34c759;
     color: white;
@@ -237,20 +272,24 @@ h1 {
     <div class="container">
         <div class="search-container">
             <h1>RIMS</h1>
-            <form action="/search" method="GET">
-                <input type="text" class="search-input" placeholder="Search for research topics..." name="query" id="search-input" required>
-                <input type="hidden" name="barcode" id="hidden-barcode-input">
-                <button type="submit" class="search-button">
-                    <i class="fas fa-search"></i>
-                </button>
+            <form action="/search" method="GET" class="search-container">
+                <div class="search-wrapper">
+                    <input type="text" class="search-input" placeholder="Search for research topics..." name="query" id="search-input" required>
+                    <input type="hidden" name="barcode" id="hidden-barcode-input">
+                    <button type="submit" class="search-button">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
             </form>
+            
     
             <div class="search-action-container">
                 <div class="ios-style-container">
                     <p>or using</p>
                     <button class="scan-button" id="startBarcodeScan">
-                        Barcode Scanner
+                        <i class="fas fa-barcode"></i> Barcode Scanner
                     </button>
+                    
                 </div>
             </div>
         </div>
@@ -467,6 +506,24 @@ document.addEventListener('keydown', (event) => {
         // Append the typed character to the barcode buffer
         barcodeBuffer += event.key;
     }
+});
+
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+    const searchWrapper = document.querySelector(".search-wrapper");
+    const searchInput = document.querySelector(".search-input");
+
+    searchInput.addEventListener("focus", function () {
+        searchWrapper.classList.add("expanded");
+    });
+
+    document.addEventListener("click", function (event) {
+        if (!searchWrapper.contains(event.target)) {
+            searchWrapper.classList.remove("expanded");
+        }
+    });
 });
 
 </script>

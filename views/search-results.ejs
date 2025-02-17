@@ -235,11 +235,10 @@ body {
     width: 70%; /* Adjust the width as needed */
     padding: 0.5rem;
     border: 1px solid #ccc;
-    border-radius: 4px;
+    border-radius: 50px; /* Fully rounded shape */
     font-size: 1rem;
     padding-right: 10px;
-    margin-left: -20px ;
-
+    margin-left: -20px;
 }
 
 .search-button {
@@ -247,7 +246,7 @@ body {
     color: white;
     border: none;
     padding: 0.5rem 1rem;
-    border-radius: 4px;
+    border-radius: 50px; /* Fully rounded shape */
     margin-left: 0.5rem;
     cursor: pointer;
     font-size: 1rem;
@@ -257,6 +256,7 @@ body {
 .search-button:hover {
     background-color: #1e5631;
 }
+
 
 .checkmark-container {
     display: inline-block;
@@ -321,12 +321,60 @@ body {
 }
 
 
+
+.sort-form {
+    display: flex;
+    align-items: center;
+}
+
+.form-select {
+    border-radius: 50px; /* Fully rounded shape */
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+.form-select:focus {
+    border-color: #2e7d32;
+}
+
+@keyframes floatBook {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+    100% { transform: translateY(0); }
+}
+
+.animated-book {
+    display: inline-block;
+    animation: floatBook 1.5s infinite ease-in-out;
+}
+
+/* Typing effect */
+.typing-text::after {
+    content: "|"; /* Blinking cursor */
+    display: inline-block;
+    animation: blink 0.7s infinite;
+}
+
+@keyframes blink {
+    50% { opacity: 0; }
+}
+
+
+
     </style>
 </head>
 <body>
 
 <div class="header">
-    <div class="brand">ESSU Research and Information Management System</div>
+    <div class="brand" style="display: flex; align-items: center; gap: 10px;">
+        <div style="width: 40px; height: 40px; border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center; background-color: white;">
+            <img src="/images/essu_logo.png" alt="ESSU Logo" style="width: 100%; height: auto; object-fit: contain;">
+        </div>
+        ESSU RIMS
+    </div>
     <div class="d-flex">
         <button class="btn-back-home" onclick="window.location.href='/'">Go back to homepage</button>
         
@@ -347,8 +395,12 @@ body {
    
     <div class="sort-options">
         <div class="search-info">
-            <p>Here's what I found...</p>
+            <p><i class="fas fa-book animated-book"></i> <span class="typing-text"></span></p>
         </div>
+        
+        
+        
+        
         <form method="GET" action="/search" class="sort-form">
             <input type="hidden" name="query" value="<%= query %>">
             <select name="sort" onchange="this.form.submit()" class="form-select w-50">
@@ -373,20 +425,24 @@ body {
                 <p><strong>Status:</strong> <%= result.status %></p>
                 <p><strong>Keyword(s):</strong> <%= result.keyword %></p>
                 
-                <button type="button" class="btn btn-success" data-bs-toggle="offcanvas" data-bs-target="#researchDetails<%= result.id %>">See More</button>
+                <button type="button" class="btn btn-success rounded-pill" data-bs-toggle="offcanvas" data-bs-target="#researchDetails<%= result.id %>">See More</button>
+
                 
                
                 <div class="offcanvas offcanvas-end" tabindex="-1" id="researchDetails<%= result.id %>" aria-labelledby="researchDetailsLabel">
                     <div class="offcanvas-header d-flex justify-content-between align-items-center">
-                        <h5 class="offcanvas-title" id="researchDetailsLabel">Research Details</h5>
+                        <h5 class="offcanvas-title" id="researchDetailsLabel">
+                            <i class="fas fa-book-open"></i> Research Details
+                        </h5>
+                        
                 
-                        <% if (result.filename) { %>
+                        <!-- <% if (result.filename) { %>
                             <button class="btn btn-success btn-sm px-2 py-1" onclick="sendToEmail('<%= result.barnum %>', '<%= result.filename %>')">
                                 <i class="fas fa-paper-plane"></i> Send PDF to my email
                             </button>
                             
                             
-                        <% } %>
+                        <% } %> -->
                 
                         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                     </div>
@@ -509,7 +565,7 @@ body {
 </div>
 
 <div class="footer">
-    <p>© 2025 ESSU Research and Information Management System</p>
+    <p>© 2025 ESSU Research Information Management System</p>
 </div>
 
 <script>
@@ -566,6 +622,71 @@ document.getElementById("emailForm").addEventListener("submit", async function (
         }, 2000); // Close modal after 2 seconds
     }
 });
+
+
+
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+    const text = "Here's what I found...";
+    const typingSpeed = 100;
+    let index = 0;
+    const typingElement = document.querySelector(".typing-text");
+
+    function type() {
+        if (index < text.length) {
+            typingElement.innerHTML += text.charAt(index);
+            index++;
+            setTimeout(type, typingSpeed);
+        }
+    }
+
+    function speakText(message) {
+        const speech = new SpeechSynthesisUtterance(message);
+        speech.lang = "en-US";
+        speech.rate = 1.15;
+        speech.pitch = 1.8;
+        speech.volume = 1;
+
+        let voices = window.speechSynthesis.getVoices();
+        let arianaLikeVoice = voices.find(voice =>
+            voice.name.includes("Samantha") ||  // macOS
+            voice.name.includes("Google UK English Female") || 
+            voice.name.includes("Google US English") ||
+            voice.name.includes("Victoria") ||  // macOS
+            voice.name.includes("Allison") ||   // Windows
+            voice.name.includes("Zira") ||      // Windows
+            voice.name.includes("Tessa")        // macOS
+        );
+
+        if (arianaLikeVoice) {
+            speech.voice = arianaLikeVoice;
+        } else {
+            window.speechSynthesis.onvoiceschanged = function () {
+                voices = window.speechSynthesis.getVoices();
+                arianaLikeVoice = voices.find(voice =>
+                    voice.name.includes("Samantha") ||  
+                    voice.name.includes("Google UK English Female") || 
+                    voice.name.includes("Google US English") ||
+                    voice.name.includes("Victoria") ||  
+                    voice.name.includes("Allison") ||   
+                    voice.name.includes("Zira") ||      
+                    voice.name.includes("Tessa")        
+                );
+                if (arianaLikeVoice) speech.voice = arianaLikeVoice;
+                window.speechSynthesis.speak(speech);
+            };
+            return;
+        }
+
+        window.speechSynthesis.speak(speech);
+    }
+
+    speakText(text);
+    type();
+});
+
 
 
 

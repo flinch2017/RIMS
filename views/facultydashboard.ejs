@@ -104,22 +104,41 @@ body::before {
         }
 
         .sidebar a {
-            display: block;
-            color: white;
-            padding: 0.8rem;
-            text-decoration: none;
-            font-size: 1rem;
-            transition: background-color 0.3s ease;
-        }
+    display: flex;
+    align-items: center;
+    color: white;
+    padding: 0.8rem;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: background-color 0.3s ease, color 0.15s ease; /* Faster color transition */
+}
 
-        .sidebar a:hover {
-            background-color: #388e3c;
-        }
+/* Ensure both icon and text get the hover effect */
+.sidebar a i, 
+.sidebar a span {
+    transition: transform 0.25s cubic-bezier(0.25, 1, 0.5, 1), color 0.15s ease; /* Faster color transition */
+    display: inline-block; /* Smooth scaling */
+}
 
-        .sidebar i {
-            margin-right: 8px;
-            font-size: 1rem;
-        }
+/* Add spacing between icon and text */
+.sidebar a i {
+    margin-right: 12px; /* Adjust as needed */
+    font-size: 1.2rem;  /* Slightly larger for balance */
+}
+
+/* More subtle enlarge & push to right effect, plus color change */
+.sidebar a:hover {
+    color: rgb(255, 255, 255); /* Change text & icon color */
+}
+
+.sidebar a:hover i, 
+.sidebar a:hover span {
+    transform: scale(1.08) translateX(4px); /* Gentle scaling & movement */
+}
+
+
+
+
 
        
         
@@ -136,19 +155,43 @@ body::before {
 
 /* Welcome Text Styling */
 .welcome {
-    font-size: 1.25rem; /* Smaller font size */
+    font-size: 1.25rem; /* Keep the smaller font size */
     font-weight: bold;
-    color: #343a40;
-    margin-bottom: 15px; /* Adjusted margin */
+    color: #2e7d32; /* Dark Green */
+    margin-bottom: 15px; /* Maintain spacing */
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Space between icon and text */
     animation: fadeIn 1.5s ease-in-out;
 }
+
+/* Icon Styling */
+.welcome i {
+    font-size: 1.5rem; /* Slightly bigger than text */
+    color: #66bb6a; /* Lighter Green */
+    animation: bounce 1.5s infinite alternate;
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+    0% { opacity: 0; transform: translateY(-5px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+/* Bouncing effect for the sun/moon */
+@keyframes bounce {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-3px); }
+}
+
+
 
 /* Main Title Styling */
 h1.my-4 {
     font-size: 2rem; /* Smaller font size */
     color: #000000;
     font-weight: 600;
-    text-align: center;
+    text-align: left;
     animation: fadeIn 2s ease-in-out;
 }
 
@@ -273,28 +316,235 @@ h1.my-4 {
     }
 }
 
+@keyframes bounceHover {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1.05); }
+}
+
+.btn-profile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 45px !important;
+    height: 45px !important;
+    border-radius: 50% !important; /* Makes it circular */
+    overflow: hidden;
+    cursor: pointer;
+    background-color: #0088cc !important; /* Telegram blue */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15); /* Soft shadow */
+    position: relative;
+    transition: box-shadow 0.3s ease-in-out;
+}
+
+.btn-profile img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+/* Bounce animation on hover */
+.btn-profile:hover {
+    animation: bounceHover 0.4s ease-in-out forwards;
+    box-shadow: 0 6px 20px rgba(0, 136, 204, 0.4); /* Soft blue glow */
+}
+
+/* Click effect */
+.btn-profile:active {
+    transform: scale(0.9); /* Press-down effect */
+    box-shadow: 0 3px 10px rgba(0, 136, 204, 0.3); /* Slightly reduced glow */
+}
+
+
+.profile-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.btn-profile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 45px !important;
+    height: 45px !important;
+    border-radius: 50%;
+    overflow: hidden;
+    cursor: pointer;
+    background-color: #0088cc;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+    position: relative;
+    transition: box-shadow 0.3s ease-in-out;
+}
+
+.btn-profile img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Dropdown Menu */
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 50px;
+    right: 0;
+    background: #fff;
+    border-radius: 12px; /* Slightly more rounded */
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1); /* Soft shadow with more spread */
+    width: 200px;
+    z-index: 100;
+    opacity: 0;
+    transform: translateY(-15px);
+    animation: dropdownAnimation 0.3s ease forwards;
+    overflow: hidden;
+}
+
+/* Keyframe animation for dropdown (Smooth reveal) */
+@keyframes dropdownAnimation {
+    0% {
+        opacity: 0;
+        transform: translateY(-15px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Show dropdown when active */
+.profile-dropdown.active .dropdown-menu {
+    display: block;
+}
+
+/* Dropdown Header (Full Name) */
+.dropdown-header {
+    padding: 12px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    background-color: #f1f1f1;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Styling for links inside dropdown */
+.dropdown-menu a {
+    display: block;
+    padding: 12px;
+    color: #333;
+    text-decoration: none;
+    font-size: 14px;
+    transition: background 0.3s, padding-left 0.3s;
+    padding-left: 16px; /* Indentation for icon and text */
+}
+
+/* Hover effect for links */
+.dropdown-menu a:hover {
+    background-color: #e6e6e6;
+    padding-left: 24px; /* Indentation increases on hover */
+}
+
+/* Add space between icon and text */
+.dropdown-menu a i {
+    margin-right: 12px; /* Space between icon and text */
+    color: #333;
+    font-size: 18px;
+}
+
+
+
     </style>
 </head>
 <body>
 
-<div class="header">
-    <div class="brand">ESSU Research and Information Management System</div>
-    <div class="d-flex">
-        <span class="btn-profile" onclick="window.location.href='/facultyprofile'">Profile</span>
-        <button class="btn-logout" onclick="window.location.href='/logout'">Logout</button>
+    <div class="header">
+        <div class="brand" style="display: flex; align-items: center; gap: 10px;">
+            <div style="width: 40px; height: 40px; border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center; background-color: white;">
+                <img src="/images/essu_logo.png" alt="ESSU Logo" style="width: 100%; height: auto; object-fit: contain;">
+            </div>
+            ESSU RIMS
+        </div>
+        <div class="d-flex">
+            <div class="profile-dropdown">
+                <!-- Profile Picture -->
+                <span class="btn-profile" onclick="toggleDropdown()">
+                    <img src="/uploads/<%= filename %>" alt="Profile Picture">
+                </span>
+            
+                <!-- Dropdown Menu -->
+                <div class="dropdown-menu" id="profileDropdown">
+                    <!-- Full Name Displayed Above the Links -->
+                    <div class="dropdown-header">
+                        <p class="fullname"><%= fullname %></p>
+                    </div>
+            
+                    <!-- Profile and Log Out Links -->
+                    <a href="/facultyprofile">
+                        <i class="fas fa-user"></i> View Profile
+                    </a>
+                    <a href="/logout">
+                        <i class="fas fa-sign-out-alt"></i> Log Out
+                    </a>
+                </div>
+            </div>
+            
+        </div>
     </div>
-</div>
+
+    <script>
+        function toggleDropdown() {
+    document.querySelector('.profile-dropdown').classList.toggle('active');
+}
+
+// Close dropdown when clicking outside
+document.addEventListener('click', function (event) {
+    let dropdown = document.querySelector('.profile-dropdown');
+    if (!dropdown.contains(event.target)) {
+        dropdown.classList.remove('active');
+    }
+});
+
+    </script>
+    
 
 <div class="dashboard-container">
     <div class="sidebar">
-        <a href="/facultydashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-        <a href="/facultypapers"><i class="fas fa-book"></i> Researches</a>
-        
-        
+        <a href="/facultydashboard">
+            <i class="fas fa-tachometer-alt"></i> <span>Dashboard</span>
+        </a>
+        <a href="/facultypapers">
+            <i class="fas fa-book"></i> <span>Researches</span>
+        </a>
     </div>
+    
 
     <div class="main-content">
-        <div class="welcome">Hi, <%= fullname %>!</div>
+        <div class="welcome">
+            <i id="greeting-icon" class="fas"></i> <span id="greeting-text">Good day, <%= fullname %>!</span>
+        </div>
+        
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const hour = new Date().getHours();
+                const icon = document.getElementById("greeting-icon");
+                const text = document.getElementById("greeting-text");
+        
+                if (hour >= 6 && hour < 18) {
+                    // Daytime: Show Sun
+                    icon.classList.add("fas", "fa-sun");
+                    text.innerHTML = "Good day, <%= fullname %>!";
+                } else {
+                    // Nighttime: Show Moon
+                    icon.classList.add("fas", "fa-moon");
+                    text.innerHTML = "Good evening, <%= fullname %>!";
+                }
+            });
+        </script>
         <h1 class="my-4">Dashboard</h1>
         
         <div class="grid">

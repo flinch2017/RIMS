@@ -104,22 +104,37 @@ body::before {
         }
 
         .sidebar a {
-            display: block;
-            color: white;
-            padding: 0.8rem;
-            text-decoration: none;
-            font-size: 1rem;
-            transition: background-color 0.3s ease;
-        }
+    display: flex;
+    align-items: center;
+    color: white;
+    padding: 0.8rem;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: background-color 0.3s ease, color 0.15s ease; /* Faster color transition */
+}
 
-        .sidebar a:hover {
-            background-color: #388e3c;
-        }
+/* Ensure both icon and text get the hover effect */
+.sidebar a i, 
+.sidebar a span {
+    transition: transform 0.25s cubic-bezier(0.25, 1, 0.5, 1), color 0.15s ease; /* Faster color transition */
+    display: inline-block; /* Smooth scaling */
+}
 
-        .sidebar i {
-            margin-right: 8px;
-            font-size: 1rem;
-        }
+/* Add spacing between icon and text */
+.sidebar a i {
+    margin-right: 12px; /* Adjust as needed */
+    font-size: 1.2rem;  /* Slightly larger for balance */
+}
+
+/* More subtle enlarge & push to right effect, plus color change */
+.sidebar a:hover {
+    color: rgb(255, 255, 255); /* Change text & icon color */
+}
+
+.sidebar a:hover i, 
+.sidebar a:hover span {
+    transform: scale(1.08) translateX(4px); /* Gentle scaling & movement */
+}
 
         .main-content {
             margin-left: 220px; /* Increased to account for the sidebar */
@@ -338,30 +353,90 @@ form {
     animation-delay: 0.4s;
 }
 
+/* Pending Requests Heading Styling */
+.pending-requests {
+    font-size: 1.5rem; /* Balanced size */
+    font-weight: bold;
+    color: #2e7d32; /* Deep orange to indicate pending status */
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Space between icon and text */
+    opacity: 0;
+    transform: translateY(-10px);
+    animation: fadeSlideIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Icon Styling */
+.pending-requests i {
+    font-size: 1.75rem; /* Slightly larger for emphasis */
+    color: #2e7d32; /* Matches text */
+    opacity: 0;
+    transform: scale(0.8);
+    animation: popIn 0.4s ease-out 0.2s forwards;
+}
+
+/* Smooth Fade & Slide Animation (Telegram Vibe) */
+@keyframes fadeSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Pop-in Effect for Icon */
+@keyframes popIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+
+
     </style>
 </head>
 <body>
 
 <div class="header">
-    <div class="brand">ESSU Research and Information Management System</div>
+    <div class="brand" style="display: flex; align-items: center; gap: 10px;">
+        <div style="width: 40px; height: 40px; border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center; background-color: white;">
+            <img src="/images/essu_logo.png" alt="ESSU Logo" style="width: 100%; height: auto; object-fit: contain;">
+        </div>
+        ESSU RIMS
+    </div>
     <div class="d-flex">
-        <span class="btn-profile" onclick="window.location.href='/facultyprofile'">Profile</span>
+        
         <button class="btn-logout" onclick="window.location.href='/logout'">Logout</button>
     </div>
 </div>
 
 <div class="dashboard-container">
     <div class="sidebar">
-        <a href="/rdsodashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-        <a href="/rdsopapers"><i class="fas fa-file-alt"></i> Researches</a>
-        <a href="/campusescolleges"><i class="fas fa-university"></i> Campuses & Colleges</a>
-        <a href="/faculties"><i class="fas fa-user-graduate"></i> Faculties/Researchers</a>
-        <a href="/requests"><i class="fas fa-envelope"></i> Verification Requests</a>
+        <a href="/rdsodashboard"><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a>
+        <a href="/rdsopapers"><i class="fas fa-file-alt"></i> <span>Researches</span></a>
+        <a href="/campusescolleges"><i class="fas fa-university"></i> <span>Campuses & Colleges</span></a>
+        <a href="/faculties"><i class="fas fa-user-graduate"></i> <span>Faculties/Researchers</span></a>
+        <a href="/requests"><i class="fas fa-envelope"></i> <span>Verification Requests</span></a>
     </div>
     
 
     <div class="main-content">
-        <h2>Pending Requests</h2>
+        <h2 class="pending-requests">
+            <i class="fas fa-hourglass-half"></i> Pending Requests
+        </h2>
+
+        <% if (pendingUsersAndFaculty.length === 0) { %>
+            <p>No pending requests</p>
+        <% } else { %>
+        
         <!-- Improved Table (with responsive design) -->
         <div class="table-container">
             <table class="table table-striped table-hover table-bordered text-center align-middle fs-7">
@@ -412,175 +487,175 @@ form {
                             </td>
                         </tr>
                       <!-- Modal for Viewing User Details -->
-<div class="modal fade" id="viewModal<%= user.idnumber %>" tabindex="-1" aria-labelledby="viewModalLabel<%= user.idnumber %>" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content animated-modal"> <!-- Added animation class -->
-            <div class="modal-header">
-                <h5 class="modal-title text-white" id="viewModalLabel<%= user.idnumber %>">User Details</h5>
+                        <div class="modal fade" id="viewModal<%= user.idnumber %>" tabindex="-1" aria-labelledby="viewModalLabel<%= user.idnumber %>" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered modal-lg">
+                                <div class="modal-content animated-modal"> <!-- Added animation class -->
+                                    <div class="modal-header">
+                                        <h5 class="modal-title text-white" id="viewModalLabel<%= user.idnumber %>">User Details</h5>
 
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <!-- Left Column: User Information -->
-                    <div class="col-md-6 animated-content">
-                        <div class="user-details-card p-4">
-                            <h4 class="text-center mb-4">User Details</h4>
-                            <div class="user-detail-item">
-                                <p><strong>RIMS ID:</strong> <span><%= user.idnumber %></span></p>
-                            </div>
-                            <div class="user-detail-item">
-                                <p><strong>Full Name:</strong> <span><%= user.fullname %></span></p>
-                            </div>
-                            <div class="user-detail-item">
-                                <p><strong>Campus:</strong> <span><%= user.campus || 'N/A' %></span></p>
-                            </div>
-                            <div class="user-detail-item">
-                                <p><strong>College:</strong> <span><%= user.college || 'N/A' %></span></p>
-                            </div>
-                            <div class="user-detail-item">
-                                <p><strong>Department:</strong> <span><%= user.department || 'N/A' %></span></p>
-                            </div>
-                            <div class="user-detail-item">
-                                <p><strong>Designation:</strong> <span><%= user.designation || 'N/A' %></span></p>
-                            </div>
-                            <div class="user-detail-item">
-                                <p><strong>Username:</strong> <span><%= user.username %></span></p>
-                            </div>
-                            <div class="user-detail-item">
-                                <p><strong>Email:</strong> <span><%= user.email %></span></p>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <!-- Left Column: User Information -->
+                                            <div class="col-md-6 animated-content">
+                                                <div class="user-details-card p-4">
+                                                    <h4 class="text-center mb-4">User Details</h4>
+                                                    <div class="user-detail-item">
+                                                        <p><strong>RIMS ID:</strong> <span><%= user.idnumber %></span></p>
+                                                    </div>
+                                                    <div class="user-detail-item">
+                                                        <p><strong>Full Name:</strong> <span><%= user.fullname %></span></p>
+                                                    </div>
+                                                    <div class="user-detail-item">
+                                                        <p><strong>Campus:</strong> <span><%= user.campus || 'N/A' %></span></p>
+                                                    </div>
+                                                    <div class="user-detail-item">
+                                                        <p><strong>College:</strong> <span><%= user.college || 'N/A' %></span></p>
+                                                    </div>
+                                                    <div class="user-detail-item">
+                                                        <p><strong>Department:</strong> <span><%= user.department || 'N/A' %></span></p>
+                                                    </div>
+                                                    <div class="user-detail-item">
+                                                        <p><strong>Designation:</strong> <span><%= user.designation || 'N/A' %></span></p>
+                                                    </div>
+                                                    <div class="user-detail-item">
+                                                        <p><strong>Username:</strong> <span><%= user.username %></span></p>
+                                                    </div>
+                                                    <div class="user-detail-item">
+                                                        <p><strong>Email:</strong> <span><%= user.email %></span></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <style>
+                                                .user-details-card {
+                                                    background-color: #f8f9fa;
+                                                    border-radius: 10px;
+                                                    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                                                }
+                                            
+                                                .user-detail-item {
+                                                    margin-bottom: 15px;
+                                                }
+                                            
+                                                .user-detail-item p {
+                                                    font-size: 16px;
+                                                    color: #333;
+                                                }
+                                            
+                                                .user-detail-item strong {
+                                                    color: #007bff;
+                                                }
+                                            
+                                                .user-detail-item span {
+                                                    font-weight: 500;
+                                                    color: #495057;
+                                                }
+                                            
+                                                .user-detail-item:hover {
+                                                    background-color: #e9ecef;
+                                                    border-radius: 5px;
+                                                    padding: 5px;
+                                                    transition: background-color 0.3s ease;
+                                                }
+                                            
+                                                .user-details-card h4 {
+                                                    font-size: 1.25rem;
+                                                    font-weight: bold;
+                                                    color: #007bff;
+                                                }
+
+                                                
+                                            </style>
+                                            
+
+                                            <!-- Right Column: Images -->
+                                            <div class="col-md-6 text-center animated-content text-white">
+                                                <% if (user.filename) { %>
+                                                    <p><strong>Profile Picture:</strong></p>
+                                                    <img src="/uploads/<%= user.filename %>" alt="Profile Picture" class="img-fluid rounded mb-2 shadow-sm">
+                                                <% } %>
+
+                                                <% if (user.faculty_id_pic) { %>
+                                                    <p><strong>Faculty ID:</strong></p>
+                                                    <img src="/uploads/<%= user.faculty_id_pic %>" alt="Faculty ID Picture" class="img-fluid rounded mb-2 shadow-sm">
+                                                <% } %>
+
+                                                <% if (user.selfie_with_id) { %>
+                                                    <p><strong>Selfie with Faculty ID:</strong></p>
+                                                    <img src="/uploads/<%= user.selfie_with_id %>" alt="Selfie with ID" class="img-fluid rounded shadow-sm">
+                                                <% } %>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    
-                    <style>
-                        .user-details-card {
-                            background-color: #f8f9fa;
-                            border-radius: 10px;
-                            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-                        }
-                    
-                        .user-detail-item {
-                            margin-bottom: 15px;
-                        }
-                    
-                        .user-detail-item p {
-                            font-size: 16px;
-                            color: #333;
-                        }
-                    
-                        .user-detail-item strong {
-                            color: #007bff;
-                        }
-                    
-                        .user-detail-item span {
-                            font-weight: 500;
-                            color: #495057;
-                        }
-                    
-                        .user-detail-item:hover {
-                            background-color: #e9ecef;
-                            border-radius: 5px;
-                            padding: 5px;
-                            transition: background-color 0.3s ease;
-                        }
-                    
-                        .user-details-card h4 {
-                            font-size: 1.25rem;
-                            font-weight: bold;
-                            color: #007bff;
+
+                        <style>
+                        /* Glassmorphism Effect */
+                        .animated-modal {
+                            background: rgba(255, 255, 255, 0.1);
+                            backdrop-filter: blur(12px);
+                            border-radius: 15px;
+                            border: 1px solid rgba(255, 255, 255, 0.3);
+                            box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2);
+                            animation: fadeInScale 0.4s ease-out;
                         }
 
-                        
-                    </style>
-                    
+                        /* Modal Content Slide-in Animation */
+                        .animated-content {
+                            opacity: 0;
+                            transform: translateY(10px);
+                            animation: slideUp 0.4s ease-out forwards 0.2s;
+                        }
 
-                    <!-- Right Column: Images -->
-                    <div class="col-md-6 text-center animated-content text-white">
-                        <% if (user.filename) { %>
-                            <p><strong>Profile Picture:</strong></p>
-                            <img src="/uploads/<%= user.filename %>" alt="Profile Picture" class="img-fluid rounded mb-2 shadow-sm">
-                        <% } %>
+                        /* Animations */
+                        @keyframes fadeInScale {
+                            0% {
+                                opacity: 0;
+                                transform: scale(0.95);
+                            }
+                            100% {
+                                opacity: 1;
+                                transform: scale(1);
+                            }
+                        }
 
-                        <% if (user.faculty_id_pic) { %>
-                            <p><strong>Faculty ID:</strong></p>
-                            <img src="/uploads/<%= user.faculty_id_pic %>" alt="Faculty ID Picture" class="img-fluid rounded mb-2 shadow-sm">
-                        <% } %>
+                        @keyframes slideUp {
+                            0% {
+                                opacity: 0;
+                                transform: translateY(10px);
+                            }
+                            100% {
+                                opacity: 1;
+                                transform: translateY(0);
+                            }
+                        }
 
-                        <% if (user.selfie_with_id) { %>
-                            <p><strong>Selfie with Faculty ID:</strong></p>
-                            <img src="/uploads/<%= user.selfie_with_id %>" alt="Selfie with ID" class="img-fluid rounded shadow-sm">
-                        <% } %>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
+                        /* Smooth Close Button */
+                        .btn-close {
+                            transition: transform 0.2s ease;
+                        }
 
-<style>
-/* Glassmorphism Effect */
-.animated-modal {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(12px);
-    border-radius: 15px;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2);
-    animation: fadeInScale 0.4s ease-out;
-}
+                        .btn-close:hover {
+                            transform: scale(1.1);
+                        }
 
-/* Modal Content Slide-in Animation */
-.animated-content {
-    opacity: 0;
-    transform: translateY(10px);
-    animation: slideUp 0.4s ease-out forwards 0.2s;
-}
+                        /* Image Styling */
+                        .img-fluid {
+                            transition: transform 0.3s ease, box-shadow 0.3s ease;
+                        }
 
-/* Animations */
-@keyframes fadeInScale {
-    0% {
-        opacity: 0;
-        transform: scale(0.95);
-    }
-    100% {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-
-@keyframes slideUp {
-    0% {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Smooth Close Button */
-.btn-close {
-    transition: transform 0.2s ease;
-}
-
-.btn-close:hover {
-    transform: scale(1.1);
-}
-
-/* Image Styling */
-.img-fluid {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.img-fluid:hover {
-    transform: scale(1.05);
-    box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.2);
-}
-</style>
+                        .img-fluid:hover {
+                            transform: scale(1.05);
+                            box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.2);
+                        }
+                        </style>
 
 
                     <% }) %>
@@ -589,7 +664,7 @@ form {
         </div>
         
         
-
+        <% } %>
         
         
         

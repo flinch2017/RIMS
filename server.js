@@ -72,6 +72,8 @@ app.use(session({
 app.use(express.static('public'));
 app.use(express.static('uploads'));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/models', express.static(path.join(__dirname, 'models')));
+app.use('/sfx', express.static(path.join(__dirname, 'sfx')));
 
 // Multer file upload setup
 const storage = multer.diskStorage({
@@ -313,7 +315,6 @@ router.get('/rdsodashboard', )
 
 // GET route for faculty researches
 router.get('/facultypapers', async (req, res) => {
-    // Check if the user is logged in
     if (!req.session.user.idnumber) {
         return res.redirect('/login'); // Redirect to login if not authenticated
     }
@@ -321,44 +322,59 @@ router.get('/facultypapers', async (req, res) => {
     const userIdNumber = req.session.user.idnumber;
 
     try {
-        // Query to fetch user mode (Pending/Verified)
-        const userResult = await pool.query('SELECT mode FROM users WHERE idnumber = $1', [userIdNumber]);
-        
+        // Fetch user mode (Pending/Verified)
+        const userResult = await pool.query(
+            'SELECT mode, filename, fullname FROM users WHERE idnumber = $1',
+            [userIdNumber]
+        );
+
         if (userResult.rows.length === 0) {
             return res.status(404).send('User not found');
         }
 
         const userMode = userResult.rows[0].mode;
+        const userFilename = userResult.rows[0].filename;
+        const fullName = userResult.rows[0].fullname;
 
         const { status, search } = req.query;
-
-        let query = `
-            SELECT 
-                e.id, e.title, e.date_uploaded, e.publication_date, 
-                e.journal_publication, e.barcode, e.barnum, e.doi, e.abstract, e.funding, e.request, e.nature, e.origin, e.isbn, e.startdate, e.enddate, e.keyword, e.filename, 
-                s.name AS status, 
-                e.status_id,
-                STRING_AGG(r.name, ', ') AS author_name
-            FROM globalresearches e
-            LEFT JOIN statuses s ON e.status_id = s.id
-            LEFT JOIN faculty r ON r.researcher_id = ANY(
-                string_to_array(TRIM(BOTH ' ' FROM e.author), ', ')::uuid[]
-            )
-            WHERE e.idnumber = $1
-        `;
-
         const queryParams = [userIdNumber];
 
+        let query = `
+            WITH research_data AS (
+                SELECT 
+                    e.id, e.title, e.date_uploaded, e.publication_date, 
+                    e.journal_publication, e.barcode, e.barnum, e.doi, e.abstract, e.funding, 
+                    e.request, e.nature, e.origin, e.isbn, e.startdate, e.enddate, e.keyword, e.filename, 
+                    s.name AS status, e.status_id,
+                    STRING_AGG(r.name, ', ') AS author_name,
+                    STRING_AGG(DISTINCT r.campus, ', ') AS campuses
+                FROM globalresearches e
+                LEFT JOIN statuses s ON e.status_id = s.id
+                LEFT JOIN faculty r ON r.researcher_id = ANY(
+                    string_to_array(TRIM(BOTH ' ' FROM e.author), ', ')::uuid[]
+                )
+                WHERE e.idnumber = $1
+                GROUP BY e.id, s.name
+            )
+            SELECT * FROM research_data
+            WHERE 1 = 1
+        `;
+
         if (status) {
-            query += ' AND e.status_id = $2';
+            query += ' AND status_id = $2';
             queryParams.push(parseInt(status, 10));
         }
 
-        query += `
-            GROUP BY 
-                e.id, e.title, e.date_uploaded, e.publication_date, 
-                e.journal_publication, e.barcode, e.barnum, e.doi, e.abstract, e.funding, e.nature, e.origin, e.isbn, e.startdate, e.enddate, e.keyword, e.filename, s.name, e.status_id
-        `;
+        // Search filter: Now applies AFTER aggregation using WHERE
+        if (search) {
+            query += ` AND (
+                LOWER(title) LIKE LOWER($${queryParams.length + 1}) OR
+                LOWER(abstract) LIKE LOWER($${queryParams.length + 1}) OR
+                LOWER(keyword) LIKE LOWER($${queryParams.length + 1}) OR
+                LOWER(author_name) LIKE LOWER($${queryParams.length + 1})
+            )`;
+            queryParams.push(`%${search}%`);
+        }
 
         const result = await pool.query(query, queryParams);
 
@@ -366,17 +382,7 @@ router.get('/facultypapers', async (req, res) => {
         const researches = result.rows.map(research => {
             const request = research.request ? research.request.trim() : '';
 
-            // Check if there is a 'request' condition and format accordingly
-            if (request.startsWith('Request for ')) {
-                // If the request starts with "Request for", display the full text
-                research.displayStatus = request;
-            } else if (research.status) {
-                // If the status exists, display the status name (from the `statuses` table)
-                research.displayStatus = research.status; // Use `research.status` here, not `status_id`
-            } else {
-                // Otherwise, display 'Pending'
-                research.displayStatus = 'Pending';
-            }
+            research.displayStatus = request.startsWith('Request for ') ? request : research.status || 'Pending';
             return research;
         });
 
@@ -390,13 +396,17 @@ router.get('/facultypapers', async (req, res) => {
                 { id: 3, name: 'Published' },
                 { id: 4, name: 'Proposed' }
             ],
-            userMode, // Pass the user mode to the view
+            userMode,
+            filename: userFilename,
+            fullname: fullName
         });
     } catch (err) {
         console.error(err.message);
-        res.status(500).send(err.message); // Return error message for easier debugging
+        res.status(500).send(err.message);
     }
 });
+
+
 
 
 
@@ -894,13 +904,14 @@ router.get('/facultydashboard', async (req, res) => {
 
     try {
         // Query the database to get the user's fullname from the users table
-        const userResult = await pool.query('SELECT fullname FROM users WHERE idnumber = $1', [userId]);
+        const userResult = await pool.query('SELECT fullname, filename FROM users WHERE idnumber = $1', [userId]);
 
         if (userResult.rows.length === 0) {
             return res.status(404).send('User not found');
         }
 
         const fullname = userResult.rows[0].fullname;
+        const filename = userResult.rows[0].filename;
 
         // Query the database to get counts for each research status
         const totalResearchResult = await pool.query('SELECT COUNT(*) FROM globalresearches WHERE idnumber = $1', [userId]);
@@ -923,7 +934,8 @@ router.get('/facultydashboard', async (req, res) => {
             proposedCount: proposedCount,
             ongoingCount: ongoingCount,
             completedCount: completedCount,
-            publishedCount: publishedCount
+            publishedCount: publishedCount,
+            filename: filename
         });
     } catch (err) {
         console.error(err);
@@ -1079,16 +1091,30 @@ router.get('/rdsopapers', async (req, res) => {
         const queryParams = [];
         let conditions = [];
 
+        // Status filter
         if (status && !isNaN(status)) {
             conditions.push(`e.status_id = $${queryParams.length + 1}`);
             queryParams.push(parseInt(status, 10));
         }
 
+        // Campus filter
         if (campus) {
             conditions.push(`r.campus = $${queryParams.length + 1}`);
             queryParams.push(campus);
         }
 
+        // **Search filter**
+        if (search) {
+            conditions.push(`
+                (e.title ILIKE $${queryParams.length + 1} 
+                OR r.name ILIKE $${queryParams.length + 1} 
+                OR e.abstract ILIKE $${queryParams.length + 1}
+                OR e.keyword ILIKE $${queryParams.length + 1})`
+            );
+            queryParams.push(`%${search}%`);
+        }
+
+        // Append conditions
         if (conditions.length > 0) {
             query += ' WHERE ' + conditions.join(' AND ');
         }
@@ -1124,6 +1150,7 @@ router.get('/rdsopapers', async (req, res) => {
         res.status(500).send(err.message); // Return error message for easier debugging
     }
 });
+
 
 
 // GET route for faculty researches

@@ -98,9 +98,9 @@
             color: #2e7d32;
         }
         .dashboard-container {
-            display: flex;
-            flex-grow: 1;
             margin-top: 60px;
+            display: flex;
+            flex-wrap: wrap;
         }
         .sidebar {
             width: 220px;
@@ -111,18 +111,41 @@
             left: 0;
             height: calc(100% - 60px);
             overflow-y: auto;
+            z-index: 900;
         }
+
         .sidebar a {
-            display: block;
-            color: white;
-            padding: 0.8rem;
-            text-decoration: none;
-            font-size: 1rem;
-            transition: background-color 0.3s ease;
-        }
-        .sidebar a:hover {
-            background-color: #388e3c;
-        }
+    display: flex;
+    align-items: center;
+    color: white;
+    padding: 0.8rem;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: background-color 0.3s ease, color 0.15s ease; /* Faster color transition */
+}
+
+/* Ensure both icon and text get the hover effect */
+.sidebar a i, 
+.sidebar a span {
+    transition: transform 0.25s cubic-bezier(0.25, 1, 0.5, 1), color 0.15s ease; /* Faster color transition */
+    display: inline-block; /* Smooth scaling */
+}
+
+/* Add spacing between icon and text */
+.sidebar a i {
+    margin-right: 12px; /* Adjust as needed */
+    font-size: 1.2rem;  /* Slightly larger for balance */
+}
+
+/* More subtle enlarge & push to right effect, plus color change */
+.sidebar a:hover {
+    color: rgb(255, 255, 255); /* Change text & icon color */
+}
+
+.sidebar a:hover i, 
+.sidebar a:hover span {
+    transform: scale(1.08) translateX(4px); /* Gentle scaling & movement */
+}
         .main-content {
             margin-left: 220px;
             padding: 1rem;
@@ -142,6 +165,8 @@
             align-items: center;
             width: 100%;
         }
+
+        
         .input-group {
             display: flex;
             align-items: center;
@@ -528,29 +553,338 @@ td button {
 }
 
 
+.btn-profile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 45px !important;
+    height: 45px !important;
+    border-radius: 50% !important; /* Makes it circular */
+    overflow: hidden;
+    cursor: pointer;
+    background-color: #0088cc !important; /* Telegram blue */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15); /* Soft shadow */
+    position: relative;
+    transition: box-shadow 0.3s ease-in-out;
+}
+
+.btn-profile img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+/* Bounce animation on hover */
+.btn-profile:hover {
+    animation: bounceHover 0.4s ease-in-out forwards;
+    box-shadow: 0 6px 20px rgba(0, 136, 204, 0.4); /* Soft blue glow */
+}
+
+/* Click effect */
+.btn-profile:active {
+    transform: scale(0.9); /* Press-down effect */
+    box-shadow: 0 3px 10px rgba(0, 136, 204, 0.3); /* Slightly reduced glow */
+}
+
+
+.profile-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.btn-profile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 45px !important;
+    height: 45px !important;
+    border-radius: 50%;
+    overflow: hidden;
+    cursor: pointer;
+    background-color: #0088cc;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+    position: relative;
+    transition: box-shadow 0.3s ease-in-out;
+}
+
+.btn-profile img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Dropdown Menu */
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 50px;
+    right: 0;
+    background: #fff;
+    border-radius: 12px; /* Slightly more rounded */
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1); /* Soft shadow with more spread */
+    width: 200px;
+    z-index: 100;
+    opacity: 0;
+    transform: translateY(-15px);
+    animation: dropdownAnimation 0.3s ease forwards;
+    overflow: hidden;
+}
+
+/* Keyframe animation for dropdown (Smooth reveal) */
+@keyframes dropdownAnimation {
+    0% {
+        opacity: 0;
+        transform: translateY(-15px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Show dropdown when active */
+.profile-dropdown.active .dropdown-menu {
+    display: block;
+}
+
+/* Dropdown Header (Full Name) */
+.dropdown-header {
+    padding: 12px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    background-color: #f1f1f1;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Styling for links inside dropdown */
+.dropdown-menu a {
+    display: block;
+    padding: 12px;
+    color: #333;
+    text-decoration: none;
+    font-size: 14px;
+    transition: background 0.3s, padding-left 0.3s;
+    padding-left: 16px; /* Indentation for icon and text */
+}
+
+/* Hover effect for links */
+.dropdown-menu a:hover {
+    background-color: #e6e6e6;
+    padding-left: 24px; /* Indentation increases on hover */
+}
+
+/* Add space between icon and text */
+.dropdown-menu a i {
+    margin-right: 12px; /* Space between icon and text */
+    color: #333;
+    font-size: 18px;
+}
+
+/* Ensure the input field is rounded */
+.form-control {
+    border-radius: 25px; /* Makes input field rounded */
+    padding: 10px 15px;
+    border: 1px solid #ccc;
+    flex-grow: 1;
+}
+
+/* Circular search button */
+.search-btn {
+    width: 50px;  
+    height: 40px; 
+    border-radius: 50%; /* Makes the button circular */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    background-color: #28a745; /* Green color */
+    border: none;
+    color: white;
+}
+
+.search-btn:hover {
+    background-color: #218838; /* Darker green on hover */
+}
+
+.form-select {
+    border-radius: 20px; /* Adjust for more or less roundness */
+    padding: 8px 12px; /* Add some padding for better appearance */
+    border: 1px solid #ccc; /* Optional: Improve border appearance */
+    outline: none;
+    transition: all 0.3s ease-in-out;
+}
+
+.form-select:focus {
+    border-color: #28a745; /* Optional: Change border color when focused */
+    box-shadow: 0 0 8px rgba(40, 167, 69, 0.5);
+}
+
+
+
+/* Researches Heading Styling */
+.researches-heading {
+    font-size: 1.75rem; /* Prominent size */
+    font-weight: bold;
+    color: #2e7d32; /* Deep green for consistency */
+    display: flex;
+    align-items: center;
+    gap: 12px; /* Space between icon and text */
+    opacity: 0;
+    transform: translateY(-10px);
+    animation: fadeSlideIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    margin-bottom: 30px;
+}
+
+/* Icon Styling */
+.researches-heading i {
+    font-size: 2rem; /* Larger for emphasis */
+    color: #2e7d32; /* Matches the heading */
+    opacity: 0;
+    transform: scale(0.8);
+    animation: popIn 0.4s ease-out 0.2s forwards;
+}
+
+/* Smooth Fade & Slide Animation (Telegram Vibe) */
+@keyframes fadeSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Pop-in Effect for Icon */
+@keyframes popIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+
+
+/* Telegram-Style Loading Animation */
+@keyframes fadeSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes popIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Apply Animation to Elements */
+.aligned-container,
+.search-btn,
+.sortof select,
+.upload-btn {
+    opacity: 0;
+    transform: translateY(-10px);
+    animation: fadeSlideIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Staggered Load Effect */
+.search-btn { animation-delay: 0.2s; }
+.upload-btn { animation-delay: 0.4s; }
+.sortof select { animation-delay: 0.6s; }
+
+
     </style>
 </head>
 <body>
 
     <div class="header">
-        <div class="brand">ESSU Research and Information Management System</div>
+        <div class="brand" style="display: flex; align-items: center; gap: 10px;">
+            <div style="width: 40px; height: 40px; border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center; background-color: white;">
+                <img src="/images/essu_logo.png" alt="ESSU Logo" style="width: 100%; height: auto; object-fit: contain;">
+            </div>
+            ESSU RIMS
+        </div>
         <div class="d-flex">
-            <span class="btn-profile" onclick="window.location.href='/facultyprofile'">Profile</span>
-            <button class="btn-logout" onclick="window.location.href='/logout'">Logout</button>
+            <div class="profile-dropdown">
+                <!-- Profile Picture -->
+                <span class="btn-profile" onclick="toggleDropdown()">
+                    <img src="/uploads/<%= filename %>" alt="Profile Picture">
+                </span>
+            
+                <!-- Dropdown Menu -->
+                <div class="dropdown-menu" id="profileDropdown">
+                    <!-- Full Name Displayed Above the Links -->
+                    <div class="dropdown-header">
+                        <p class="fullname"><%= fullname %></p>
+                    </div>
+            
+                    <!-- Profile and Log Out Links -->
+                    <a href="/facultyprofile">
+                        <i class="fas fa-user"></i> View Profile
+                    </a>
+                    <a href="/logout">
+                        <i class="fas fa-sign-out-alt"></i> Log Out
+                    </a>
+                </div>
+            </div>
+            
         </div>
     </div>
 
+    <script>
+        function toggleDropdown() {
+    document.querySelector('.profile-dropdown').classList.toggle('active');
+}
+
+// Close dropdown when clicking outside
+document.addEventListener('click', function (event) {
+    let dropdown = document.querySelector('.profile-dropdown');
+    if (!dropdown.contains(event.target)) {
+        dropdown.classList.remove('active');
+    }
+});
+
+    </script>
+
     <div class="dashboard-container">
         <div class="sidebar">
-            <a href="/facultydashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-            <a href="/facultypapers"><i class="fas fa-book"></i> Researches</a>
-            
-            
+            <a href="/facultydashboard">
+                <i class="fas fa-tachometer-alt"></i> <span>Dashboard</span>
+            </a>
+            <a href="/facultypapers">
+                <i class="fas fa-book"></i> <span>Researches</span>
+            </a>
         </div>
 
         <div class="main-content">
             <div class="container">
-                <h1 class="my-4">Researches</h1>
+                <h1 class="my-4 researches-heading">
+                    <i class="fas fa-book-open"></i> Researches
+                </h1>
+                
                 <!-- Filter and Search Section -->
                 <div class="d-flex align-items-center mb-4">
                     <!-- Search Bar -->
@@ -561,9 +895,10 @@ td button {
                             class="form-control" 
                             placeholder="Search by Title, Author, or Description" 
                             value="<%= searchQuery || '' %>">
-                            <button type="submit" class="btn btn-green ms-2">
+                            <button type="submit" class="btn btn-green ms-2 search-btn">
                                 <i class="fas fa-search"></i>
-                              </button>
+                            </button>
+                            
                               
                        
                         
@@ -579,22 +914,23 @@ td button {
                 </div>
                 <div class="aligned-container">
                     <div class="mb-3 text-end">
-                        <button class="btn btn-success" 
-        data-bs-toggle="modal" 
-        data-bs-target="#uploadResearchModal"
-        <% if (userMode === 'Pending' || userMode === 'Rejected') { %>
-            style="filter: grayscale(100%); cursor: not-allowed;" 
-            disabled
-        <% } %>
->
-    <i class="fas fa-plus"></i> Upload New Research
-</button>
+                        <button class="btn btn-success rounded-pill px-4 py-2" 
+                            data-bs-toggle="modal" 
+                            data-bs-target="#uploadResearchModal"
+                            <% if (userMode === 'Pending' || userMode === 'Rejected') { %>
+                                style="filter: grayscale(100%); cursor: not-allowed;" 
+                                disabled
+                            <% } %>
+                        >
+                            <i class="fas fa-plus"></i> Upload New Research
+                        </button>
 
-<% if (userMode === 'Pending') { %>
-    <p class="text-muted">RDSO Verifying...</p>
-<% } else if (userMode === 'Rejected') { %>
-    <p class="text-muted">Sorry, you have been rejected.</p>
-<% } %>
+
+                        <% if (userMode === 'Pending') { %>
+                            <p class="text-muted">RDSO Verifying...</p>
+                        <% } else if (userMode === 'Rejected') { %>
+                            <p class="text-muted">Sorry, you have been rejected.</p>
+                        <% } %>
 
 
                     </div>
@@ -620,7 +956,7 @@ td button {
     <div class="modal-dialog modal-lg"> <!-- Add modal-lg here for larger width -->
         <div class="modal-content">
             <div class="modal-header" style="background-color: #4CAF50; color: white;">
-                <h5 class="modal-title" id="uploadResearchModalLabel">Add New Research</h5>
+                <h5 class="modal-title" id="uploadResearchModalLabel"> <i class="fas fa-file-alt"></i>   Add New Research</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -642,8 +978,8 @@ td button {
                         <div id="selected-authors" class="mb-3"></div> <!-- Container for selected authors -->
                     </div>
 
-                   <!-- Type of Research by Nature -->
-                   
+                    <div class="row">
+                        <!-- Type of Research by Nature -->
                         <div class="col-md-6 form-group mb-3">
                             <label for="nature" class="form-label">Type of Research by Nature</label>
                             <select name="nature" id="nature" class="form-control" style="border-color: #4CAF50;">
@@ -664,8 +1000,7 @@ td button {
                                 <option value="External">External</option>
                             </select>
                         </div>
-                    
-
+                    </div>
 
                     <!-- Abstract (Shown for Ongoing, Completed, and Published) -->
                     <div class="row" id="abstract-row" style="display: none;">
@@ -675,8 +1010,8 @@ td button {
                         </div>
                     </div>
 
-                     <!-- Funding Source -->
-                     <div class="row" id="fundingsource-row" style="display: none;">
+                    <!-- Funding Source -->
+                    <div class="row" id="fundingsource-row" style="display: none;">
                         <div class="col-md-6 form-group mb-3">
                             <label for="funding" class="form-label">Funding Source</label>
                             <select name="funding" id="funding" class="form-control" style="border-color: #4CAF50;">
@@ -706,7 +1041,7 @@ td button {
                         </div>
                     </div>
 
-                   <!-- Project/Study Duration -->
+                    <!-- Project/Study Duration -->
                     <div class="row justify-content-center" id="duration-row" style="display: none;">
                         <div class="col-md-8" style="border: 1px solid #4CAF50; border-radius: 8px; padding: 15px;">
                             <div class="row">
@@ -725,14 +1060,7 @@ td button {
                         </div>
                     </div>
 
-
-
-
-
-
-                    
-
-                    <!--  ISBN (Shown for Published) -->
+                    <!-- ISBN (Shown for Published) -->
                     <div class="row" id="isbn-row" style="display: none;">
                         <div class="col-md-6 form-group mb-3">
                             <label for="isbn" class="form-label">ISBN/ISSN</label>
@@ -740,8 +1068,7 @@ td button {
                         </div>
                     </div>
 
-
-                   <!-- Keyword Input (Shown for Published) -->
+                    <!-- Keyword Input (Shown for Published) -->
                     <div class="row" id="keyword-row" style="display: none;">
                         <div class="col-md-12 form-group mb-3">
                             <label for="keyword-input" class="form-label">Keywords (Maximum 5)</label>
@@ -754,71 +1081,66 @@ td button {
                         </div>
                     </div>
 
-                <script>
-                    const keywordInput = document.getElementById("keyword-input");
-                    const addKeywordButton = document.getElementById("add-keyword");
-                    const keywordList = document.getElementById("keyword-list");
-                    const maxKeywords = 5;
-                    let keywords = [];
-
-                    addKeywordButton.addEventListener("click", () => {
-                        const keyword = keywordInput.value.trim();
-                        if (keyword === "") {
-                            alert("Keyword cannot be empty.");
-                            return;
-                        }
-                        if (keywords.length >= maxKeywords) {
-                            alert(`You can only add up to ${maxKeywords} keywords.`);
-                            return;
-                        }
-                        if (keywords.includes(keyword)) {
-                            alert("This keyword has already been added.");
-                            return;
-                        }
-                        keywords.push(keyword);
-                        const listItem = document.createElement("li");
-                        listItem.textContent = keyword;
-                        listItem.className = "keyword-item d-flex justify-content-between align-items-center border p-2 mb-1 rounded";
-                        listItem.style.borderColor = "#4CAF50";
-                        const removeButton = document.createElement("button");
-                        removeButton.textContent = "Remove";
-                        removeButton.className = "btn btn-danger btn-sm";
-                        removeButton.addEventListener("click", () => {
-                            keywordList.removeChild(listItem);
-                            keywords = keywords.filter(k => k !== keyword);
+                    <script>
+                        const keywordInput = document.getElementById("keyword-input");
+                        const addKeywordButton = document.getElementById("add-keyword");
+                        const keywordList = document.getElementById("keyword-list");
+                        const maxKeywords = 5;
+                        let keywords = [];
+    
+                        addKeywordButton.addEventListener("click", () => {
+                            const keyword = keywordInput.value.trim();
+                            if (keyword === "") {
+                                alert("Keyword cannot be empty.");
+                                return;
+                            }
+                            if (keywords.length >= maxKeywords) {
+                                alert(`You can only add up to ${maxKeywords} keywords.`);
+                                return;
+                            }
+                            if (keywords.includes(keyword)) {
+                                alert("This keyword has already been added.");
+                                return;
+                            }
+                            keywords.push(keyword);
+                            const listItem = document.createElement("li");
+                            listItem.textContent = keyword;
+                            listItem.className = "keyword-item d-flex justify-content-between align-items-center border p-2 mb-1 rounded";
+                            listItem.style.borderColor = "#4CAF50";
+                            const removeButton = document.createElement("button");
+                            removeButton.textContent = "Remove";
+                            removeButton.className = "btn btn-danger btn-sm";
+                            removeButton.addEventListener("click", () => {
+                                keywordList.removeChild(listItem);
+                                keywords = keywords.filter(k => k !== keyword);
+                            });
+                            listItem.appendChild(removeButton);
+                            keywordList.appendChild(listItem);
+                            keywordInput.value = "";
                         });
-                        listItem.appendChild(removeButton);
-                        keywordList.appendChild(listItem);
-                        keywordInput.value = "";
-                    });
-
-                    // Select the form using querySelector (based on action attribute or other selector)
-                    const form = document.querySelector('form[action="/fresearch/add"]'); // Select the form by its action URL
-
-                    form.addEventListener('submit', (event) => {
-                        event.preventDefault(); // Prevent the default form submission
-
-                        // Join keywords into a comma-separated string
-                        const keywordString = keywords.join(', ');
-
-                        // If there are keywords, add them to a hidden input field
-                        if (keywordString) {
-                            const keywordField = document.createElement('input');
-                            keywordField.type = 'hidden';
-                            keywordField.name = 'keywords'; // Ensure this matches the name in the backend
-                            keywordField.value = keywordString;
-                            form.appendChild(keywordField); // Append the hidden field to the form
-                        }
-
-                        // Now submit the form with the updated keyword field
-                        form.submit(); // This will now include the keywords as a comma-separated string
-                    });
-                </script>
-
-
-
-
-                     
+    
+                        // Select the form using querySelector (based on action attribute or other selector)
+                        const form = document.querySelector('form[action="/fresearch/add"]'); // Select the form by its action URL
+    
+                        form.addEventListener('submit', (event) => {
+                            event.preventDefault(); // Prevent the default form submission
+    
+                            // Join keywords into a comma-separated string
+                            const keywordString = keywords.join(', ');
+    
+                            // If there are keywords, add them to a hidden input field
+                            if (keywordString) {
+                                const keywordField = document.createElement('input');
+                                keywordField.type = 'hidden';
+                                keywordField.name = 'keywords'; // Ensure this matches the name in the backend
+                                keywordField.value = keywordString;
+                                form.appendChild(keywordField); // Append the hidden field to the form
+                            }
+    
+                            // Now submit the form with the updated keyword field
+                            form.submit(); // This will now include the keywords as a comma-separated string
+                        });
+                    </script>
 
                     <!-- DOI (Shown for Published) -->
                     <div class="row" id="doi-row" style="display: none;">
@@ -828,14 +1150,11 @@ td button {
                         </div>
                     </div>
 
-                
                     <!-- Research File (Shown for Published) -->
                     <div class="form-group mb-3" id="research-file-row" style="display: none;">
                         <label for="researchFile" class="form-label">Research Document</label>
                         <input type="file" name="researchFile" id="researchFile" class="form-control" accept=".pdf,.doc,.docx" style="border-color: #4CAF50;">
                     </div>
-
-                    
 
                     <!-- Status Selection -->
                     <div class="row">
@@ -846,7 +1165,6 @@ td button {
                                 <option value="2">Ongoing</option>
                                 <option value="1">Completed</option>
                                 <option value="3">Published</option>
-                                
                             </select>
                         </div>
                     </div>
@@ -860,6 +1178,8 @@ td button {
         </div>
     </div>
 </div>
+
+
 
 <script>
     function toggleFields() {
@@ -1409,12 +1729,95 @@ td button {
                 </div>
 
             </div>
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    // Function to hide empty fields
+                    function hideEmptyFields() {
+                        document.querySelectorAll(".modal-body p").forEach((element) => {
+                            let span = element.querySelector("span");
+                            if (!span || !span.textContent.trim()) {
+                                element.style.display = "none"; // Hide the <p> element if empty
+                            }
+                        });
+                    }
+            
+                    // Run the function when modal is opened
+                    document.getElementById("viewResearchModal").addEventListener("show.bs.modal", function () {
+                        setTimeout(hideEmptyFields, 100); // Slight delay to ensure content is loaded
+                    });
+                });
+            </script>
+            
             <div class="modal-footer border-top-0 d-flex justify-content-end">
                 <button type="button" class="btn btn-outline-light px-4 py-2" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
 </div>
+
+<style>
+    /* Modal Design with Green Palette */
+.modal-content {
+    background-color: #1B4D3E; /* Deep green background */
+    border-radius: 12px; /* Rounded corners */
+}
+
+.modal-header {
+    background-color: #14532D; /* Darker green for header */
+    color: #fff; /* White text for contrast */
+    border-bottom: none;
+}
+
+.modal-title {
+    font-weight: bold;
+    color: #A9F3D1; /* Light green for title */
+}
+
+.modal-body {
+    color: #A9F3D1; /* Light green text for the body */
+}
+
+.modal-footer {
+    background-color: #14532D; /* Dark footer */
+}
+
+.btn-light {
+    background-color: #2E8B57; /* A slightly lighter green for the buttons */
+    color: white;
+    border-radius: 50px; /* Circular button for a sleek look */
+}
+
+.btn-light:hover {
+    background-color: #3C9C74; /* Hover effect for the button */
+}
+
+/* Highlight important elements */
+strong {
+    color: #9AE99E; /* Lighter green for important labels */
+}
+
+/* Custom Styling for Barcode Image */
+#view-barcode-image {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+}
+
+/* PDF Preview Section */
+.pdf-preview embed {
+    border-radius: 8px;
+}
+
+/* When empty fields are detected, hide them */
+.modal-body p {
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.modal-body .mb-3 {
+    border-bottom: none; /* Removed the underline */
+}
+</style>
+
 
 
 
@@ -1593,67 +1996,37 @@ document.getElementById('printModalContent').addEventListener('click', function 
                 <td><%= research.displayStatus || 'Pending' %></td>
 
                 
-                <td> <!-- New column for buttons -->
-                    <!-- View Button (could trigger a modal or redirect to a details page) -->
-                    <button class="btn btn-warning btn-sm" 
-    data-bs-toggle="modal" 
-    data-bs-target="#viewResearchModal" 
-    data-id="<%= research.id %>" 
-    data-title="<%= research.title %>" 
-    data-author="<%= research.author_name %>" 
-    data-publication_date="<%= research.publication_date %>" 
-    data-journal_publication="<%= research.journal_publication %>" 
-    data-status="<%= research.status %>" 
-    data-barcode="<%= research.barcode %>" 
-    data-barnum="<%= research.barnum %>" 
-    data-doi="<%= research.doi %>" 
-    data-abstract="<%= research.abstract %>"
-    data-funding="<%= research.funding %>"
-    data-nature="<%= research.nature %>"
-    data-origin="<%= research.origin %>"
-    data-isbn="<%= research.isbn %>"
-    data-startdate="<%= research.startdate %>"
-    data-enddate="<%= research.enddate %>"
-    data-keyword="<%= research.keyword %>"
-    data-filename="<%= research.filename %>"
-    data-campus="ESSU MAIN">
-    View
-</button>
+                <% 
+    let buttonText = '';
+    let modalTarget = '';
+    let buttonClass = 'btn-success'; // Default value to avoid undefined error
+    let buttonDisabled = false;
 
-                
-                    <!-- Conditionally Render Edit Button -->
-<% let buttonText = ''; %>
-<% let modalTarget = ''; %>
-<% let buttonClass = 'btn-success'; %>
-<% let buttonDisabled = false; %>
+    if (research.status === 'Proposed') {
+        buttonText = 'Continue';
+        modalTarget = '#ongoingUpdate';
+    } else if (research.status === 'Ongoing') {
+        buttonText = 'Complete';
+        modalTarget = '#completeUpdate';
+    } else if (research.status === 'Completed') {
+        buttonText = 'Publish';
+        modalTarget = '#editResearchModal';
+    }
 
-<% if (research.status === 'Proposed') { %>
-    <% buttonText = 'Continue'; %>
-    <% modalTarget = '#ongoingUpdate'; %>
-<% } else if (research.status === 'Ongoing') { %>
-    <% buttonText = 'Complete'; %>
-    <% modalTarget = '#completeUpdate'; %>
-<% } else if (research.status === 'Completed') { %>
-    <% buttonText = 'Publish'; %>
-    <% modalTarget = '#editResearchModal'; %>
-<% } %>
+    if (research.displayStatus && research.displayStatus.startsWith('Request for')) {
+        buttonClass = 'btn-secondary'; // Disabled styling
+        buttonDisabled = true;
+    } else if (research.displayStatus && research.displayStatus.startsWith('Current')) {
+        buttonClass = 'btn-success';
+        buttonDisabled = false;
+    }
+%>
 
-<!-- Add condition for 'Request for <status>' and 'Current <status>' -->
-<% if (research.displayStatus && research.displayStatus.startsWith('Request for')) { %>
-    <!-- Disable button with greyscale styling for 'Request for' status -->
-    <% buttonClass = 'btn-secondary'; %>
-    <% buttonDisabled = true; %>
-<% } else if (research.displayStatus && research.displayStatus.startsWith('Current')) { %>
-    <!-- Active button for 'Current' status -->
-    <% buttonClass = 'btn-success'; %>
-    <% buttonDisabled = false; %>
-<% } %>
-
-<!-- Add condition to hide button when status is 'Published' -->
-<% if (research.status !== 'Published') { %>
-    <button class="btn <%= buttonClass %> btn-sm" 
+<td class="d-flex flex-column gap-2">
+    <!-- View Button -->
+    <button class="btn btn-warning btn-sm rounded-pill" 
         data-bs-toggle="modal" 
-        data-bs-target="<%= modalTarget %>" 
+        data-bs-target="#viewResearchModal" 
         data-id="<%= research.id %>" 
         data-title="<%= research.title %>" 
         data-author="<%= research.author_name %>" 
@@ -1672,12 +2045,40 @@ document.getElementById('printModalContent').addEventListener('click', function 
         data-enddate="<%= research.enddate %>"
         data-keyword="<%= research.keyword %>"
         data-filename="<%= research.filename %>"
-        <%= buttonDisabled ? 'disabled' : '' %>>
-        <%= buttonText %>
+        data-campus="<%= research.campuses %>">
+        View
     </button>
-<% } %>
 
-                </td>
+    <% if (research.status !== 'Published') { %>
+        <button class="btn <%= buttonClass %> btn-sm rounded-pill" 
+            data-bs-toggle="modal" 
+            data-bs-target="<%= modalTarget %>" 
+            data-id="<%= research.id %>" 
+            data-title="<%= research.title %>" 
+            data-author="<%= research.author_name %>" 
+            data-publication_date="<%= research.publication_date %>" 
+            data-journal_publication="<%= research.journal_publication %>" 
+            data-status="<%= research.status %>" 
+            data-barcode="<%= research.barcode %>" 
+            data-barnum="<%= research.barnum %>" 
+            data-doi="<%= research.doi %>" 
+            data-abstract="<%= research.abstract %>"
+            data-funding="<%= research.funding %>"
+            data-nature="<%= research.nature %>"
+            data-origin="<%= research.origin %>"
+            data-isbn="<%= research.isbn %>"
+            data-startdate="<%= research.startdate %>"
+            data-enddate="<%= research.enddate %>"
+            data-keyword="<%= research.keyword %>"
+            data-filename="<%= research.filename %>"
+            <%= buttonDisabled ? 'disabled' : '' %>>
+            <%= buttonText %>
+        </button>
+    <% } %>
+</td>
+
+
+
                 
             </tr>
         <% }); %>

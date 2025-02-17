@@ -101,24 +101,50 @@
             z-index: 900;
         }
 
+        .sidebar {
+            width: 220px;
+            background-color: #66bb6a;
+            padding-top: 15px;
+            position: fixed;
+            top: 60px;
+            left: 0;
+            height: calc(100% - 60px);
+            overflow-y: auto;
+            z-index: 900;
+        }
+
         .sidebar a {
-            display: block;
-            color: white;
-            padding: 0.8rem;
-            text-decoration: none;
-            font-size: 1rem;
-            transition: background-color 0.3s ease;
-        }
+    display: flex;
+    align-items: center;
+    color: white;
+    padding: 0.8rem;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: background-color 0.3s ease, color 0.15s ease; /* Faster color transition */
+}
 
-        .sidebar a:hover {
-            background-color: #388e3c;
-        }
+/* Ensure both icon and text get the hover effect */
+.sidebar a i, 
+.sidebar a span {
+    transition: transform 0.25s cubic-bezier(0.25, 1, 0.5, 1), color 0.15s ease; /* Faster color transition */
+    display: inline-block; /* Smooth scaling */
+}
 
-        .sidebar i {
-            margin-right: 8px;
-            font-size: 1rem;
-        }
+/* Add spacing between icon and text */
+.sidebar a i {
+    margin-right: 12px; /* Adjust as needed */
+    font-size: 1.2rem;  /* Slightly larger for balance */
+}
 
+/* More subtle enlarge & push to right effect, plus color change */
+.sidebar a:hover {
+    color: rgb(255, 255, 255); /* Change text & icon color */
+}
+
+.sidebar a:hover i, 
+.sidebar a:hover span {
+    transform: scale(1.08) translateX(4px); /* Gentle scaling & movement */
+}
         .main-content {
             margin-left: 220px;
             padding: 1.5rem;
@@ -146,24 +172,45 @@
     text-align: center;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     cursor: pointer;
+
+    /* Start hidden */
+    opacity: 0;
+    transform: translateY(20px);
 }
 
+/* Hover effect */
 .campus-card:hover {
     transform: scale(1.05);
     box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
 }
 
+/* Telegram-style reveal animation */
+@keyframes reveal {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* Icon styling */
 .campus-card i {
     font-size: 2.5rem;
     color: #66bb6a;
     margin-bottom: 1rem;
 }
 
+/* Campus name styling */
 .campus-card .campus-name {
     font-size: 1.125rem;
     font-weight: bold;
     color: #2e7d32;
 }
+
 
 .modal {
     display: none;
@@ -233,11 +280,53 @@
     }
 }
 
-h1.my-4 {
-    font-size: 1.25rem; /* Reduced font size for the title */
+/* Campus & Colleges Heading Styling */
+.campus-colleges {
+    font-size: 1.75rem; /* Larger for emphasis */
     font-weight: bold;
-    color: #000000;
+    color: #2e7d32; /* Deep green for an academic feel */
+    display: flex;
+    align-items: center;
+    gap: 12px; /* Space between icon and text */
+    opacity: 0;
+    transform: translateY(-10px);
+    animation: fadeSlideIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
+
+/* Icon Styling */
+.campus-colleges i {
+    font-size: 2rem; /* Bigger for visual balance */
+    color: #2e7d32; /* Matches text */
+    opacity: 0;
+    transform: scale(0.8);
+    animation: popIn 0.4s ease-out 0.2s forwards;
+}
+
+/* Smooth Fade & Slide Animation (Telegram Vibe) */
+@keyframes fadeSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Pop-in Effect for Icon */
+@keyframes popIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+
 
 
 
@@ -246,26 +335,34 @@ h1.my-4 {
 <body>
 
 <div class="header">
-    <div class="brand">ESSU Research and Information Management System</div>
+    <div class="brand" style="display: flex; align-items: center; gap: 10px;">
+        <div style="width: 40px; height: 40px; border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center; background-color: white;">
+            <img src="/images/essu_logo.png" alt="ESSU Logo" style="width: 100%; height: auto; object-fit: contain;">
+        </div>
+        ESSU RIMS
+    </div>
     <div class="d-flex">
-        <span class="btn-profile" onclick="window.location.href='/facultyprofile'">Profile</span>
+        
         <button class="btn-logout" onclick="window.location.href='/logout'">Logout</button>
     </div>
 </div>
 
 <div class="dashboard-container">
     <div class="sidebar">
-        <a href="/rdsodashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-        <a href="/rdsopapers"><i class="fas fa-file-alt"></i> Researches</a>
-        <a href="/campusescolleges"><i class="fas fa-university"></i> Campuses & Colleges</a>
-        <a href="/faculties"><i class="fas fa-user-graduate"></i> Faculties/Researchers</a>
-        <a href="/requests"><i class="fas fa-envelope"></i> Verification Requests</a>
+        <a href="/rdsodashboard"><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a>
+        <a href="/rdsopapers"><i class="fas fa-file-alt"></i> <span>Researches</span></a>
+        <a href="/campusescolleges"><i class="fas fa-university"></i> <span>Campuses & Colleges</span></a>
+        <a href="/faculties"><i class="fas fa-user-graduate"></i> <span>Faculties/Researchers</span></a>
+        <a href="/requests"><i class="fas fa-envelope"></i> <span>Verification Requests</span></a>
     </div>
     
 
     <div class="main-content">
         
-        <h1 class="my-4">Campus & Colleges</h1>
+        <h1 class="campus-colleges">
+            <i class="fas fa-university"></i> Campus & Colleges
+        </h1>
+        
         <p>Select campus to set annual target number of research</p>
         <div class="campus-grid">
             <div class="campus-card" data-campus="ESSU MAIN">
@@ -293,6 +390,19 @@ h1.my-4 {
                 <div class="campus-name">ESSU ARTECHE</div>
             </div>
         </div>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+    const cards = document.querySelectorAll(".campus-card");
+
+    cards.forEach((card, index) => {
+        setTimeout(() => {
+            card.style.animation = "reveal 0.4s ease-out forwards";
+        }, index * 150); // 150ms delay between each card
+    });
+});
+
+        </script>
         
         <!-- Modal -->
 <div id="campusModal" class="modal">
