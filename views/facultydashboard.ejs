@@ -456,6 +456,233 @@ h1.my-4 {
     font-size: 18px;
 }
 
+/* Icon Styling */
+.notification-icon,
+.messenger-icon {
+    font-size: 22px;
+    color: #333;
+    text-decoration: none;
+    position: relative;
+    cursor: pointer;
+}
+
+.notification-icon:hover,
+.messenger-icon:hover {
+    color: #0078FF;
+}
+
+/* Badge for Notifications & Messages */
+.badge {
+    position: absolute;
+    top: -5px;
+    right: -8px;
+    background: red;
+    color: white;
+    font-size: 12px;
+    border-radius: 50%;
+    padding: 3px 7px;
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 30%;
+    margin: 10% auto;
+    position: relative;
+}
+
+.modal-content h2 {
+    margin-top: 0;
+}
+
+.modal-content ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.modal-content ul li {
+    background: #f1f1f1;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+}
+
+.close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+
+/* Modal Styling */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: white;
+    padding: 15px;
+    border-radius: 8px;
+    width: 50%;
+    height: 70%;
+    margin: 5% auto;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+/* Messenger Layout */
+.messenger-container {
+    display: flex;
+    height: 100%;
+}
+
+/* Contacts Sidebar */
+.contacts-panel {
+    width: 30%;
+    background: #f0f0f0;
+    padding: 10px;
+    overflow-y: auto;
+    border-right: 1px solid #ddd;
+}
+
+.contacts-panel h3 {
+    margin: 0;
+    padding-bottom: 10px;
+}
+
+#contactList {
+    list-style: none;
+    padding: 0;
+}
+
+#contactList li {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background 0.3s;
+}
+
+#contactList li:hover {
+    background: #e0e0e0;
+}
+
+#contactList li img {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+/* Chat Panel */
+.chat-panel {
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+#chatHeader {
+    background: #0078FF;
+    color: white;
+    padding: 10px;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* Chat Box Styling */
+#chatBox {
+    flex-grow: 1;
+    padding: 10px;
+    overflow-y: auto;
+    background: #f9f9f9;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Received Message (His) */
+.chat-message.received {
+    background: #e0e0e0;
+    color: black;
+    padding: 8px 12px;
+    border-radius: 10px;
+    margin: 5px 0;
+    width: fit-content;
+    align-self: flex-start;
+}
+
+/* Sent Message (Mine) */
+.chat-message.sent {
+    background: #0078FF;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 10px;
+    margin: 5px 0;
+    width: fit-content;
+    align-self: flex-end;
+}
+
+/* Chat Input */
+.chat-input {
+    display: flex;
+    padding: 10px;
+    background: #fff;
+    border-top: 1px solid #ddd;
+}
+
+.chat-input input {
+    flex-grow: 1;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.chat-input button {
+    background: #0078FF;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    margin-left: 5px;
+    cursor: pointer;
+}
+
+.chat-input button:hover {
+    background: #005fcc;
+}
+
 
 
     </style>
@@ -469,33 +696,432 @@ h1.my-4 {
             </div>
             ESSU RIMS
         </div>
-        <div class="d-flex">
+        <div class="d-flex" style="display: flex; align-items: center; gap: 15px;">
+            <!-- Notification Bell -->
+<span class="notification-icon" onclick="openModal('notificationModal')">
+    <i class="fas fa-bell"></i>
+    <span class="badge" id="notifBadge"></span> <!-- Notification Badge -->
+</span>
+    
+            <!-- Messenger Icon -->
+            <span class="messenger-icon" onclick="openModal('messageModal')">
+                <i class="fab fa-facebook-messenger"></i>
+                <span class="badge" id="msgBadge">5</span> <!-- Example Unread Messages -->
+            </span>
+    
+            <!-- Profile Dropdown -->
             <div class="profile-dropdown">
-                <!-- Profile Picture -->
                 <span class="btn-profile" onclick="toggleDropdown()">
                     <img src="/uploads/<%= filename %>" alt="Profile Picture">
                 </span>
-            
-                <!-- Dropdown Menu -->
                 <div class="dropdown-menu" id="profileDropdown">
-                    <!-- Full Name Displayed Above the Links -->
                     <div class="dropdown-header">
                         <p class="fullname"><%= fullname %></p>
                     </div>
-            
-                    <!-- Profile and Log Out Links -->
-                    <a href="/facultyprofile">
-                        <i class="fas fa-user"></i> View Profile
-                    </a>
-                    <a href="/logout">
-                        <i class="fas fa-sign-out-alt"></i> Log Out
-                    </a>
+                    <a href="/facultyprofile"><i class="fas fa-user"></i> View Profile</a>
+                    <a href="/logout"><i class="fas fa-sign-out-alt"></i> Log Out</a>
                 </div>
             </div>
-            
         </div>
     </div>
+    
+  <!-- Notification Modal -->
+<div id="notificationModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('notificationModal')">&times;</span>
+        <h2>Notifications</h2>
+        <button id="clearAllBtn" class="clear-all-btn">Clear All Notifications</button>
+        <div id="notificationList">
+            <!-- Notifications will be dynamically generated here -->
+        </div>
+    </div>
+</div>
 
+<style>
+    /* Existing styles */
+    .notification-item .time-ago {
+        font-size: 11px;
+        color: #aaa;
+        font-style: italic;
+        text-align: right;
+    }
+    .notification-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px;
+        border-bottom: 1px solid #eee;
+        font-size: 14px;
+        color: #333;
+    }
+
+    /* General button styling */
+    .accept-button,
+    .reject-button {
+        padding: 4px 10px;
+        font-size: 12px;
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+        margin-left: 5px;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    /* Group buttons together */
+    .button-group {
+        display: flex;
+        gap: 5px;
+        align-items: center;
+    }
+
+    /* Accept button styling */
+    .accept-button {
+        background-color: #4CAF50;
+        color: white;
+    }
+
+    .accept-button:hover {
+        background-color: #45a049;
+        transform: scale(1.05);
+    }
+
+    /* Reject button styling */
+    .reject-button {
+        background-color: #f44336;
+        color: white;
+    }
+
+    .reject-button:hover {
+        background-color: #d32f2f;
+        transform: scale(1.05);
+    }
+
+    /* Clear All Button */
+    .clear-all-btn {
+        background-color: #f1c40f;
+        color: white;
+        padding: 10px 15px;
+        font-size: 14px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-bottom: 15px;
+        transition: background-color 0.3s ease;
+    }
+
+    .clear-all-btn:hover {
+        background-color: #e67e22;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        fetch('/notifications')
+            .then(response => response.json())
+            .then(data => {
+
+                
+                const notificationList = document.getElementById('notificationList');
+                notificationList.innerHTML = '';
+
+                if (data.length === 0) {
+                    notificationList.innerHTML = '<p class="text-center">No new notifications</p>';
+                } else {
+                    // Sort notifications from latest to oldest based on the actual created_at timestamp
+                    data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+                    data.forEach(notification => {
+                        const notificationItem = document.createElement('div');
+                        notificationItem.classList.add('notification-item');
+                        notificationItem.setAttribute('data-follower-id', notification.follower_id);
+
+                        let message = '';
+                        if (notification.type === 'follow_request') {
+                            message = `<strong>${notification.fullname}</strong> requested to follow you`;
+                        } else if (notification.type === 'follow_accepted') {
+                            message = `<strong>${notification.fullname}</strong> accepted your follow request`;
+                        } else if (notification.type === 'research_approval') {
+                            message = `Your request for <strong>${notification.title}</strong> as <strong>${notification.status_name}</strong> has been approved!`;
+                        }
+
+                        const messageElem = document.createElement('p');
+                        messageElem.innerHTML = message;
+                        notificationItem.appendChild(messageElem);
+
+                        if (notification.type === 'follow_request') {
+                            const buttonGroup = document.createElement('div');
+                            buttonGroup.classList.add('button-group');
+
+                            const acceptButton = document.createElement('button');
+                            acceptButton.classList.add('accept-button');
+                            acceptButton.innerText = 'Accept';
+                            acceptButton.addEventListener('click', () => handleFollowRequest(notification.follower_id, 'accept', acceptButton));
+                            buttonGroup.appendChild(acceptButton);
+
+                            const rejectButton = document.createElement('button');
+                            rejectButton.classList.add('reject-button');
+                            rejectButton.innerText = 'Reject';
+                            rejectButton.addEventListener('click', () => handleFollowRequest(notification.follower_id, 'reject', rejectButton));
+                            buttonGroup.appendChild(rejectButton);
+
+                            notificationItem.appendChild(buttonGroup);
+                        }
+
+                        // Display the time ago
+                        const timeAgo = document.createElement('p');
+                        timeAgo.classList.add('time-ago');
+                        timeAgo.textContent = notification.timeAgo;
+                        notificationItem.appendChild(timeAgo);
+
+                        notificationList.appendChild(notificationItem);
+                    });
+                }
+            })
+            .catch(error => console.error('Error fetching notifications:', error));
+
+        // Clear all notifications without confirmation
+const clearAllBtn = document.getElementById('clearAllBtn');
+clearAllBtn.addEventListener('click', async () => {
+    try {
+        const response = await fetch('/clear-notifications', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        if (response.ok) {
+            document.getElementById('notificationList').innerHTML = '<p class="text-center">No new notifications</p>';
+        } else {
+            alert('Failed to clear notifications');
+        }
+    } catch (error) {
+        console.error('Error clearing notifications:', error);
+        alert('Something went wrong while clearing notifications');
+    }
+});
+
+    });
+
+    async function handleFollowRequest(followerId, action, button) {
+        try {
+            const endpoint = action === 'accept' ? '/accept-follow-request' : '/reject-follow-request';
+            const response = await fetch(endpoint, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ followerId })
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                button.innerText = action === 'accept' ? 'Accepted' : 'Rejected';
+                button.style.filter = 'grayscale(100%)';
+                button.disabled = true;
+
+                const notificationItem = button.closest('.notification-item');
+                const otherButton = notificationItem.querySelector(action === 'accept' ? '.reject-button' : '.accept-button');
+
+                if (otherButton) {
+                    otherButton.remove();
+                }
+
+                setTimeout(() => {
+                    notificationItem.remove();
+                }, 3000);
+            } else {
+                alert(`Error: ${result.error}`);
+            }
+        } catch (error) {
+            console.error(`Error processing ${action} follow request:`, error);
+            alert('Something went wrong. Please try again.');
+        }
+    }
+</script>
+
+
+
+
+
+
+
+
+    
+
+
+
+
+
+
+
+    
+
+    
+    <!-- Message Modal -->
+<div id="messageModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('messageModal')">&times;</span>
+
+        <div class="messenger-container">
+            <!-- Left Sidebar (Contacts) -->
+            <div class="contacts-panel">
+                <h3>Contacts</h3>
+
+                <!-- Search Bar -->
+                <input type="text" id="searchContacts" placeholder="Search contacts..." onkeyup="searchContacts()">
+
+                <ul id="contactList">
+                    <!-- Contacts will be dynamically generated here -->
+                </ul>
+            </div>
+
+            <!-- Right Chat Panel -->
+            <div class="chat-panel">
+                <div id="chatHeader">Select a conversation</div>
+                <div id="chatBox">
+                    <p class="chat-message">Click on a contact to start chatting.</p>
+                </div>
+                <div class="chat-input">
+                    <input type="text" id="messageInput" placeholder="Type a message...">
+                    <button onclick="sendMessage()">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    // Function to search users and display them
+    function searchContacts() {
+        let input = document.getElementById('searchContacts').value.toLowerCase();
+        let contactList = document.getElementById('contactList');
+        contactList.innerHTML = '';  // Clear previous results
+    
+        // Fetch all users from the database that match the search term
+        fetch('/search-users?query=' + input)
+            .then(response => response.json())
+            .then(data => {
+                data.users.forEach(user => {
+                    // Render each user as a list item with a follow button
+                    let li = document.createElement('li');
+                    li.innerHTML = `
+                        <img src="${user.profilePic}" alt="${user.fullname}">
+                        <span>${user.fullname}</span>
+                        <button onclick="followUser('${user.idnumber}')">Follow</button>
+                    `;
+                    contactList.appendChild(li);
+                });
+            });
+    }
+    
+    // Function to follow a user (will send POST request to backend)
+    function followUser(followeeId) {
+        fetch('/follow', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ followee_idnumber: followeeId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(data.message);
+            } else {
+                alert(data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error following user:', error);
+        });
+    }
+    </script>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <script>
+            let selectedUser = "";
+
+        // Open chat with selected contact
+        function openChat(user) {
+            selectedUser = user;
+            document.getElementById("chatHeader").textContent = user;
+            document.getElementById("chatBox").innerHTML = `<p class="chat-message received">Chat with ${user}.</p>`;
+        }
+
+        // Send message
+        function sendMessage() {
+            if (!selectedUser) return alert("Select a contact first!");
+            
+            let messageInput = document.getElementById("messageInput");
+            if (messageInput.value.trim() !== "") {
+                let chatBox = document.getElementById("chatBox");
+
+                // Create new message element
+                let newMessage = document.createElement("p");
+                newMessage.className = "chat-message sent"; // Sent messages appear on the right
+                newMessage.textContent = messageInput.value;
+                
+                // Append message to chat
+                chatBox.appendChild(newMessage);
+                messageInput.value = "";
+                chatBox.scrollTop = chatBox.scrollHeight;
+
+                // Simulate response (optional)
+                setTimeout(() => {
+                    let receivedMessage = document.createElement("p");
+                    receivedMessage.className = "chat-message received"; // Received messages appear on the left
+                    receivedMessage.textContent = "This is a reply from " + selectedUser;
+                    chatBox.appendChild(receivedMessage);
+                    chatBox.scrollTop = chatBox.scrollHeight;
+                }, 1000);
+            }
+        }
+
+
+        </script>
+
+            
+            <script>
+                // Function to Open a Modal
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = "block";
+        }
+
+        // Function to Close a Modal
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = "none";
+        }
+
+        // Close the modal if user clicks outside
+        window.onclick = function(event) {
+            if (event.target.classList.contains("modal")) {
+                event.target.style.display = "none";
+            }
+        }
+
+    </script>
+    
+    
     <script>
         function toggleDropdown() {
     document.querySelector('.profile-dropdown').classList.toggle('active');

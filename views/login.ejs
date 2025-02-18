@@ -92,41 +92,45 @@ body::before {
 </div>
 
 <div class="login-container">
-    <h2 class="login-title">Login</h2>
+    <div class="logo">
+        <img src="/images/login2.png" alt="Logo" class="logo-image">
+    </div>
+    
+    <div class="login-form">
+        <h2 class="login-title">Login</h2>
 
-    <form action="/login" method="POST" autocomplete="off">
-        <div class="form-group">
-            
-            <div class="input-container">
-                <i class="fas fa-user"></i>
-                <input type="text" class="form-control" id="username" name="username" placeholder="Enter username" required autocomplete="off">
+        <form action="/login" method="POST" autocomplete="off">
+            <div class="form-group">
+                <div class="input-container">
+                    <i class="fas fa-user"></i>
+                    <input type="text" class="form-control" id="username" name="username" placeholder="Enter username" required autocomplete="off">
+                </div>
             </div>
-        </div>
 
-        <div class="form-group">
-           
-            <div class="input-container">
-                <i class="fas fa-lock"></i>
-                <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" required autocomplete="off">
-                <span class="toggle-password" id="togglePassword" onclick="togglePasswordVisibility()">
-                    <i class="fas fa-eye"></i>
-                </span>
+            <div class="form-group">
+                <div class="input-container">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" required autocomplete="off">
+                    <span class="toggle-password" id="togglePassword" onclick="togglePasswordVisibility()">
+                        <i class="fas fa-eye"></i>
+                    </span>
+                </div>
             </div>
-        </div>
 
-        <% if (typeof errorMessage !== 'undefined') { %>
-            <div class="form-group text-center text-danger">
-                <p><%= errorMessage %></p>
+            <% if (typeof errorMessage !== 'undefined') { %>
+                <div class="form-group text-center text-danger">
+                    <p><%= errorMessage %></p>
+                </div>
+            <% } %>
+
+            <div class="form-group text-center">
+                <button type="submit" class="btn btn-login">Login</button>
             </div>
-        <% } %>
+        </form>
 
-        <div class="form-group text-center">
-            <button type="submit" class="btn btn-login">Login</button>
+        <div class="signup-link">
+            <p>Don't have an account? <a href="/signup">Sign Up</a></p>
         </div>
-    </form>
-
-    <div class="signup-link">
-        <p>Don't have an account? <a href="/signup">Sign Up</a></p>
     </div>
 </div>
 
@@ -146,22 +150,61 @@ body::before {
     }
 
     /* Login Container */
-    .login-container {
-        background: white;
-        padding: 30px;
-        border-radius: 12px;
-        box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.1);
-        width: 350px;
+.login-container {
+    display: flex;
+    align-items: center;
+    background: linear-gradient(135deg, #2e7d32, #9ade9e); /* Gradient Green */
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.1);
+    width: 600px; /* Adjust width */
+    text-align: center;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+
+    /* Logo Section */
+    .logo {
+        flex: 2;
+        padding-right: 20px;
+    }
+
+    /* Logo Image */
+.logo-image {
+    width: 100%;
+    max-width: 500px; /* Adjust logo size */
+    height: auto;
+    opacity: 0; /* Initially invisible */
+    transform: translateY(20px); /* Start below its normal position */
+    animation: fadeInUp 1s ease-out forwards; /* Fade in and slide up */
+}
+
+/* Animation Keyframe */
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(20px); /* Start below */
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0); /* End at normal position */
+    }
+}
+
+
+    /* Login Form Section */
+    .login-form {
+        flex: 2;
         text-align: center;
-        animation: fadeIn 0.5s ease-in-out;
     }
 
     .login-title {
-        font-size: 22px;
-        font-weight: bold;
-        color: #000000;
-        margin-bottom: 20px;
-    }
+    font-size: 22px;
+    font-weight: bold;
+    color: #ffffff;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); /* Adds a subtle shadow */
+}
 
     .form-group {
         margin-bottom: 15px;
@@ -173,7 +216,7 @@ body::before {
         display: flex;
         align-items: center;
         background: #f2f2f2;
-        border-radius: 8px;
+        border-radius: 10px;
         padding: 10px;
         transition: 0.3s;
     }
@@ -194,7 +237,6 @@ body::before {
         background: transparent;
         width: 100%;
         font-size: 16px;
-     
         margin-left: 10px;
         margin-right: 10px;
     }
@@ -209,37 +251,35 @@ body::before {
         color: #0088cc;
     }
 
-   /* Login Button */
-.btn-login {
-    width: 120px; /* Initially small */
-    padding: 10px;
-    border: none;
-    border-radius: 50px; /* Capsule shape */
-    background: #2e7d32;
-    color: white;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease-in-out;
-}
+    /* Login Button */
+    .btn-login {
+        width: 120px; /* Initially small */
+        padding: 10px;
+        border: none;
+        border-radius: 50px; /* Capsule shape */
+        background: #2e7d32;
+        color: white;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease-in-out;
+    }
 
-/* Hover Effect with Bouncy Animation */
-.btn-login:hover {
-    width: 100%; /* Expands to full width */
-    border-radius: 8px; /* Turns into a square */
-    background: #000000;
-    color: yellow;
-    animation: bounceEffect 0.4s ease-out;
-}
+    /* Hover Effect with Bouncy Animation */
+    .btn-login:hover {
+        width: 100%; /* Expands to full width */
+        border-radius: 8px; /* Turns into a square */
+        background: #000000;
+        color: yellow;
+        animation: bounceEffect 0.4s ease-out;
+    }
 
-/* Bouncy Animation */
-@keyframes bounceEffect {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.1); } /* Slightly bigger */
-    100% { transform: scale(1); } /* Back to normal */
-}
-
-
+    /* Bouncy Animation */
+    @keyframes bounceEffect {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); } /* Slightly bigger */
+        100% { transform: scale(1); } /* Back to normal */
+    }
 
     /* Signup Link */
     .signup-link {
@@ -248,7 +288,7 @@ body::before {
     }
 
     .signup-link a {
-        color: #2e7d32;
+        color: #ffffff;
         text-decoration: none;
         font-weight: bold;
     }
@@ -287,6 +327,7 @@ body::before {
         }
     }
 </script>
+
 
 
 <!-- Bootstrap JS for responsiveness -->

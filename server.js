@@ -12,6 +12,7 @@ const path = require('path');
 const { Pool } = require('pg');
 const session = require('express-session');
 const { format } = require('date-fns'); // If you're using date-fns
+const socketIo = require('socket.io'); // Import socket.io
 
 // Ensure uploads directory exists
 const uploadDir = 'uploads';
@@ -48,6 +49,12 @@ if (!wirelessIP) {
     console.error('Wi-Fi adapter not found! Defaulting to Ethernet or first available network.');
     wirelessIP = Object.values(networkInterfaces).flat().find((iface) => iface.family === 'IPv4' && !iface.internal).address;
 }
+
+// Create HTTPS server
+const server = https.createServer(options, app);
+
+// Initialize socket.io with the server
+const io = socketIo(server);
 
 // PostgreSQL pool configuration
 const pool = new Pool({
@@ -446,6 +453,7 @@ router.post('/fresearch/add', upload.single('researchFile'), async (req, res) =>
 
         const idnumber = req.session.user.idnumber; // Access idnumber from session
         const date_uploaded = new Date(); // Current date and time
+        const stat_time = new Date(); // Current exact date and time for stat_time
 
         // Determine the publication_date based on the selected status
         const finalPublicationDate = status_id == 3 ? publication_date : 'Not published';
@@ -485,9 +493,9 @@ router.post('/fresearch/add', upload.single('researchFile'), async (req, res) =>
                 formattedStatus = "Request is Undefined"; // Handle unexpected status values
         }
 
-        // Insert into the 'globalresearches' table, including file details and formatted status
+        // Insert into the 'globalresearches' table, including file details, formatted status, and view_status
         await pool.query(
-            'INSERT INTO globalresearches (title, author, publication_date, journal_publication, status_id, request, idnumber, barcode, barnum, date_uploaded, doi, abstract, funding, nature, origin, isbn, startdate, enddate, keyword, filename) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20)',
+            'INSERT INTO globalresearches (title, author, publication_date, journal_publication, status_id, request, idnumber, barcode, barnum, date_uploaded, stat_time, view_status, doi, abstract, funding, nature, origin, isbn, startdate, enddate, keyword, filename) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22) ',
             [
                 title, 
                 selected_authors, 
@@ -499,6 +507,8 @@ router.post('/fresearch/add', upload.single('researchFile'), async (req, res) =>
                 barcodeBase64, 
                 barcodeValue, 
                 date_uploaded, 
+                stat_time, // Current exact date and time
+                'Seen', // Set 'Seen' for view_status
                 doi, 
                 abstract, 
                 funding, 
@@ -519,6 +529,8 @@ router.post('/fresearch/add', upload.single('researchFile'), async (req, res) =>
         res.status(500).send('Server Error');
     }
 });
+
+
 
 
 // Define the router.post route for updating papers
@@ -569,6 +581,9 @@ router.post('/update-paper', upload.single('researchFile'), (req, res) => {
         return res.status(400).send('Invalid status value');
     }
 
+    // Get the current date and time for stat_time
+    const stat_time = new Date();
+
     const query = `
         UPDATE globalresearches
         SET 
@@ -586,8 +601,10 @@ router.post('/update-paper', upload.single('researchFile'), (req, res) => {
             startdate = $12,
             enddate = $13,
             keyword = $14,
-            filename = $15
-        WHERE id = $16
+            filename = $15,
+            stat_time = $16,  -- Update stat_time
+            view_status = $17 -- Set view_status to 'Seen'
+        WHERE id = $18
     `;
 
     const values = [
@@ -606,6 +623,8 @@ router.post('/update-paper', upload.single('researchFile'), (req, res) => {
         enddate,
         keyword,
         researchFile,
+        stat_time, // Current date and time for stat_time
+        'Seen',    // Set view_status to 'Seen'
         id,
     ];
 
@@ -618,6 +637,7 @@ router.post('/update-paper', upload.single('researchFile'), (req, res) => {
         }
     });
 });
+
 
 
 // Endpoint to fetch author suggestions
@@ -1497,8 +1517,19 @@ router.post('/update-paper-status', async (req, res) => {
             updatedRequest = request.replace("Request for ", "Current ");
         }
 
-        const query = `UPDATE globalresearches SET request = $1 WHERE id = $2`;
-        await pool.query(query, [updatedRequest, id]);
+        // Get the current date and time for stat_time
+        const stat_time = new Date();
+
+        const query = `
+            UPDATE globalresearches 
+            SET 
+                request = $1, 
+                stat_time = $2,  -- Update stat_time
+                view_status = $3  -- Set view_status to 'Review'
+            WHERE id = $4
+        `;
+        
+        await pool.query(query, [updatedRequest, stat_time, 'Review', id]);
 
         res.json({ success: true, message: 'Status updated successfully' });
     } catch (error) {
@@ -1506,6 +1537,7 @@ router.post('/update-paper-status', async (req, res) => {
         res.status(500).json({ success: false, error: 'Database update failed' });
     }
 });
+
 
 
 
@@ -1541,6 +1573,214 @@ router.get('/get-paper-details/:id', async (req, res) => {
 });
 
 
+// Route to search users from the users table
+router.get('/search-users', async (req, res) => {
+    const query = req.query.query.toLowerCase();
+
+    try {
+        // Search users by name or profile picture, assuming 'name' and 'profilePic' columns exist in the users table
+        const result = await pool.query(`
+            SELECT idnumber, fullname, profilePic
+            FROM users
+            WHERE LOWER(fullname) LIKE '%' || $1 || '%';
+        `, [query]);
+
+        res.json({ users: result.rows });
+    } catch (err) {
+        console.error('Error searching users:', err);
+        res.status(500).json({ message: 'Failed to search users' });
+    }
+});
+
+
+// Route to follow a user and store in the contacts table
+router.post('/follow', async (req, res) => {
+    const { followee_idnumber } = req.body;
+    const userId = req.session.user.idnumber;  // Assuming user ID is in the session
+
+    try {
+        // Check if the current user is already following the other user
+        const checkQuery = `
+            SELECT * FROM contacts
+            WHERE idnumber = $1 AND following = $2;
+        `;
+        const checkResult = await pool.query(checkQuery, [userId, followee_idnumber]);
+
+        if (checkResult.rows.length > 0) {
+            return res.json({ success: false, message: 'You are already following this user' });
+        }
+
+        // If not already following, insert the follow request into the contacts table
+        const insertQuery = `
+            INSERT INTO contacts (idnumber, following, follow_status, date)
+            VALUES ($1, $2, 'Pending', NOW());
+        `;
+        await pool.query(insertQuery, [userId, followee_idnumber]);
+
+        res.json({ success: true, message: 'Follow request sent successfully' });
+    } catch (err) {
+        console.error('Error following user:', err);
+        res.status(500).json({ success: false, message: 'Failed to follow user' });
+    }
+});
+
+
+
+router.get('/notifications', async (req, res) => {
+    function formatDateAgo(date) {
+        const now = new Date();
+        const diffInSeconds = Math.floor((now - new Date(date)) / 1000);
+        const seconds = diffInSeconds % 60;
+        const minutes = Math.floor(diffInSeconds / 60) % 60;
+        const hours = Math.floor(diffInSeconds / 3600) % 24;
+        const days = Math.floor(diffInSeconds / 86400) % 30;
+        const months = Math.floor(diffInSeconds / 2628000) % 12;
+        const years = Math.floor(diffInSeconds / 31536000);
+
+        if (years > 0) return `${years} year${years > 1 ? 's' : ''} ago`;
+        if (months > 0) return `${months} month${months > 1 ? 's' : ''} ago`;
+        if (days > 0) return `${days} day${days > 1 ? 's' : ''} ago`;
+        if (hours > 0) return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+        if (minutes > 0) return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+        if (seconds > 0) return `${seconds} second${seconds > 1 ? 's' : ''} ago`;
+        return "Just now";
+    }
+
+    try {
+        const userId = req.session.user.idnumber;
+
+        // Query for pending follow requests sent to the user, allowing NULL or blank values for notif
+const followQuery = `
+SELECT f.idnumber AS follower_id, f.fullname, c.following, c.date, c.follow_status
+FROM contacts c
+JOIN users f ON c.idnumber = f.idnumber
+WHERE c.following = $1 AND c.follow_status = 'Pending' AND (c.notif != 'Cleared' OR c.notif IS NULL OR c.notif = '')
+`;
+
+// Query for accepted follow requests where the user followed someone, and they accepted it, allowing NULL or blank values for notif
+const acceptedFollowQuery = `
+SELECT u.idnumber AS follower_id, u.fullname, c.date
+FROM contacts c
+JOIN users u ON c.following = u.idnumber
+WHERE c.idnumber = $1 AND c.follow_status = 'Accepted' AND (c.notif != 'Cleared' OR c.notif IS NULL OR c.notif = '')
+`;
+
+// Query for research approval notifications, allowing NULL or blank values for notif
+const researchQuery = `
+SELECT r.id, r.title, r.stat_time, r.view_status, s.name AS status_name
+FROM globalresearches r
+JOIN statuses s ON r.status_id = s.id
+WHERE r.idnumber = $1 AND r.view_status = 'Review' AND (r.notif != 'Cleared' OR r.notif IS NULL OR r.notif = '')
+`;
+
+
+        // Fetch data in parallel
+        const [followRows, acceptedFollowRows, researchRows] = await Promise.all([
+            pool.query(followQuery, [userId]),
+            pool.query(acceptedFollowQuery, [userId]),
+            pool.query(researchQuery, [userId])
+        ]);
+
+        console.log("Fetched notifications:", { followRows, acceptedFollowRows, researchRows });
+
+        // Format notifications
+        const notifications = [
+            ...followRows.rows.map(notification => ({
+                type: 'follow_request',
+                follower_id: notification.follower_id,
+                fullname: notification.fullname,
+                timeAgo: formatDateAgo(notification.date),
+                created_at: notification.date // Use 'date' for follow requests
+            })),
+            ...acceptedFollowRows.rows.map(notification => ({
+                type: 'follow_accepted',
+                follower_id: notification.follower_id,
+                fullname: notification.fullname,
+                timeAgo: formatDateAgo(notification.date),
+                created_at: notification.date // Use 'date' for accepted follow requests
+            })),
+            ...researchRows.rows.map(notification => ({
+                type: 'research_approval',
+                research_id: notification.id,
+                title: notification.title,
+                status_name: notification.status_name,
+                timeAgo: formatDateAgo(notification.stat_time),
+                created_at: notification.stat_time // Use 'stat_time' for research approvals
+            }))
+        ];
+
+        // Sort notifications from latest to oldest based on created_at
+        notifications.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+        // Emit real-time notifications to clients via WebSocket
+        io.emit('new-notifications', notifications);
+
+        // Send notifications
+        res.json(notifications);
+    } catch (err) {
+        console.error('Error fetching notifications:', err);
+        res.status(500).json({ error: 'Server Error' });
+    }
+});
+
+
+
+
+
+router.post('/accept-follow-request', async (req, res) => {
+    const { followerId } = req.body;
+    try {
+        await pool.query(
+            `UPDATE contacts 
+             SET follow_status = 'Accepted', date = NOW() 
+             WHERE idnumber = $1 AND following = $2`, 
+            [followerId, req.session.user.idnumber]
+        );
+
+        res.json({ message: 'Follow request accepted' });
+    } catch (err) {
+        console.error('Error accepting follow request:', err);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+
+router.post('/reject-follow-request', async (req, res) => {
+    const { followerId } = req.body;
+    try {
+        await pool.query(`DELETE FROM contacts WHERE idnumber = $1 AND following = $2`, [followerId, req.session.user.idnumber]);
+        res.json({ message: 'Follow request rejected' });
+    } catch (err) {
+        console.error('Error rejecting follow request:', err);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+
+
+
+
+
+
+
+
+router.post('/clear-notifications', async (req, res) => {
+    try {
+        const userId = req.session.user.idnumber;
+
+        // Update the 'notif' column in 'contacts' and 'globalresearches' tables to 'Cleared'
+        await pool.query('UPDATE contacts SET notif = $1 WHERE idnumber = $2', ['Cleared', userId]);
+        await pool.query('UPDATE globalresearches SET notif = $1 WHERE idnumber = $2', ['Cleared', userId]);
+
+        res.status(200).json({ message: 'Notifications cleared' });
+    } catch (err) {
+        console.error('Error clearing notifications:', err);
+        res.status(500).json({ error: 'Error clearing notifications' });
+    }
+});
+
+
+
 
 
 
@@ -1563,8 +1803,7 @@ router.get('/logout', (req, res) => {
     });
 });
 
-// Mount the router
-app.use('/', router);
+
 
 // Route to handle GET / (homepage)
 app.get('/', (req, res) => {
@@ -1574,7 +1813,7 @@ app.get('/', (req, res) => {
 // Use the router
 app.use('/', router);
 
-// Start the HTTPS server
-https.createServer(options, app).listen(443, wirelessIP, () => {
+// Start the server
+server.listen(443, wirelessIP, () => {
     console.log(`HTTPS server running on https://${wirelessIP}`);
 });

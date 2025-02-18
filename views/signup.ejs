@@ -78,7 +78,7 @@ body::before {
         }
         /* Signup Container */
 .signup-container {
-    background-color: #ffffff;
+    background: linear-gradient(135deg, #ffffff, #9ade9e); /* Gradient Green */
     padding: 2rem;
     border-radius: 15px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
@@ -97,10 +97,11 @@ body::before {
     margin-bottom: 1.5rem;
     text-align: center;
     font-weight: 600;
-    color: #000000; /* Telegram-like blue */
+    color: #388e3c; /* Green color */
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
- 
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); /* Adds a subtle shadow */
 }
+
 
 /* Form Group Styling */
 .form-group {
@@ -178,7 +179,7 @@ body::before {
 }
 
 .login-link a {
-    color: #2e7d32;
+    color: #000000;
     text-decoration: none;
     font-weight: bold;
     font-size: 1rem;
@@ -216,6 +217,7 @@ body::before {
 /* Profile Container */
 .profile-container {
     text-align: center;
+    margin-bottom: 20px; /* Adds space below the profile container */
 }
 
 .profile-container label {
@@ -305,11 +307,12 @@ body::before {
         border-radius: 8px;
         padding: 10px;
         transition: 0.3s;
+        height: 50px;
     }
 
     .input-container:focus-within {
         box-shadow: 0px 0px 10px rgba(0, 136, 204, 0.3);
-        padding: 20px;
+        padding: 30px;
     }
 
     .input-container i {
@@ -345,6 +348,13 @@ body::before {
     background-color: #000000;
 }
 
+label[for="profilePic"] {
+    color: rgb(0, 0, 0);
+    font-weight: 400; /* Lighter font weight */
+}
+
+
+
 
     </style>
 </head>
@@ -361,19 +371,21 @@ body::before {
 </div>
 
 <div class="signup-container">
-    <h2>Sign Up</h2>
+    <h2><i class="fas fa-user-plus"></i> Sign Up</h2>
+
+     <!-- Line Above -->
+     <hr class="divider">
     <form action="/signup" method="POST" enctype="multipart/form-data">
         <div class="form-group">
-            <label for="role">Sign up as</label>
-            <select class="form-select" id="role" name="role" required>
-                <option value="Faculty">Faculty</option>
-                
-
+            
+            <select class="form-select" id="role" name="role" required style="display: none;">
+                <option value="Faculty" selected>Faculty</option>
             </select>
+
         </div>
 
         <div class="profile-container">
-            <label for="profilePic">Profile Picture</label>
+            <label for="profilePic">Upload Profile Picture</label>
             <input type="file" id="profilePic" name="profilePic" accept="image/*">
             <div id="imagePreview">
                 <img id="previewImg" src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="Default Profile Icon">
@@ -795,7 +807,7 @@ profilePicInput.addEventListener('change', (event) => {
         const toggleIcon = document.getElementById('togglePassword');
         if (passwordField.type === 'password') {
             passwordField.type = 'text';
-            toggleIcon.textContent = '🙈';  // Change icon to "hide"
+            toggleIcon.textContent = '👁️';  // Change icon to "hide"
         } else {
             passwordField.type = 'password';
             toggleIcon.textContent = '👁️';  // Change icon to "show"
@@ -808,7 +820,7 @@ profilePicInput.addEventListener('change', (event) => {
         const toggleIcon = document.getElementById('toggleConfirmPassword');
         if (confirmPasswordField.type === 'password') {
             confirmPasswordField.type = 'text';
-            toggleIcon.textContent = '🙈';  // Change icon to "hide"
+            toggleIcon.textContent = '👁️';  // Change icon to "hide"
         } else {
             confirmPasswordField.type = 'password';
             toggleIcon.textContent = '👁️';  // Change icon to "show"
