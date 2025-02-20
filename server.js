@@ -13,6 +13,7 @@ const { Pool } = require('pg');
 const session = require('express-session');
 const { format } = require('date-fns'); // If you're using date-fns
 const socketIo = require('socket.io'); // Import socket.io
+const Tesseract = require('tesseract.js');
 
 // Ensure uploads directory exists
 const uploadDir = 'uploads';
@@ -140,7 +141,7 @@ router.post('/signup', upload.fields([
     { name: 'facultyIDPic', maxCount: 1 },
     { name: 'selfieWithID', maxCount: 1 }
 ]), async (req, res) => {
-    const { role, fullname, username, birthday, email, contact, password, confirmPassword } = req.body;
+    const { role, fullname, username, birthday, email, contact, password, confirmPassword, faculty_no } = req.body;
 
     if (password !== confirmPassword) {
         return res.status(400).render('signup', { errorMessage: 'Passwords do not match.' });
@@ -162,8 +163,8 @@ router.post('/signup', upload.fields([
         const hashedPassword = await bcrypt.hash(password, 10); // 10 is the salt rounds
 
         await pool.query(
-            `INSERT INTO users (role, fullname, username, birthday, email, contact, password, filename, faculty_id_pic, selfie_with_id, idnumber, date_created, mode) 
-             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)`,
+            `INSERT INTO users (role, fullname, username, birthday, email, contact, password, filename, faculty_id_pic, selfie_with_id, idnumber, date_created, mode, faculty_no) 
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)`,
             [
                 role,
                 fullname,
@@ -178,6 +179,7 @@ router.post('/signup', upload.fields([
                 idnumber,
                 dateCreated,
                 mode,
+                faculty_no,
             ]
         );
 
@@ -203,48 +205,52 @@ router.post('/signup', upload.fields([
 });
 
 
-
 // GET route for /setupaccount
 router.get('/setupaccount', (req, res) => {
     if (!req.session.user) {
         return res.redirect('/signup');
     }
 
-    const { fullname, idnumber, profilePic } = req.session.user; // Use profilePic here
-    res.render('setupaccount', { fullname, idnumber, profilePic }); // Pass profilePic to the view
+    let { fullname, idnumber, filename, profilePic } = req.session.user;
+
+    // If profilePic exists, assign it to filename
+    filename = profilePic || filename || null;
+
+    res.render('setupaccount', { fullname, idnumber, profilePic: filename }); // Pass updated filename as profilePic
 });
+
+
 
 
 router.post("/setupaccount", async (req, res) => {
     const { name, designation, college, department, campus } = req.body;
-    const { idnumber, profilePic } = req.session.user; // Use profilePic from session
+    let { idnumber, filename, profilePic } = req.session.user; 
 
     if (!name) {
         return res.status(400).send("Name is required");
     }
 
-    if (!profilePic) {
-        return res.status(400).send("Profile picture is required"); // Ensure profilePic is available
-    }
-
     try {
-        // Fetch user's email from the database using idnumber
-        const userResult = await pool.query("SELECT email FROM users WHERE idnumber = $1", [idnumber]);
+        // Fetch user's email and filename from the database using idnumber
+        const userResult = await pool.query("SELECT email, filename FROM users WHERE idnumber = $1", [idnumber]);
 
         if (userResult.rows.length === 0) {
             return res.status(404).send("User not found");
         }
 
-        const email = userResult.rows[0].email; // Extract email from query result
+        const { email, filename: dbFilename } = userResult.rows[0];
+
+        // Use profilePic from session if available, otherwise fallback to database filename
+        const finalProfilePic = profilePic || dbFilename || null; // Allow NULL if both are empty
 
         // Generate a new UUID for researcher_id
         const researcher_id = uuidv4();
 
-        // Insert data into the faculty table with the profilePic filename from the session
+        // Insert data into the faculty table with finalProfilePic (which could be NULL)
         await pool.query(
             `INSERT INTO faculty (name, designation, college, department, campus, idnumber, filename, researcher_id)
              VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
-            [name, designation, college, department, campus, idnumber, profilePic, researcher_id] // Use profilePic here
+            [name, designation, college, department, campus, idnumber, finalProfilePic, researcher_id]
         );
 
         // Send verification email
@@ -267,10 +273,12 @@ router.post("/setupaccount", async (req, res) => {
 
 
 
-// GET route for /setupaccount
-router.get('/login', (req, res) => {
 
-   
+
+
+
+// GET route for /login
+router.get('/login', (req, res) => {
     res.render('login');
 });
 
@@ -279,43 +287,54 @@ router.post('/login', async (req, res) => {
     const { username, password } = req.body;
 
     try {
-        // Query to find the user by username
         const result = await pool.query('SELECT * FROM users WHERE username = $1', [username]);
 
         if (result.rows.length === 0) {
-            // If no user is found, return an error
             return res.status(400).render('login', { errorMessage: 'Invalid username or password.' });
         }
 
         const user = result.rows[0];
 
-        // Compare the entered password with the hashed password in the database
         const isMatch = await bcrypt.compare(password, user.password);
-
         if (!isMatch) {
-            // If passwords do not match, return an error
             return res.status(400).render('login', { errorMessage: 'Invalid username or password.' });
         }
 
-        // If authentication is successful, store user details in session
-        req.session.user = { username: user.username, idnumber: user.idnumber, role: user.role };
+        // Store user details in session
+        req.session.user = {
+            username: user.username,
+            idnumber: user.idnumber,
+            role: user.role,
+            filename: user.filename, // Store filename
+            fullname: user.fullname // Store fullname
+        };
 
-        // Redirect based on user role
+        // Redirect RDSO Staff immediately
         if (user.role === 'RDSO Staff') {
-            return res.redirect('/rdsodashboard'); // Redirect to RDSO Staff dashboard
+            return res.redirect('/rdsodashboard');
         }
 
+        // Redirect Super Admin
         if (user.role === 'Super Admin') {
-            return res.redirect('/superadmindashboard'); // Redirect to Super Admin dashboard
+            return res.redirect('/superadmindashboard');
         }
 
-        // Default redirect (if the role is neither RDSO Staff nor Super Admin)
+        // Check if the user is already in the faculty table
+        const facultyCheck = await pool.query('SELECT * FROM faculty WHERE idnumber = $1', [user.idnumber]);
+
+        if (facultyCheck.rows.length === 0) {
+            return res.redirect('/setupaccount'); // Redirect to setup profile page
+        }
+
+        // Default redirect for faculty members
         res.redirect('/facultypapers');
     } catch (error) {
         console.error('Error during login:', error);
         res.status(500).render('login', { errorMessage: 'An error occurred during login. Please try again later.' });
     }
 });
+
+
 
 router.get('/rdsodashboard', )
 
@@ -648,7 +667,7 @@ router.get('/authors/suggestions', async (req, res) => {
         
         // Execute the query to fetch authors that match the search term
         const result = await pool.query(
-            'SELECT DISTINCT researcher_id, name, designation, department, campus, idnumber FROM faculty WHERE name ILIKE $1 LIMIT 10',
+            'SELECT DISTINCT researcher_id, name, filename, designation, department, campus, idnumber FROM faculty WHERE name ILIKE $1 LIMIT 10',
             [`%${query}%`] // Use ILIKE for case-insensitive matching
         );
 
@@ -664,7 +683,8 @@ router.get('/authors/suggestions', async (req, res) => {
             designation: row.designation,
             department: row.department,
             campus: row.campus,
-            authoracc: row.idnumber
+            authoracc: row.idnumber,
+            filename: row.filename
             
         }));
 
@@ -1305,7 +1325,7 @@ router.get('/campusescolleges', (req, res) => {
 
 // POST route to handle form submission
 router.post('/save-campus-data', async (req, res) => {
-    const { campus, college, year, targetResearch } = req.body;
+    const { campus, selectedCollege, year, targetResearch } = req.body;
 
     // Ensure the user is logged in and the idnumber is available in the session
     const idnumber = req.session.user ? req.session.user.idnumber : null;
@@ -1316,7 +1336,7 @@ router.post('/save-campus-data', async (req, res) => {
 
     // Query to insert the data into the database
     const query = 'INSERT INTO task (campus, college, year, target, idnumber) VALUES ($1, $2, $3, $4, $5)';
-    const values = [campus, college, year, targetResearch, idnumber];
+    const values = [campus, selectedCollege, year, targetResearch, idnumber];
 
     try {
         // Execute the query using the pool
@@ -1549,7 +1569,7 @@ router.get('/get-paper-details/:id', async (req, res) => {
         const query = `
             SELECT gr.id, gr.title, gr.author, gr.request, gr.date_uploaded, gr.publication_date,
                 gr.journal_publication, gr.doi, gr.abstract, gr.funding, gr.nature, gr.origin,
-                gr.isbn, gr.startdate, gr.enddate, gr.keyword, gr.filename,
+                gr.isbn, gr.startdate, gr.enddate, gr.keyword, gr.filename, 
                 STRING_AGG(f.name, ', ') AS author_names
             FROM globalresearches gr
             LEFT JOIN faculty f ON f.researcher_id::TEXT = ANY(string_to_array(gr.author, ', '))
@@ -1571,6 +1591,7 @@ router.get('/get-paper-details/:id', async (req, res) => {
         res.status(500).json({ error: 'Server Error' });
     }
 });
+
 
 
 // Route to search users from the users table

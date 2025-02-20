@@ -7,13 +7,17 @@
     <!-- Bootstrap CSS for responsiveness -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body {
+       body {
     position: relative;
-    background-color: #e8f5e9; /* No background on the main body */
-    display: flex;
-    flex-direction: column;
+    background: #e6f7ff; /* Light Telegram blue */
     font-family: 'Arial', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
 }
+
 
 body::before {
     content: '';
@@ -76,61 +80,128 @@ body::before {
             background-color: #f1f1f1; /* Light grey on hover */
             color: #2e7d32; /* Dark green text on hover */
         }
-        .login-container {
-            background-color: #ffffff; /* White background for the login container */
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 400px;
-            margin: 5rem auto 2rem; /* Added top margin to avoid header overlap */
-        }
-        .login-container h2 {
-            margin-bottom: 1.5rem;
-            text-align: center;
-            font-weight: 600;
-            color: #2e7d32; /* Dark green for the title */
-        }
-        .form-group {
-            margin-bottom: 1.2rem;
-        }
-        .form-select, .form-control {
-            height: 45px;
-            font-size: 1rem;
-            border-color: #66bb6a; /* Medium green border */
-        }
-        .form-select:focus, .form-control:focus {
-            border-color: #388e3c; /* Darker green when focused */
-            box-shadow: 0 0 0 0.25rem rgba(56, 142, 60, 0.25); /* Green shadow on focus */
-        }
-        .btn-login {
-            background-color: #388e3c; /* Dark green button */
-            color: white;
-            font-size: 1rem;
-            font-weight: bold;
-        }
-        .btn-login:hover {
-            background-color: #2e7d32; /* Darker green on hover */
-        }
-        .signup-link {
-            text-align: center;
-            margin-top: 1rem;
-        }
-        .signup-link a {
-            color: #388e3c;
-            text-decoration: none;
-            font-weight: bold;
-        }
-        .signup-link a:hover {
-            text-decoration: underline;
-        }
+        
 
-        .readonly-field {
-    background-color: #f0f0f0; /* Light grey background */
-    color: #6c757d; /* Muted text color */
-    pointer-events: none; /* Prevent interaction */
-    border: 1px solid #ced4da; /* Optional: match other inputs' borders */
+/* Box that holds both the image and form */
+.setup-box {
+    display: flex;
+    width: 800px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    transform: scale(0.9);
+    animation: popUp 0.5s ease-in-out forwards;
+    margin-top: 50px;
 }
+
+/* Left column: Image */
+.left-column {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #e8fce8; /* Light green */
+    padding: 20px;
+    animation: slideInLeft 0.6s ease-in-out;
+}
+
+.left-column img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Right column: Form */
+.right-column {
+    flex: 1.2;
+    padding: 30px;
+    opacity: 0;
+    animation: fadeIn 1s 0.5s ease-in-out forwards;
+}
+
+.right-column h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #008000; /* Green heading */
+}
+
+/* Input Fields & Select Boxes */
+.form-control {
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    transition: all 0.3s;
+}
+
+.form-control:focus {
+    border-color: #008000;
+    box-shadow: 0 0 8px rgba(0, 128, 0, 0.5);
+    transform: scale(1.02);
+}
+
+/* Button Style */
+.btn-primary {
+    background: #008000;
+    border: none;
+    padding: 12px;
+    border-radius: 50px;
+    transition: all 0.3s ease-in-out;
+}
+
+.btn-primary:hover {
+    background: #006600;
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(0, 128, 0, 0.3);
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes popUp {
+    from {
+        transform: scale(0.9);
+    }
+    to {
+        transform: scale(1);
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        transform: translateX(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 900px) {
+    .setup-box {
+        flex-direction: column;
+        width: 90%;
+    }
+    .left-column {
+        padding: 10px;
+        animation: fadeIn 0.5s ease-in-out;
+    }
+    .right-column {
+        padding: 20px;
+    }
+}
+
+
+
+
 
     </style>
 </head>
@@ -141,73 +212,90 @@ body::before {
         <div style="width: 40px; height: 40px; border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center; background-color: white;">
             <img src="/images/essu_logo.png" alt="ESSU Logo" style="width: 100%; height: auto; object-fit: contain;">
         </div>
-        ESSU Research and Information Management System
+        ESSU RIMS
     </div>
     <button class="btn-back-home" onclick="window.location.href='/'">Go back to homepage</button>
 </div>
 
-<div class="login-container" style="background: linear-gradient(90deg, #ffffff, #d4edda);">
-    <h2>Setup Researcher Profile</h2>
-    <form action="/setupaccount" method="POST">
-        <div class="mb-3">
-            <label for="name" class="form-label">Researcher Name</label>
-            <input 
-                type="text" 
-                id="name" 
-                name="name" 
-                class="form-control readonly-field" 
-                required 
-                value="<%= fullname %>" 
-                readonly
-            >
+<div class="setup-container">
+    <div class="setup-box">
+        <!-- Left side: Image -->
+        <div class="left-column">
+            <img src="/images/essu_logo.png" alt="ESSU Logo">
         </div>
-        <div class="mb-3">
-            <label for="designation" class="form-label">Designation</label>
-            <input type="text" id="designation" name="designation" class="form-control" required>
+
+        <!-- Right side: Form -->
+        <div class="right-column">
+            <h2>Setup Researcher Profile</h2>
+            <form action="/setupaccount" method="POST">
+                <div class="mb-3 input-group">
+                    <span class="input-group-text"><i class="fa fa-user"></i></span>
+                    <input 
+                        type="text" 
+                        id="name" 
+                        name="name" 
+                        class="form-control readonly-field" 
+                        required 
+                        value="<%= fullname %>" 
+                        readonly
+                    >
+                </div>
+                <div class="mb-3 input-group">
+                    <span class="input-group-text"><i class="fa fa-briefcase"></i></span>
+                    <input type="text" id="designation" name="designation" class="form-control" required>
+                </div>
+                <div class="mb-3 input-group">
+                    <span class="input-group-text"><i class="fa fa-university"></i></span>
+                    <select id="college" name="college" class="form-control" required onchange="updateDepartments()">
+                        <option value="" disabled selected>Select College</option>
+                        <option value="Agriculture">Agriculture</option>
+                        <option value="Arts and Sciences">Arts and Sciences</option>
+                        <option value="Business Management and Accountancy">Business Management and Accountancy</option>
+                        <option value="Computer Studies">Computer Studies</option>
+                        <option value="Criminal Justice Education">Criminal Justice Education</option>
+                        <option value="Education">Education</option>
+                        <option value="Engineering">Engineering</option>
+                        <option value="Fisheries and Aquatics Sciences">Fisheries and Aquatics Sciences</option>
+                        <option value="Hospitality Management">Hospitality Management</option>
+                        <option value="Nursing and Allied Sciences">Nursing and Allied Sciences</option>
+                        <option value="Science">Science</option>
+                        <option value="Technology">Technology</option>
+                    </select>
+                </div>
+                <div class="mb-3 input-group">
+                    <span class="input-group-text"><i class="fa fa-building"></i></span>
+                    <select id="department" name="department" class="form-control" required>
+                        <option value="" disabled selected>Select Department</option>
+                    </select>
+                </div>
+                <div class="mb-3 input-group">
+                    <span class="input-group-text"><i class="fa fa-map-marker-alt"></i></span>
+                    <select id="campus" name="campus" class="form-control" required>
+                        <option value="ESSU MAIN">ESSU MAIN</option>
+                        <option value="ESSU ARTECHE">ESSU ARTECHE</option>
+                        <option value="ESSU BALANGIGA">ESSU BALANGIGA</option>
+                        <option value="ESSU CAN-AVID">ESSU CAN-AVID</option>
+                        <option value="ESSU GUIUAN">ESSU GUIUAN</option>
+                        <option value="ESSU MAYDOLONG">ESSU MAYDOLONG</option>
+                        <option value="ESSU SALCEDO">ESSU SALCEDO</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100"><i class="fa fa-user-plus"></i> Create Researcher Profile</button>
+            </form>
         </div>
-        <div class="mb-3">
-            <label for="college" class="form-label">College</label>
-            <select id="college" name="college" class="form-control" required onchange="updateDepartments()">
-                <option value="" disabled selected>Select College</option>
-                <option value="Agriculture">Agriculture</option>
-                <option value="Arts and Sciences">Arts and Sciences</option>
-                <option value="Business Management and Accountancy">Business Management and Accountancy</option>
-                <option value="Computer Studies">Computer Studies</option>
-                <option value="Criminal Justice Education">Criminal Justice Education</option>
-                <option value="Education">Education</option>
-                <option value="Engineering">Engineering</option>
-                <option value="Fisheries and Aquatics Sciences">Fisheries and Aquatics Sciences</option>
-                <option value="Hospitality Management">Hospitality Management</option>
-                <option value="Nursing and Allied Sciences">Nursing and Allied Sciences</option>
-                <option value="Science">Science</option>
-                <option value="Technology">Technology</option>
-            </select>
-        </div>
-        <div class="mb-3">
-            <label for="department" class="form-label">Department</label>
-            <select id="department" name="department" class="form-control" required>
-                <option value="" disabled selected>Select Department</option>
-                <!-- Departments will be dynamically populated based on college selection -->
-            </select>
-        </div>
-        <div class="mb-3">
-            <label for="campus" class="form-label">Campus</label>
-            <select id="campus" name="campus" class="form-control" required>
-                <option value="ESSU MAIN">ESSU MAIN</option>
-                <option value="ESSU ARTECHE">ESSU ARTECHE</option>
-                <option value="ESSU BALANGIGA">ESSU BALANGIGA</option>
-                <option value="ESSU CAN-AVID">ESSU CAN-AVID</option>
-                <option value="ESSU GUIUAN">ESSU GUIUAN</option>
-                <option value="ESSU MAYDOLONG">ESSU MAYDOLONG</option>
-                <option value="ESSU SALCEDO">ESSU SALCEDO</option>
-            </select>
-        </div>
-       
-        <button type="submit" class="btn btn-primary">Create Profile</button>
-    </form>
+    </div>
+</div>
+
+<!-- Add FontAwesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+
+
+
     
     
-    <script>
+<script>
         const departmentOptions = {
             "Agriculture": ["Bachelor Of Science In Agriculture"],
             "Arts and Sciences": [
@@ -288,7 +376,7 @@ body::before {
                 document.querySelector('#department option[value=""]').disabled = true;
             }
         });
-    </script>
+</script>
     
 
 

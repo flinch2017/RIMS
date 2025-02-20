@@ -212,60 +212,7 @@
 }
 
 
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.4);
-    overflow: auto;
-}
 
-.modal-content {
-    background-color: white;
-    margin: 15% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
-    max-width: 400px;
-    border-radius: 10px;
-}
-
-.modal-content label {
-    display: block;
-    margin: 10px 0 5px;
-}
-
-.modal-content input {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-}
-
-.modal-content input[readonly] {
-    background-color: #f0f0f0;
-    cursor: not-allowed;
-}
-
-.close {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-.close:hover,
-.close:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
-}
 
 .campus-grid {
     display: grid;
@@ -327,9 +274,175 @@
 }
 
 
+/* Bounce Animation */
+@keyframes bounceIn {
+    0% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1);
+    }
+}
 
 
 
+
+
+/* Modal Background */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0, 0, 0, 0.4); /* Black with opacity */
+    padding-top: 60px; /* Space from top */
+    animation: bounceIn 0.6s ease-out;
+}
+
+/* Modal Content */
+.modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 500px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    position: relative; /* Ensure relative positioning for absolute elements */
+}
+
+.close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Form Styling */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+label {
+    font-weight: bold;
+}
+
+
+
+
+
+    </style>
+
+    <!-- CSS for Pill Design -->
+<style>
+
+    .input-row {
+            display: flex;
+            gap: 10px; /* Space between inputs */
+            justify-content: flex-start;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+    
+        .small-width {
+            flex: 0 1 48%; /* Limits width to 48% for each, adjusting automatically */
+            min-width: 200px; /* Prevents shrinking too much */
+        }
+    
+        .input-container {
+            display: flex;
+            align-items: center;
+           
+            padding: 10px;
+            border-radius: 50px; /* Pill Shape */
+            border: 0px solid #ccc;
+            margin-bottom: 15px;
+            width: 100%;
+        }
+    
+        .dual-input {
+            justify-content: space-between;
+            padding: 10px 15px;
+        }
+    
+    
+       
+    
+      
+    
+        
+    
+        
+        .pill-input {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 25px;
+            border: 1px solid #ccc;
+           
+            font-size: 16px;
+           
+            padding-left: 40px;
+            transition: all 0.2s ease-in-out;
+            margin-left: 20px;
+        }
+    
+        .pill-input:focus {
+            border-color: #007BFF;
+            background: white;
+            box-shadow: 0px 0px 8px rgba(0, 123, 255, 0.3);
+        }
+    
+        
+    
+        /* Submit Button */
+        .btn-submit {
+            width: 100%;
+            padding: 12px;
+            border-radius: 25px;
+            border: none;
+            background: #007BFF;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+        }
+    
+        .btn-submit:hover {
+            background: #0056b3;
+        }
+    
+         /* Responsive Adjustments */
+         @media (max-width: 600px) {
+            .input-row {
+                flex-direction: column;
+            }
+    
+            .small-width {
+                flex: 1 1 100%; /* Makes it full width on small screens */
+            }
+        }
+    
+        
     </style>
 </head>
 <body>
@@ -389,6 +502,10 @@
                 <i class="fas fa-school"></i>
                 <div class="campus-name">ESSU ARTECHE</div>
             </div>
+            <div class="campus-card" data-campus="ESSU BALANGIGA">
+                <i class="fas fa-school"></i>
+                <div class="campus-name">ESSU BALANGIGA</div>
+            </div>
         </div>
 
         <script>
@@ -404,131 +521,114 @@
 
         </script>
         
-        <!-- Modal -->
+       <!-- Add Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+<!-- Modal -->
 <div id="campusModal" class="modal">
     <div class="modal-content">
         <span class="close">&times;</span>
         <form action="/save-campus-data" method="POST">
-            <label for="campus">Campus:</label>
-            <input type="text" id="campus" name="campus" readonly />
-        
-            <label for="college">College:</label>
-            <input type="text" id="college" name="college" />
-        
-            <label for="year">Select Year:</label>
-            <input type="number" id="year" name="year" min="2023" max="2026" step="1" value="2023">
-        
-            <label for="targetResearch">Target Number of Research:</label>
-            <input type="number" id="targetResearch" name="targetResearch" min="0" placeholder="Enter target number of research">
-        
-            <button type="submit" class="btn-submit">Save</button>
-        </form>
-        
+            <label for="campus">Set Goal</label>
+            <div class="input-container">
+                <i class="fa-solid fa-building"></i>
+                <input type="text" id="campus" name="campus" readonly class="pill-input" />
+            </div>
+            <!-- College Selection and Selected College Side by Side -->
+<!-- Single Pill for College Selection and Display -->
+<div class="input-group">
+    <label for="college">College</label>
+    <div class="input-container dual-input">
+        <i class="fa-solid fa-school"></i>
+        <select id="college" name="college" class="pill-input select-box">
+            <option value="" disabled selected>Select a college</option>
+        </select>
+        <input type="text" id="selectedCollege" name="selectedCollege" class="pill-input display-box" required readonly />
     </div>
 </div>
 
 
-        <style>
-           /* Modal Background */
-.modal {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
-    left: 0;
-    top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgba(0, 0, 0, 0.4); /* Black with opacity */
-    padding-top: 60px; /* Space from top */
-}
 
-/* Modal Content */
-.modal-content {
-    background-color: #fefefe;
-    margin: 5% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
-    max-width: 500px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
+          
 
-/* Close Button */
-.close {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-}
+            <label for="year">Select Year:</label>
+            <div class="input-container">
+                <i class="fa-solid fa-calendar"></i>
+                <input type="number" id="year" name="year" min="2025" max="2030" step="1" value="2025" class="pill-input" required>
+            </div>
 
-.close:hover,
-.close:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
-}
+            <label for="targetResearch">Target Number of Research:</label>
+            <div class="input-container">
+                <i class="fa-solid fa-bullseye"></i>
+                <input type="number" id="targetResearch" name="targetResearch" min="0" placeholder="Enter target number of research" class="pill-input" required>
+            </div>
 
-/* Form Styling */
-form {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-label {
-    font-weight: bold;
-}
-
-/* Input Fields Styling */
-input[type="text"],
-input[type="number"] {
-    padding: 10px; /* Added padding for text and number fields */
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    width: 100%;
-    box-sizing: border-box;
-}
+            <button type="submit" class="btn-submit">Save</button>
+        </form>
+    </div>
+</div>
 
 
-/* Range Slider Styling */
-input[type="range"] {
-    padding: 0px; /* No padding for the range slider */
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    width: 100%;
-    box-sizing: border-box;
-}
 
-/* Percentage Value Styling */
-#percentageValue {
-    text-align: right;
-    font-size: 14px;
-    margin-top: 5px;
-}
 
-/* Submit Button Styling */
-.btn-submit {
-    background-color: #66bb6a; /* Green background */
-    color: white; /* White text */
-    border: none; /* Remove default border */
-    padding: 10px 20px; /* Padding for the button */
-    font-size: 16px; /* Font size */
-    border-radius: 8px; /* Rounded corners */
-    cursor: pointer; /* Pointer cursor on hover */
-    transition: background-color 0.3s ease; /* Smooth background change on hover */
-    width: 100%; /* Full width */
-    box-sizing: border-box; /* Include padding and border in the element's total width */
-}
+<script>
+    // College options based on campus
+    const collegesByCampus = {
+        "ESSU MAIN": ["Agriculture", "Arts and Sciences", "Business Management and Accountancy", "Computer Studies", "Criminal Justice Education", "Education", "Engineering", "Fisheries and Aquatics Sciences",  "Hospitality Management", "Nursing and Allied Sciences", "Science", "Technology"],
+        "ESSU SALCEDO": ["Engineering", "Education", "Nursing and Allied Sciences", "Computer Studies"],
+        "ESSU GUIUAN": ["Education", "Hospitality Management", "Criminal Justice Education", "Computer Studies", "Arts and Sciences", "Business Management and Accountancy", "Technology", "Engineering"],
+        "ESSU MAYDOLONG": ["Education", "Criminal Justice Education", "Hospitality Management"],
+        "ESSU ARTECHE": ["College of Tourism", "College of Marine Sciences"],
+        "ESSU BALANGIGA": ["College of Tourism", "College of Marine Sciences"],
+        "ESSU CAN-AVID": ["Education", "Agriculture", "Business Management and Accountancy", "Criminal Justice Education", "Computer Studies"]
+    };
 
-.btn-submit:hover {
-    background-color: #388e3c; /* Darker green on hover */
-}
+    document.addEventListener("DOMContentLoaded", function () {
+    const campusInput = document.getElementById("campus");
+    const collegeSelect = document.getElementById("college");
+    const selectedCollegeInput = document.getElementById("selectedCollege"); // New input field
 
-        </style>
+    function updateCollegeOptions() {
+        const selectedCampus = campusInput.value.trim();
+        collegeSelect.innerHTML = "<option value='' disabled selected>Select a college</option>"; // Reset options
+
+        if (collegesByCampus[selectedCampus]) {
+            collegesByCampus[selectedCampus].forEach(college => {
+                const option = document.createElement("option");
+                option.value = college;
+                option.textContent = college;
+                collegeSelect.appendChild(option);
+            });
+        }
+    }
+
+    // Update colleges when modal is opened (campus field is already set)
+    const modal = document.getElementById("campusModal");
+    modal.addEventListener("click", updateCollegeOptions);
+
+    // Also update when the campus field changes (just in case)
+    campusInput.addEventListener("input", updateCollegeOptions);
+
+    // Display the selected college in the input field
+    collegeSelect.addEventListener("change", function () {
+        selectedCollegeInput.value = collegeSelect.value;
+    });
+});
+
+
+
+
+
+
+</script>
+
+
+
+
+
+        
+
+
         
 
         <script>
@@ -557,7 +657,7 @@ campusCards.forEach(card => {
         targetResearchInput.value = '';  // Set to empty string or a default value if needed
         
         // Reset the year selection to default
-        yearInput.value = "2023";  // Set default year (can change if needed)
+        yearInput.value = "2025";  // Set default year (can change if needed)
         
         // Open the modal
         modal.style.display = 'block';
@@ -577,6 +677,8 @@ window.addEventListener('click', function (event) {
 });
 
             </script>
+
+            
             
         
         

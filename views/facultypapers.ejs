@@ -411,84 +411,13 @@ td button {
 
     </style>
     <style>
-        /* General Modal Styles */
-.modal-body {
-    padding: 2rem;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    font-family: Arial, sans-serif;
-}
-
-/* Form Labels */
-.modal-body .form-label {
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 0.5rem;
-    display: block;
-}
-
-/* Input Fields */
-.modal-body .form-control {
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    padding: 0.5rem 0.75rem;
-    font-size: 1rem;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.modal-body .form-control:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
-}
-
-
-
-
-/* Buttons */
-.modal-footer .btn {
-    padding: 0.5rem 1rem;
-    font-size: 1rem;
-    border-radius: 4px;
-    transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.modal-footer .btn-primary {
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-}
-
-.modal-footer .btn-primary:hover {
-    background-color: #0056b3;
-}
-
-.modal-footer .btn-secondary {
-    background-color: #6c757d;
-    color: #fff;
-    border: none;
-}
-
-.modal-footer .btn-secondary:hover {
-    background-color: #565e64;
-}
+        
 
 /* Publication Date Group (Hidden Initially) */
 #publication_date_group {
     display: none;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-    .modal-body {
-        padding: 1rem;
-    }
-
-    .modal-footer .btn {
-        font-size: 0.9rem;
-        padding: 0.4rem 0.8rem;
-    }
-}
 
 .pagination-controls {
     display: flex;
@@ -815,6 +744,274 @@ td button {
 .upload-btn { animation-delay: 0.4s; }
 .sortof select { animation-delay: 0.6s; }
 
+/* Icon Styling */
+.notification-icon,
+.messenger-icon {
+    font-size: 22px;
+    color: #333;
+    text-decoration: none;
+    position: relative;
+    cursor: pointer;
+}
+
+.notification-icon:hover,
+.messenger-icon:hover {
+    color: #0078FF;
+}
+
+/* Badge for Notifications & Messages */
+.badge {
+    position: absolute;
+    top: -5px;
+    right: -8px;
+    background: red;
+    color: white;
+    font-size: 12px;
+    border-radius: 50%;
+    padding: 3px 7px;
+}
+
+/* Modal Styles */
+
+
+
+/* Modal Styling */
+.notif-modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.notif-modal-content {
+    background-color: white;
+    padding: 15px;
+    border-radius: 8px;
+    width: 50%;
+    height: 70%;
+    margin: 5% auto;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+/* Messenger Layout */
+.messenger-container {
+    display: flex;
+    height: 100%;
+}
+
+/* Contacts Sidebar */
+.contacts-panel {
+    width: 30%;
+    background: #f0f0f0;
+    padding: 10px;
+    overflow-y: auto;
+    border-right: 1px solid #ddd;
+}
+
+.contacts-panel h3 {
+    margin: 0;
+    padding-bottom: 10px;
+}
+
+#contactList {
+    list-style: none;
+    padding: 0;
+}
+
+#contactList li {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background 0.3s;
+}
+
+#contactList li:hover {
+    background: #e0e0e0;
+}
+
+#contactList li img {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+/* Chat Panel */
+.chat-panel {
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+#chatHeader {
+    background: #0078FF;
+    color: white;
+    padding: 10px;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* Chat Box Styling */
+#chatBox {
+    flex-grow: 1;
+    padding: 10px;
+    overflow-y: auto;
+    background: #f9f9f9;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Received Message (His) */
+.chat-message.received {
+    background: #e0e0e0;
+    color: black;
+    padding: 8px 12px;
+    border-radius: 10px;
+    margin: 5px 0;
+    width: fit-content;
+    align-self: flex-start;
+}
+
+/* Sent Message (Mine) */
+.chat-message.sent {
+    background: #0078FF;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 10px;
+    margin: 5px 0;
+    width: fit-content;
+    align-self: flex-end;
+}
+
+/* Chat Input */
+.chat-input {
+    display: flex;
+    padding: 10px;
+    background: #fff;
+    border-top: 1px solid #ddd;
+}
+
+.chat-input input {
+    flex-grow: 1;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.chat-input button {
+    background: #0078FF;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    margin-left: 5px;
+    cursor: pointer;
+}
+
+.chat-input button:hover {
+    background: #005fcc;
+}
+
+/* Existing styles */
+.notification-item .time-ago {
+        font-size: 11px;
+        color: #aaa;
+        font-style: italic;
+        text-align: right;
+    }
+    .notification-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px;
+        border-bottom: 1px solid #eee;
+        font-size: 14px;
+        color: #333;
+    }
+
+    /* General button styling */
+    .accept-button,
+    .reject-button {
+        padding: 4px 10px;
+        font-size: 12px;
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+        margin-left: 5px;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    /* Group buttons together */
+    .button-group {
+        display: flex;
+        gap: 5px;
+        align-items: center;
+    }
+
+    /* Accept button styling */
+    .accept-button {
+        background-color: #4CAF50;
+        color: white;
+    }
+
+    .accept-button:hover {
+        background-color: #45a049;
+        transform: scale(1.05);
+    }
+
+    /* Reject button styling */
+    .reject-button {
+        background-color: #f44336;
+        color: white;
+    }
+
+    .reject-button:hover {
+        background-color: #d32f2f;
+        transform: scale(1.05);
+    }
+
+    /* Clear All Button */
+    .clear-all-btn {
+        background-color: #f1c40f;
+        color: white;
+        padding: 10px 15px;
+        font-size: 14px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-bottom: 15px;
+        transition: background-color 0.3s ease;
+    }
+
+    .clear-all-btn:hover {
+        background-color: #e67e22;
+    }
+
+    
+
+    .messenger-icon {
+    display: none;
+}
+
+
+
 
     </style>
 </head>
@@ -827,47 +1024,82 @@ td button {
             </div>
             ESSU RIMS
         </div>
-        <div class="d-flex">
+        <div class="d-flex" style="display: flex; align-items: center; gap: 15px;">
+            <!-- Notification Bell -->
+            <span class="notification-icon" onclick="openModal('notificationModal')">
+                <i class="fas fa-bell"></i>
+                <span class="badge" id="notifBadge"></span> <!-- Notification Badge -->
+            </span>
+    
+            <!-- Messenger Icon -->
+            <span class="messenger-icon" onclick="openModal('messageModal')">
+                <i class="fab fa-facebook-messenger"></i>
+                <span class="badge" id="msgBadge">5</span> <!-- Example Unread Messages -->
+            </span>
+    
+            <!-- Profile Dropdown -->
             <div class="profile-dropdown">
-                <!-- Profile Picture -->
                 <span class="btn-profile" onclick="toggleDropdown()">
                     <img src="/uploads/<%= filename %>" alt="Profile Picture">
                 </span>
-            
-                <!-- Dropdown Menu -->
                 <div class="dropdown-menu" id="profileDropdown">
-                    <!-- Full Name Displayed Above the Links -->
                     <div class="dropdown-header">
                         <p class="fullname"><%= fullname %></p>
                     </div>
-            
-                    <!-- Profile and Log Out Links -->
-                    <a href="/facultyprofile">
-                        <i class="fas fa-user"></i> View Profile
-                    </a>
-                    <a href="/logout">
-                        <i class="fas fa-sign-out-alt"></i> Log Out
-                    </a>
+                    <a href="/facultyprofile"><i class="fas fa-user"></i> View Profile</a>
+                    <a href="/logout"><i class="fas fa-sign-out-alt"></i> Log Out</a>
                 </div>
             </div>
-            
+        </div>
+    </div>
+    
+    <!-- Notification Modal -->
+    <div id="notificationModal" class="notif-modal">
+        <div class="notif-modal-content">
+            <span class="close" onclick="closeModal('notificationModal')">&times;</span>
+            <h2>Notifications</h2>
+            <button id="clearAllBtn" class="clear-all-btn">Clear All Notifications</button>
+            <div id="notificationList">
+                <!-- Notifications will be dynamically generated here -->
+            </div>
         </div>
     </div>
 
-    <script>
-        function toggleDropdown() {
-    document.querySelector('.profile-dropdown').classList.toggle('active');
-}
+    
+        <!-- Message Modal -->
+    <div id="messageModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('messageModal')">&times;</span>
 
-// Close dropdown when clicking outside
-document.addEventListener('click', function (event) {
-    let dropdown = document.querySelector('.profile-dropdown');
-    if (!dropdown.contains(event.target)) {
-        dropdown.classList.remove('active');
-    }
-});
+            <div class="messenger-container">
+                <!-- Left Sidebar (Contacts) -->
+                <div class="contacts-panel">
+                    <h3>Contacts</h3>
 
-    </script>
+                    <!-- Search Bar -->
+                    <input type="text" id="searchContacts" placeholder="Search contacts..." onkeyup="searchContacts()">
+
+                    <ul id="contactList">
+                        <!-- Contacts will be dynamically generated here -->
+                    </ul>
+                </div>
+
+                <!-- Right Chat Panel -->
+                <div class="chat-panel">
+                    <div id="chatHeader">Select a conversation</div>
+                    <div id="chatBox">
+                        <p class="chat-message">Click on a contact to start chatting.</p>
+                    </div>
+                    <div class="chat-input">
+                        <input type="text" id="messageInput" placeholder="Type a message...">
+                        <button onclick="sendMessage()">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="dashboard-container">
         <div class="sidebar">
@@ -955,7 +1187,7 @@ document.addEventListener('click', function (event) {
 <div class="modal fade" id="uploadResearchModal" tabindex="-1" aria-labelledby="uploadResearchModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg"> <!-- Add modal-lg here for larger width -->
         <div class="modal-content">
-            <div class="modal-header" style="background-color: #4CAF50; color: white;">
+            <div class="modal-header">
                 <h5 class="modal-title" id="uploadResearchModalLabel"> <i class="fas fa-file-alt"></i>   Add New Research</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -965,14 +1197,18 @@ document.addEventListener('click', function (event) {
                         <!-- Left Column -->
                         <div class="col-md-6 form-group mb-3">
                             <label for="title" class="form-label">Title</label>
-                            <input type="text" name="title" id="title" class="form-control" required style="border-color: #4CAF50;">
+                            <input type="text" name="title" id="title" class="form-control" required >
                         </div>
 
-                        <div class="col-md-6 form-group mb-3">
+                        <div class="col-md-6 form-group position-relative mb-3">
                             <label for="author" class="form-label">Author</label>
-                            <input type="text" name="author" id="author" class="form-control" autocomplete="off" style="border-color: #4CAF50;">
-                            <ul id="author-suggestions" class="dropdown-menu"></ul>
+                            <input type="text" name="author" id="author" class="form-control" autocomplete="off">
+                            
+                            <!-- Suggestions dropdown directly below the input field -->
+                            <ul id="author-suggestions" class="list-group position-absolute w-100 d-none" 
+                                style="top: 100%; left: 0; z-index: 1050; max-height: 200px; overflow-y: auto;"></ul>
                         </div>
+                        
 
                         <input type="hidden" name="selected_authors" id="selected_authors">
                         <div id="selected-authors" class="mb-3"></div> <!-- Container for selected authors -->
@@ -982,7 +1218,7 @@ document.addEventListener('click', function (event) {
                         <!-- Type of Research by Nature -->
                         <div class="col-md-6 form-group mb-3">
                             <label for="nature" class="form-label">Type of Research by Nature</label>
-                            <select name="nature" id="nature" class="form-control" style="border-color: #4CAF50;">
+                            <select name="nature" id="nature" class="form-control" >
                                 <option value="" disabled selected>Select type of research by nature</option>
                                 <option value="Basic Research">Basic Research</option>
                                 <option value="Applied Research">Applied Research</option>
@@ -994,7 +1230,7 @@ document.addEventListener('click', function (event) {
 
                         <div class="col-md-6 form-group mb-3">
                             <label for="origin" class="form-label">Type of Research by Source/Origin</label>
-                            <select name="origin" id="origin" class="form-control" style="border-color: #4CAF50;">
+                            <select name="origin" id="origin" class="form-control" >
                                 <option value="" disabled selected>Select type of research by source/origin</option>
                                 <option value="Internal">Internal</option>
                                 <option value="External">External</option>
@@ -1006,7 +1242,7 @@ document.addEventListener('click', function (event) {
                     <div class="row" id="abstract-row" style="display: none;">
                         <div class="col-md-6 form-group mb-3">
                             <label for="abstract" class="form-label">Abstract</label>
-                            <textarea name="abstract" id="abstract" class="form-control" placeholder="Enter abstract here" style="border-color: #4CAF50;"></textarea>
+                            <textarea name="abstract" id="abstract" class="form-control" placeholder="Enter abstract here"></textarea>
                         </div>
                     </div>
 
@@ -1014,7 +1250,7 @@ document.addEventListener('click', function (event) {
                     <div class="row" id="fundingsource-row" style="display: none;">
                         <div class="col-md-6 form-group mb-3">
                             <label for="funding" class="form-label">Funding Source</label>
-                            <select name="funding" id="funding" class="form-control" style="border-color: #4CAF50;">
+                            <select name="funding" id="funding" class="form-control">
                                 <option value="" disabled selected>Select funding source</option>
                                 <option value="Government">Government</option>
                                 <option value="Private">Private</option>
@@ -1029,7 +1265,7 @@ document.addEventListener('click', function (event) {
                     <div class="row" id="journal-publication-row" style="display: none;">
                         <div class="col-md-6 form-group mb-3">
                             <label for="journal_publication" class="form-label">Journal Publication</label>
-                            <input type="text" name="journal_publication" id="journal_publication" class="form-control" style="border-color: #4CAF50;">
+                            <input type="text" name="journal_publication" id="journal_publication" class="form-control">
                         </div>
                     </div>
 
@@ -1037,24 +1273,24 @@ document.addEventListener('click', function (event) {
                     <div class="row" id="publication-date-row" style="display: none;">
                         <div class="col-md-6 form-group mb-3">
                             <label for="publication_date" class="form-label">Publication Date</label>
-                            <input type="date" name="publication_date" id="publication_date" class="form-control" style="border-color: #4CAF50;">
+                            <input type="date" name="publication_date" id="publication_date" class="form-control">
                         </div>
                     </div>
 
                     <!-- Project/Study Duration -->
                     <div class="row justify-content-center" id="duration-row" style="display: none;">
-                        <div class="col-md-8" style="border: 1px solid #4CAF50; border-radius: 8px; padding: 15px;">
+                        <div class="col-md-8" >
                             <div class="row">
                                 <div class="col-12 form-group mb-3">
                                     <label for="duration" class="form-label">Project/Study Duration</label>
                                 </div>
                                 <div class="col-md-6 form-group mb-3">
                                     <label for="start" class="form-label">Start</label>
-                                    <input type="date" name="start" id="start" class="form-control" style="border-color: #4CAF50;">
+                                    <input type="date" name="start" id="start" class="form-control" >
                                 </div>
                                 <div class="col-md-6 form-group mb-3">
                                     <label for="end" class="form-label">End</label>
-                                    <input type="date" name="end" id="end" class="form-control" style="border-color: #4CAF50;">
+                                    <input type="date" name="end" id="end" class="form-control" >
                                 </div>
                             </div>
                         </div>
@@ -1064,7 +1300,7 @@ document.addEventListener('click', function (event) {
                     <div class="row" id="isbn-row" style="display: none;">
                         <div class="col-md-6 form-group mb-3">
                             <label for="isbn" class="form-label">ISBN/ISSN</label>
-                            <input type="text" name="isbn" id="isbn" class="form-control" style="border-color: #4CAF50;">
+                            <input type="text" name="isbn" id="isbn" class="form-control" >
                         </div>
                     </div>
 
@@ -1073,7 +1309,7 @@ document.addEventListener('click', function (event) {
                         <div class="col-md-12 form-group mb-3">
                             <label for="keyword-input" class="form-label">Keywords (Maximum 5)</label>
                             <div class="d-flex">
-                                <input type="text" id="keyword-input" class="form-control me-2" placeholder="Enter a keyword" style="border-color: #4CAF50;">
+                                <input type="text" id="keyword-input" class="form-control me-2" placeholder="Enter a keyword">
                                 <button type="button" id="add-keyword" class="btn btn-success">Add</button>
                             </div>
                             <small class="text-muted">Press "Add" to save each keyword.</small>
@@ -1081,86 +1317,25 @@ document.addEventListener('click', function (event) {
                         </div>
                     </div>
 
-                    <script>
-                        const keywordInput = document.getElementById("keyword-input");
-                        const addKeywordButton = document.getElementById("add-keyword");
-                        const keywordList = document.getElementById("keyword-list");
-                        const maxKeywords = 5;
-                        let keywords = [];
-    
-                        addKeywordButton.addEventListener("click", () => {
-                            const keyword = keywordInput.value.trim();
-                            if (keyword === "") {
-                                alert("Keyword cannot be empty.");
-                                return;
-                            }
-                            if (keywords.length >= maxKeywords) {
-                                alert(`You can only add up to ${maxKeywords} keywords.`);
-                                return;
-                            }
-                            if (keywords.includes(keyword)) {
-                                alert("This keyword has already been added.");
-                                return;
-                            }
-                            keywords.push(keyword);
-                            const listItem = document.createElement("li");
-                            listItem.textContent = keyword;
-                            listItem.className = "keyword-item d-flex justify-content-between align-items-center border p-2 mb-1 rounded";
-                            listItem.style.borderColor = "#4CAF50";
-                            const removeButton = document.createElement("button");
-                            removeButton.textContent = "Remove";
-                            removeButton.className = "btn btn-danger btn-sm";
-                            removeButton.addEventListener("click", () => {
-                                keywordList.removeChild(listItem);
-                                keywords = keywords.filter(k => k !== keyword);
-                            });
-                            listItem.appendChild(removeButton);
-                            keywordList.appendChild(listItem);
-                            keywordInput.value = "";
-                        });
-    
-                        // Select the form using querySelector (based on action attribute or other selector)
-                        const form = document.querySelector('form[action="/fresearch/add"]'); // Select the form by its action URL
-    
-                        form.addEventListener('submit', (event) => {
-                            event.preventDefault(); // Prevent the default form submission
-    
-                            // Join keywords into a comma-separated string
-                            const keywordString = keywords.join(', ');
-    
-                            // If there are keywords, add them to a hidden input field
-                            if (keywordString) {
-                                const keywordField = document.createElement('input');
-                                keywordField.type = 'hidden';
-                                keywordField.name = 'keywords'; // Ensure this matches the name in the backend
-                                keywordField.value = keywordString;
-                                form.appendChild(keywordField); // Append the hidden field to the form
-                            }
-    
-                            // Now submit the form with the updated keyword field
-                            form.submit(); // This will now include the keywords as a comma-separated string
-                        });
-                    </script>
-
                     <!-- DOI (Shown for Published) -->
                     <div class="row" id="doi-row" style="display: none;">
                         <div class="col-md-6 form-group mb-3">
                             <label for="doi" class="form-label">DOI</label>
-                            <input type="text" name="doi" id="doi" class="form-control" placeholder="Enter DOI (if available)" style="border-color: #4CAF50;">
+                            <input type="text" name="doi" id="doi" class="form-control" placeholder="Enter DOI (if available)">
                         </div>
                     </div>
 
                     <!-- Research File (Shown for Published) -->
                     <div class="form-group mb-3" id="research-file-row" style="display: none;">
                         <label for="researchFile" class="form-label">Research Document</label>
-                        <input type="file" name="researchFile" id="researchFile" class="form-control" accept=".pdf,.doc,.docx" style="border-color: #4CAF50;">
+                        <input type="file" name="researchFile" id="researchFile" class="form-control" accept=".pdf,.doc,.docx">
                     </div>
 
                     <!-- Status Selection -->
                     <div class="row">
                         <div class="col-md-6 form-group mb-3">
                             <label for="status_id" class="form-label">Status</label>
-                            <select name="status_id" id="status_id" class="form-control" required onchange="toggleFields()" style="border-color: #4CAF50;">
+                            <select name="status_id" id="status_id" class="form-control" required onchange="toggleFields()">
                                 <option value="4">Proposed</option>
                                 <option value="2">Ongoing</option>
                                 <option value="1">Completed</option>
@@ -1170,8 +1345,8 @@ document.addEventListener('click', function (event) {
                     </div>
 
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="background-color: #888;">Close</button>
-                        <button type="submit" class="btn btn-primary" style="background-color: #4CAF50; border-color: #4CAF50;">Submit</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
                     </div>
                 </form>
             </div>
@@ -1181,66 +1356,9 @@ document.addEventListener('click', function (event) {
 
 
 
-<script>
-    function toggleFields() {
-        const status = document.getElementById('status_id').value;
-        
-        // Reset the display of fields
-        document.getElementById('abstract-row').style.display = 'none';
-        document.getElementById('journal-publication-row').style.display = 'none';
-        document.getElementById('publication-date-row').style.display = 'none';
-        document.getElementById('isbn-row').style.display = 'none';
-        document.getElementById('duration-row').style.display = 'none';
-        document.getElementById('doi-row').style.display = 'none';
-        document.getElementById('research-file-row').style.display = 'none';
-        document.getElementById('fundingsource-row').style.display = 'none';
-        document.getElementById('keyword-row').style.display = 'none';
 
-       
-       
 
-        // Show fields based on status selection
-        if (status === '1') {  // Ongoing or Completed
-            document.getElementById('abstract-row').style.display = 'block';
-            document.getElementById('fundingsource-row').style.display = 'block';
-            document.getElementById('research-file-row').style.display = 'block';
-            document.getElementById('duration-row').style.display = 'block';
-            document.getElementById('keyword-row').style.display = 'block';
-            
-            
-        }
 
-          // Show fields based on status selection
-          if (status === '2') {  // Ongoing or Completed
-            document.getElementById('abstract-row').style.display = 'block';
-            document.getElementById('fundingsource-row').style.display = 'block';
-            document.getElementById('duration-row').style.display = 'block';
-            document.getElementById('keyword-row').style.display = 'block';
-        }
-        
-        if (status === '3') {  // Published
-            document.getElementById('abstract-row').style.display = 'block';
-            document.getElementById('journal-publication-row').style.display = 'block';
-            document.getElementById('publication-date-row').style.display = 'block';
-            document.getElementById('isbn-row').style.display = 'block';
-            document.getElementById('doi-row').style.display = 'block';
-            document.getElementById('fundingsource-row').style.display = 'block';
-            document.getElementById('research-file-row').style.display = 'block';
-            document.getElementById('duration-row').style.display = 'block';
-            document.getElementById('keyword-row').style.display = 'block';
-
-            
-        }
-        if (status === '4') {  // Proposed
-            // Only title, author, and status fields will be shown
-        }
-    }
-
-    // Initialize field visibility on page load
-    window.onload = function() {
-        toggleFields(); // Ensure correct fields are displayed on initial load
-    };
-</script>
 
 
                 
@@ -1252,7 +1370,10 @@ document.addEventListener('click', function (event) {
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="editResearchModalLabel">Edit Research</h5>
+                <h5 class="modal-title" id="editResearchModalLabel">
+                    <i class="fas fa-edit"></i> Update Research
+                </h5>
+                
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="/update-paper" method="POST" enctype="multipart/form-data">
@@ -1288,12 +1409,12 @@ document.addEventListener('click', function (event) {
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="status_id" class="form-label">Current Phase</label>
-                                <input type="text" class="form-control" id="status_id" name="status_id" readonly style="background-color: #e9ecef; color: #6c757d; border: 1px solid #d6d8db;">
+                                <input type="text" class="form-control readonly-field" id="status_id" name="status_id" readonly>
                             </div>
 
                             <div class="mb-3">
                                 <label for="status" class="form-label">Next Phase</label>
-                                <input type="text" class="form-control" id="status" name="status" value="Published" readonly style="background-color: #e9ecef; color: #6c757d; border: 1px solid #d6d8db;">
+                                <input type="text" class="form-control readonly-field" id="status" name="status" value="Published" readonly>
                             </div>
                             
                             <div class="mb-3">
@@ -1334,7 +1455,7 @@ document.addEventListener('click', function (event) {
                     <!-- Research File (Shown for Published) -->
                     <div class="form-group mb-3">
                         <label for="researchFile" class="form-label">Upload published manuscript</label>
-                        <input type="file" name="researchFile" id="researchFile" class="form-control" accept=".pdf,.doc,.docx" style="border-color: #4CAF50;">
+                        <input type="file" name="researchFile" id="researchFile" class="form-control" accept=".pdf,.doc,.docx">
                     </div>
                 </div>
                 
@@ -1349,12 +1470,18 @@ document.addEventListener('click', function (event) {
 
 
 
+
+
+
 <!-- Modal for editing research -->
 <div class="modal fade" id="ongoingUpdate" tabindex="-1" aria-labelledby="ongoingUpdateLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="ongoingUpdateLabel">Edit Research</h5>
+                <h5 class="modal-title" id="editResearchModalLabel">
+                    <i class="fas fa-edit"></i> Update Research
+                </h5>
+                
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="/update-paper" method="POST" enctype="multipart/form-data">
@@ -1381,18 +1508,25 @@ document.addEventListener('click', function (event) {
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="status_id" class="form-label">Current Phase</label>
-                            <input type="text" class="form-control" id="status_id" name="status_id" readonly style="background-color: #e9ecef; color: #6c757d; border: 1px solid #d6d8db;">
+                            <input type="text" class="form-control phase-field" id="status_id" name="status_id" readonly>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="status" class="form-label">Next Phase</label>
-                            <input type="text" class="form-control" id="status" name="status" value="Ongoing" readonly style="background-color: #e9ecef; color: #6c757d; border: 1px solid #d6d8db;">
+                            <input type="text" class="form-control phase-field" id="status" name="status" value="Ongoing" readonly>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="funding" class="form-label">Funding</label>
-                            <input type="text" class="form-control" id="funding" name="funding">
+                            <select class="form-control" id="funding" name="funding">
+                                <option value="" disabled selected>Select funding source</option>
+                            <option value="Government">Government</option>
+                            <option value="Private">Private</option>
+                            <option value="University">University</option>
+                            <option value="NGO">Non-Governmental Organization (NGO)</option>
+                            <option value="International">International</option>
+                            </select>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="nature" class="form-label">Nature</label>
@@ -1435,12 +1569,18 @@ document.addEventListener('click', function (event) {
 </div>
 
 
+
+
+
 <!-- Modal for editing research -->
 <div class="modal fade" id="completeUpdate" tabindex="-1" aria-labelledby="completeUpdateLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="completeUpdateLabel">Edit Research</h5>
+                <h5 class="modal-title" id="editResearchModalLabel">
+                    <i class="fas fa-edit"></i> Update Research
+                </h5>
+                
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="/update-paper" method="POST" enctype="multipart/form-data">
@@ -1460,18 +1600,18 @@ document.addEventListener('click', function (event) {
                             </div>
                             <div class="mb-3">
                                 <label for="author" class="form-label">Author</label>
-                                <input type="text" class="form-control" id="author" name="author" required disabled> <!-- Disable text input -->
+                                <input type="text" class="form-control" id="author" name="author" required disabled>
                             </div>
                             <div class="mb-3">
                                 <label for="status_id" class="form-label">Current Phase</label>
-                                <input type="text" class="form-control" id="status_id" name="status_id" readonly style="background-color: #e9ecef; color: #6c757d; border: 1px solid #d6d8db;">
+                                <input type="text" class="form-control phase-field" id="status_id" name="status_id" readonly>
                             </div>
                         </div>
 
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="status" class="form-label">Next Phase</label>
-                                <input type="text" class="form-control" id="status" name="status" value="Completed" readonly style="background-color: #e9ecef; color: #6c757d; border: 1px solid #d6d8db;">
+                                <input type="text" class="form-control phase-field" id="status" name="status" value="Completed" readonly>
                             </div>
                             <div class="mb-3">
                                 <label for="funding" class="form-label">Funding</label>
@@ -1499,7 +1639,7 @@ document.addEventListener('click', function (event) {
                             </div>
                             <div class="form-group mb-3">
                                 <label for="researchFile" class="form-label">Upload complete manuscript</label>
-                                <input type="file" name="researchFile" id="researchFile" class="form-control" accept=".pdf,.doc,.docx" style="border-color: #4CAF50;">
+                                <input type="file" name="researchFile" id="researchFile" class="form-control file-input" accept=".pdf,.doc,.docx">
                             </div>
                         </div>
                     </div>
@@ -1521,119 +1661,10 @@ document.addEventListener('click', function (event) {
 
 
 
-<script>
-    // Listen for the 'show.bs.modal' event to populate the modal fields
-    document.getElementById('editResearchModal').addEventListener('show.bs.modal', function (event) {
-        var button = event.relatedTarget; // Button that triggered the modal
-        var researchId = button.getAttribute('data-id');
-        var title = button.getAttribute('data-title');
-        var author = button.getAttribute('data-author');
-        var abstract = button.getAttribute('data-abstract');
-        var publicationDate = button.getAttribute('data-publication_date');
-        var journalPublication = button.getAttribute('data-journal_publication');
-        var statusName = button.getAttribute('data-status');
-        var doi = button.getAttribute('data-doi');
-        var funding = button.getAttribute('data-funding');
-        var nature = button.getAttribute('data-nature');
-        var origin = button.getAttribute('data-origin');
-        var isbn = button.getAttribute('data-isbn');
-        var startdate = button.getAttribute('data-startdate');
-        var enddate = button.getAttribute('data-enddate');
-        var keyword = button.getAttribute('data-keyword');
-        var filename = button.getAttribute('data-filename');
-        
-        // Set modal title dynamically
-        var modalTitle = document.querySelector('#editResearchModal .modal-title');
-        modalTitle.innerHTML = `Edit Research: ${title} <br> Current Status: ${statusName}`;
-
-        // Populate the modal fields with the data from the button
-        var modalBody = document.querySelector('#editResearchModal .modal-body');
-
-        modalBody.querySelector('#researchId').value = researchId;
-        modalBody.querySelector('#title').value = title;
-        modalBody.querySelector('#author').value = author;
-        modalBody.querySelector('#abstract').value = abstract;
-        modalBody.querySelector('#publication_date').value = publicationDate;
-        modalBody.querySelector('#journal_publication').value = journalPublication;
-        modalBody.querySelector('#status_id').value = statusName; // For read-only
-        modalBody.querySelector('#doi').value = doi;
-        modalBody.querySelector('#funding').value = funding;
-        modalBody.querySelector('#nature').value = nature;
-        modalBody.querySelector('#origin').value = origin;
-        modalBody.querySelector('#isbn').value = isbn;
-        modalBody.querySelector('#startdate').value = startdate;
-        modalBody.querySelector('#enddate').value = enddate;
-        modalBody.querySelector('#keyword').value = keyword;
-        modalBody.querySelector('#filename').value = filename;
-    });
-</script>
 
 
-<script>
-    document.getElementById('ongoingUpdate').addEventListener('show.bs.modal', function (event) {
-        var button = event.relatedTarget; // Button that triggered the modal
-        var researchId = button.getAttribute('data-id');
-        var title = button.getAttribute('data-title');
-        var author = button.getAttribute('data-author');
-        var abstract = button.getAttribute('data-abstract');
-        var statusName = button.getAttribute('data-status');
-        var funding = button.getAttribute('data-funding');
-        var nature = button.getAttribute('data-nature');
-        var origin = button.getAttribute('data-origin');
-        var startdate = button.getAttribute('data-startdate');
-        var enddate = button.getAttribute('data-enddate');
-        var keyword = button.getAttribute('data-keyword');
-        var modalTitle = document.querySelector('#ongoingUpdateLabel');
-        var modalBody = document.querySelector('#ongoingUpdate .modal-body');
 
-        modalTitle.innerHTML = `Edit Research: ${title} <br> Current Status: ${statusName}`;
-        modalBody.querySelector('#status_id').value = statusName;
-        modalBody.querySelector('#researchId').value = researchId;
-        modalBody.querySelector('#title').value = title;
-        modalBody.querySelector('#author').value = author;
-        modalBody.querySelector('#abstract').value = abstract;
-        modalBody.querySelector('#funding').value = funding;
-        modalBody.querySelector('#nature').value = nature;
-        modalBody.querySelector('#origin').value = origin;
-        modalBody.querySelector('#startdate').value = startdate;
-        modalBody.querySelector('#enddate').value = enddate;
-        modalBody.querySelector('#keyword').value = keyword;
-    });
-</script>
 
-<script>
-    document.getElementById('completeUpdate').addEventListener('show.bs.modal', function (event) {
-        var button = event.relatedTarget; // Button that triggered the modal
-        var researchId = button.getAttribute('data-id');
-        var title = button.getAttribute('data-title');
-        var author = button.getAttribute('data-author');
-        var abstract = button.getAttribute('data-abstract');
-        var statusName = button.getAttribute('data-status');
-        var funding = button.getAttribute('data-funding');
-        var nature = button.getAttribute('data-nature');
-        var origin = button.getAttribute('data-origin');
-        var startdate = button.getAttribute('data-startdate');
-        var enddate = button.getAttribute('data-enddate');
-        var keyword = button.getAttribute('data-keyword');
-        
-        var modalTitle = document.querySelector('#completeUpdateLabel');
-        var modalBody = document.querySelector('#completeUpdate .modal-body');
-
-        modalTitle.innerHTML = `Edit Research: ${title} <br> Current Status: ${statusName}`;
-
-        modalBody.querySelector('#researchId').value = researchId;
-        modalBody.querySelector('#status_id').value = statusName;
-        modalBody.querySelector('#title').value = title;
-        modalBody.querySelector('#author').value = author;
-        modalBody.querySelector('#abstract').value = abstract;
-        modalBody.querySelector('#funding').value = funding;
-        modalBody.querySelector('#nature').value = nature;
-        modalBody.querySelector('#origin').value = origin;
-        modalBody.querySelector('#startdate').value = startdate;
-        modalBody.querySelector('#enddate').value = enddate;
-        modalBody.querySelector('#keyword').value = keyword;
-    });
-</script>
 
 
 
@@ -1647,8 +1678,11 @@ document.addEventListener('click', function (event) {
 <div class="modal fade" id="viewResearchModal" tabindex="-1" aria-labelledby="viewResearchModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content shadow-lg rounded-4 border-0">
-            <div class="modal-header border-bottom-0">
-                <h5 class="modal-title text-light" id="viewResearchModalLabel">View Research</h5>
+            <div class="modal-header border-bottom-0 bg-success text-white">
+                <h5 class="modal-title" id="viewResearchModalLabel">
+                    <i class="fa-solid fa-file-lines"></i> View Research
+                </h5>
+                
                 <!-- Print Button -->
                 <button type="button" class="btn btn-light btn-sm" id="printModalContent" title="Print">
                     <i class="bi bi-printer"></i>
@@ -1663,57 +1697,63 @@ document.addEventListener('click', function (event) {
                 <!-- Two-column layout for details and PDF preview -->
                 <div class="row">
                     <div class="col-md-6">
-                        <!-- Left Column: Research Details -->
-                        <div class="mb-3">
-                            <p><strong class="text-muted">Title:</strong> <span id="view-title" class="text-dark"></span></p>
+                        <!-- Title Box -->
+                        <div class="p-3 rounded-3 shadow-sm bg-success-subtle mb-3 text-center">
+                            <h4 class="text-success">
+                                <i class="fas fa-file-alt"></i> Title</h4><strong><span id="view-title" class="text-dark" style="font-size: 20px; font-weight: 700;"></span></strong>
                         </div>
-                        <div class="mb-3">
-                            <p><strong class="text-muted">Author:</strong> <span id="view-author" class="text-dark"></span></p>
-                        </div>
-                        <div class="mb-3">
-                            <p><strong class="text-muted">Campus:</strong> <span id="view-campus" class="text-dark"></span></p>
-                        </div>
-                        <div class="mb-3">
-                            <p><strong class="text-muted">Publication Date:</strong> <span id="view-publication-date" class="text-dark"></span></p>
-                        </div>
-                        <div class="mb-3">
-                            <p><strong class="text-muted">Journal Publication:</strong> <span id="view-journal-publication" class="text-dark"></span></p>
-                        </div>
-                        <div class="mb-3">
-                            <p><strong class="text-muted">Status:</strong> <span id="view-status" class="text-dark"></span></p>
-                        </div>
-                        <div class="mb-3">
-                            <p><strong class="text-muted">Nature:</strong> <span id="view-nature" class="text-dark"></span></p>
-                        </div>
-                        <div class="mb-3">
-                            <p><strong class="text-muted">Origin:</strong> <span id="view-origin" class="text-dark"></span></p>
-                        </div>
-                        <div class="mb-3">
-                            <p><strong class="text-muted">DOI:</strong> <span id="view-doi" class="text-dark"></span></p>
-                        </div>
-                        <div class="mb-3">
-                            <p><strong class="text-muted">Abstract:</strong> <span id="view-abstract" class="text-dark"></span></p>
-                        </div>
-                        <div class="mb-3">
-                            <p><strong class="text-muted">Funding:</strong> <span id="view-funding" class="text-dark"></span></p>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <p><strong class="text-muted">ISBN/ISSN:</strong> <span id="view-isbn" class="text-dark"></span></p>
-                        </div>
-                        <div class="mb-3">
-                            <p><strong class="text-muted">Start Date:</strong> <span id="view-startdate" class="text-dark"></span></p>
-                        </div>
-                        <div class="mb-3">
-                            <p><strong class="text-muted">End Date:</strong> <span id="view-enddate" class="text-dark"></span></p>
-                        </div>
-                        <div class="mb-3">
-                            <p><strong class="text-muted">Keywords:</strong> <span id="view-keyword" class="text-dark"></span></p>
-                        </div>
-                        <div class="mb-3">
-                            <p><strong class="text-muted">Filename:</strong> <span id="view-filename" class="text-dark"></span></p>
+                
+                        <!-- Details Box -->
+                        <div class="p-3 rounded-3 shadow-sm bg-success-subtle">
+                            <div class="mb-3">
+                                <p><strong class="text-success"><i class="fas fa-user"></i> Author</strong> <span id="view-author" class="text-dark"></span></p>
+                            </div>
+                            <div class="mb-3">
+                                <p><strong class="text-success"><i class="fas fa-university"></i> Campus</strong> <span id="view-campus" class="text-dark"></span></p>
+                            </div>
+                            <div class="mb-3">
+                                <p><strong class="text-success"><i class="fas fa-calendar-alt"></i> Publication Date</strong> <span id="view-publication-date" class="text-dark"></span></p>
+                            </div>
+                            <div class="mb-3">
+                                <p><strong class="text-success"><i class="fas fa-book"></i> Journal Publication</strong> <span id="view-journal-publication" class="text-dark"></span></p>
+                            </div>
+                            <div class="mb-3">
+                                <p><strong class="text-success"><i class="fas fa-info-circle"></i> Status</strong> <span id="view-status" class="text-dark"></span></p>
+                            </div>
+                            <div class="mb-3">
+                                <p><strong class="text-success"><i class="fas fa-tags"></i> Nature</strong> <span id="view-nature" class="text-dark"></span></p>
+                            </div>
+                            <div class="mb-3">
+                                <p><strong class="text-success"><i class="fas fa-globe"></i> Origin</strong> <span id="view-origin" class="text-dark"></span></p>
+                            </div>
+                            <div class="mb-3">
+                                <p><strong class="text-success"><i class="fas fa-link"></i> DOI</strong> <span id="view-doi" class="text-dark"></span></p>
+                            </div>
+                            <div class="mb-3">
+                                <p><strong class="text-success"><i class="fas fa-align-left"></i> Abstract</strong> <span id="view-abstract" class="text-dark"></span></p>
+                            </div>
+                            <div class="mb-3">
+                                <p><strong class="text-success"><i class="fas fa-money-bill-wave"></i> Funding</strong> <span id="view-funding" class="text-dark"></span></p>
+                            </div>
+                            <div class="mb-3">
+                                <p><strong class="text-success"><i class="fas fa-barcode"></i> ISBN/ISSN</strong> <span id="view-isbn" class="text-dark"></span></p>
+                            </div>
+                            <div class="mb-3">
+                                <p><strong class="text-success"><i class="fas fa-calendar-plus"></i> Start Date</strong> <span id="view-startdate" class="text-dark"></span></p>
+                            </div>
+                            <div class="mb-3">
+                                <p><strong class="text-success"><i class="fas fa-calendar-check"></i> End Date</strong> <span id="view-enddate" class="text-dark"></span></p>
+                            </div>
+                            <div class="mb-3">
+                                <p><strong class="text-success"><i class="fas fa-key"></i> Keywords</strong> <span id="view-keyword" class="text-dark"></span></p>
+                            </div>
+                            <div class="mb-3">
+                                <p><strong class="text-success"><i class="fas fa-file"></i> Filename</strong> <span id="view-filename" class="text-dark"></span></p>
+                            </div>
                         </div>
                     </div>
+                    
+                    
                     <div class="col-md-6">
                         <!-- Right Column: PDF Preview -->
                         <div class="pdf-preview mt-4">
@@ -1729,237 +1769,44 @@ document.addEventListener('click', function (event) {
                 </div>
 
             </div>
-            <script>
-                document.addEventListener("DOMContentLoaded", function () {
-                    // Function to hide empty fields
-                    function hideEmptyFields() {
-                        document.querySelectorAll(".modal-body p").forEach((element) => {
-                            let span = element.querySelector("span");
-                            if (!span || !span.textContent.trim()) {
-                                element.style.display = "none"; // Hide the <p> element if empty
-                            }
-                        });
-                    }
             
-                    // Run the function when modal is opened
-                    document.getElementById("viewResearchModal").addEventListener("show.bs.modal", function () {
-                        setTimeout(hideEmptyFields, 100); // Slight delay to ensure content is loaded
-                    });
-                });
-            </script>
             
             <div class="modal-footer border-top-0 d-flex justify-content-end">
-                <button type="button" class="btn btn-outline-light px-4 py-2" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-outline-success px-4 py-2" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
 </div>
 
-<style>
-    /* Modal Design with Green Palette */
-.modal-content {
-    background-color: #1B4D3E; /* Deep green background */
-    border-radius: 12px; /* Rounded corners */
-}
-
-.modal-header {
-    background-color: #14532D; /* Darker green for header */
-    color: #fff; /* White text for contrast */
-    border-bottom: none;
-}
-
-.modal-title {
-    font-weight: bold;
-    color: #A9F3D1; /* Light green for title */
-}
-
-.modal-body {
-    color: #A9F3D1; /* Light green text for the body */
-}
-
-.modal-footer {
-    background-color: #14532D; /* Dark footer */
-}
-
-.btn-light {
-    background-color: #2E8B57; /* A slightly lighter green for the buttons */
-    color: white;
-    border-radius: 50px; /* Circular button for a sleek look */
-}
-
-.btn-light:hover {
-    background-color: #3C9C74; /* Hover effect for the button */
-}
-
-/* Highlight important elements */
-strong {
-    color: #9AE99E; /* Lighter green for important labels */
-}
-
-/* Custom Styling for Barcode Image */
-#view-barcode-image {
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    border-radius: 8px;
-}
-
-/* PDF Preview Section */
-.pdf-preview embed {
-    border-radius: 8px;
-}
-
-/* When empty fields are detected, hide them */
-.modal-body p {
-    font-size: 14px;
-    line-height: 1.6;
-}
-
-.modal-body .mb-3 {
-    border-bottom: none; /* Removed the underline */
-}
-</style>
-
-
-
-
 <script>
-    // Populate the modal with the research data
-    document.getElementById('viewResearchModal').addEventListener('show.bs.modal', function (event) {
-        var button = event.relatedTarget; // Button that triggered the modal
+document.addEventListener("DOMContentLoaded", function () {
+    var viewResearchModal = document.getElementById("viewResearchModal");
+    var modalDialog = document.getElementById("viewResearchModalDialog");
+    var pdfPreview = document.getElementById("pdf-preview");
+    var pdfPreviewColumn = document.getElementById("pdfPreviewColumn");
+    var researchDetailsContainer = document.getElementById("researchDetailsContainer");
 
-        // Get filename from the button's data attribute
-        var filename = button.getAttribute('data-filename');
+    viewResearchModal.addEventListener("show.bs.modal", function () {
+        if (!pdfPreview.src || pdfPreview.src === window.location.href) {
+            // Hide the PDF preview column
+            pdfPreviewColumn.style.display = "none";
 
-        // Update filename text
-        document.getElementById('view-filename').textContent = filename;
-
-        // Update PDF preview source
-        var pdfPreview = document.getElementById('pdf-preview');
-        if (filename) {
-            pdfPreview.src = "/uploads/" + filename;
+            // Apply custom width class
+            modalDialog.classList.add("modal-custom-width");
         } else {
-            pdfPreview.src = ""; // Clear the preview if no filename
-            console.error("Filename is missing or invalid.");
+            // Show the PDF preview column
+            pdfPreviewColumn.style.display = "block";
+
+            // Remove custom width class
+            modalDialog.classList.remove("modal-custom-width");
         }
     });
-</script>
-
-
-<script>
-  // Function to format the publication date
-function formatDate(dateString) {
-    if (!dateString || isNaN(Date.parse(dateString))) {
-        return 'Not published yet'; // Return this if the date is not available or invalid
-    }
-
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', options);
-}
-
-// Print only the selected content
-document.getElementById('printModalContent').addEventListener('click', function () {
-    // Create a hidden iframe
-    var iframe = document.createElement('iframe');
-    iframe.style.position = 'absolute';
-    iframe.style.top = '-10000px'; // Hide it off-screen
-    document.body.appendChild(iframe);
-
-    // Get the iframe's document
-    var doc = iframe.contentDocument || iframe.contentWindow.document;
-
-    // Create the printable content
-    var barcode = document.getElementById('view-barcode-image').outerHTML;
-    
-    // Make the barcode a reasonable size by adding style
-    barcode = barcode.replace('<img', '<img style="width: 200px; height: 50px;"');  // Adjust width and height as needed
-
-    var campus = '<p style="font-size: 18px; margin-bottom: 60px; line-height: 1.5;">' + document.getElementById('view-campus').textContent + '</p>';
-    var title = '<p style="font-size: 26px; font-weight: bold; margin-bottom: 60px; line-height: 1.5;">' + document.getElementById('view-title').textContent + '</p>';
-    var journal = '<p style="font-size: 18px; margin-bottom: 60px; line-height: 1.5;">' + document.getElementById('view-journal-publication').textContent + '</p>';
-    var author = '<p style="font-size: 18px; margin-bottom: 60px; line-height: 1.5;">' + document.getElementById('view-author').textContent + '</p>';
-    var publicationDate = '<p style="font-size: 18px; margin-bottom: 60px; line-height: 1.5;">' + formatDate(document.getElementById('view-publication-date').textContent) + '</p>';
-
-    // Combine the content into a printable format
-    var printContent = `
-        <div style="padding: 60px; font-family: Arial, sans-serif; width: 100%; height: 100%; box-sizing: border-box;">
-            <div style="position: absolute; top: 20px; right: 20px;">
-                ${barcode}
-            </div>
-            <div style="margin-top: 250px; text-align: center;">
-                ${campus}
-                ${title}
-                ${journal}
-                ${author}
-                ${publicationDate}
-            </div>
-        </div>
-    `;
-
-    // Write the content into the iframe
-    doc.open();
-    doc.write('<html><head><title>Print</title></head><body>');
-    doc.write(printContent);
-    doc.write('</body></html>');
-    doc.close();
-
-    // Trigger the print
-    iframe.contentWindow.focus();
-    iframe.contentWindow.print();
-
-    // Remove the iframe after printing
-    setTimeout(() => document.body.removeChild(iframe), 1000);
 });
 
-
 </script>
 
 
 
-<style>
-    /* Contemporary green-themed modal design */
-    .modal-content {
-        background-color: #eafaf1;
-        color: #333;
-        border-radius: 12px;
-    }
-    .modal-header {
-        background-color: #3b9a56; /* Soft green */
-        color: #fff;
-        border-radius: 12px 12px 0 0;
-    }
-    .modal-title {
-        font-size: 1.6rem;
-        font-weight: 600;
-    }
-    .modal-body {
-        background-color: #ffffff;
-        padding: 30px;
-        border-radius: 8px;
-    }
-    .modal-footer {
-        background-color: #f7f7f7;
-        padding: 20px;
-        border-radius: 0 0 12px 12px;
-    }
-    .btn-outline-light {
-        border-color: #3b9a56;
-        color: #3b9a56;
-        font-weight: 500;
-    }
-    .btn-outline-light:hover {
-        background-color: #3b9a56;
-        color: #fff;
-    }
-    .text-muted {
-        color: #6c757d;
-    }
-    .text-dark {
-        color: #343a40;
-    }
-    .shadow-sm {
-        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    }
-</style>
 
 
 
@@ -2245,46 +2092,51 @@ document.getElementById('printModalContent').addEventListener('click', function 
         let authorsSelected = []; // Array to track selected authors
         let authorsData = []; // Array to store author objects
 
-        document.getElementById('author').addEventListener('input', async function() {
-            const query = this.value;
-            if (query.length > 1) {
-                try {
-                    const response = await fetch(`/authors/suggestions?query=${encodeURIComponent(query)}`);
-                    const authors = await response.json();
-                    
-                    authorsData = authors; // Store the data for reference
+        document.getElementById('author').addEventListener('input', async function () {
+    const query = this.value.trim();
+    const suggestionsList = document.getElementById('author-suggestions');
 
-                    const suggestionsList = document.getElementById('author-suggestions');
-                    suggestionsList.innerHTML = '';
-                    
-                    authors.forEach(author => {
-                        const listItem = document.createElement('li');
-                        listItem.classList.add('dropdown-item');
-                        listItem.style.cursor = 'pointer';
+    if (query.length > 1) {
+        try {
+            const response = await fetch(`/authors/suggestions?query=${encodeURIComponent(query)}`);
+            const authors = await response.json();
+            
+            authorsData = authors; // Store data reference
+            suggestionsList.innerHTML = ''; // Clear previous suggestions
 
-                        // Display name and profile picture
-                        listItem.innerHTML = `
-                           
-                            ${author.name}
-                        `;
-                        
-                        listItem.addEventListener('click', function() {
-                            addAuthorToSelection(author);
-                            suggestionsList.innerHTML = '';
-                            document.getElementById('author').value = ''; // Clear the input field
-                        });
+            if (authors.length > 0) {
+                authors.forEach(author => {
+                    const listItem = document.createElement('li');
+                    listItem.classList.add('list-group-item', 'list-group-item-action');
+                    listItem.style.cursor = 'pointer';
 
-                        suggestionsList.appendChild(listItem);
+                    // Display name & profile picture
+                    listItem.innerHTML = `
+                        <img src="/uploads/${author.filename}" alt="${author.name}" class="rounded-circle me-2" width="32" height="32">
+                        ${author.name}
+                    `;
+
+                    listItem.addEventListener('click', function () {
+                        addAuthorToSelection(author);
+                        suggestionsList.classList.add('d-none'); // Hide after selection
+                        document.getElementById('author').value = ''; // Clear input field
                     });
 
-                    suggestionsList.style.display = authors.length > 0 ? 'block' : 'none';
-                } catch (error) {
-                    console.error('Error fetching author suggestions:', error);
-                }
+                    suggestionsList.appendChild(listItem);
+                });
+
+                suggestionsList.classList.remove('d-none'); // Show suggestions
             } else {
-                document.getElementById('author-suggestions').style.display = 'none';
+                suggestionsList.classList.add('d-none'); // Hide if no matches
             }
-        });
+        } catch (error) {
+            console.error('Error fetching author suggestions:', error);
+        }
+    } else {
+        suggestionsList.classList.add('d-none'); // Hide if input is empty
+    }
+});
+
 
         function addAuthorToSelection(author) {
             // Check if the researcher ID is already selected
@@ -2323,8 +2175,16 @@ document.getElementById('printModalContent').addEventListener('click', function 
                 authorItem.style.alignItems = 'center';
                 authorItem.style.marginBottom = '5px';
                 authorItem.innerHTML = `
-                    <span>${author.name}</span>
-                    <button type="button" onclick="removeAuthor(this)" style="margin-left: 10px; background: none; border: none; cursor: pointer;">&times;</button>
+                    
+                   <div class="d-inline-flex align-items-center p-2 border rounded-pill bg-light shadow-sm">
+    <img src="/uploads/${author.filename}" alt="${author.name}" class="rounded-circle" width="32" height="32">
+    <span class="ms-2 fw-bold">${author.name}</span>
+    <button type="button" onclick="removeAuthor(this)" class="btn btn-sm btn-outline-danger ms-2 rounded-circle border-0 fw-bold" style="width: 24px; height: 24px; line-height: 1;">&times;</button>
+</div>
+
+
+
+
                 `;
 
                 selectionContainer.appendChild(authorItem);
@@ -2449,6 +2309,668 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        fetch('/notifications')
+            .then(response => response.json())
+            .then(data => {
+
+                
+                const notificationList = document.getElementById('notificationList');
+                notificationList.innerHTML = '';
+
+                if (data.length === 0) {
+                    notificationList.innerHTML = '<p class="text-center">No new notifications</p>';
+                } else {
+                    // Sort notifications from latest to oldest based on the actual created_at timestamp
+                    data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+                    data.forEach(notification => {
+                        const notificationItem = document.createElement('div');
+                        notificationItem.classList.add('notification-item');
+                        notificationItem.setAttribute('data-follower-id', notification.follower_id);
+
+                        let message = '';
+                        if (notification.type === 'follow_request') {
+                            message = `<strong>${notification.fullname}</strong> requested to follow you`;
+                        } else if (notification.type === 'follow_accepted') {
+                            message = `<strong>${notification.fullname}</strong> accepted your follow request`;
+                        } else if (notification.type === 'research_approval') {
+                            message = `Your request for <strong>${notification.title}</strong> as <strong>${notification.status_name}</strong> has been approved!`;
+                        }
+
+                        const messageElem = document.createElement('p');
+                        messageElem.innerHTML = message;
+                        notificationItem.appendChild(messageElem);
+
+                        if (notification.type === 'follow_request') {
+                            const buttonGroup = document.createElement('div');
+                            buttonGroup.classList.add('button-group');
+
+                            const acceptButton = document.createElement('button');
+                            acceptButton.classList.add('accept-button');
+                            acceptButton.innerText = 'Accept';
+                            acceptButton.addEventListener('click', () => handleFollowRequest(notification.follower_id, 'accept', acceptButton));
+                            buttonGroup.appendChild(acceptButton);
+
+                            const rejectButton = document.createElement('button');
+                            rejectButton.classList.add('reject-button');
+                            rejectButton.innerText = 'Reject';
+                            rejectButton.addEventListener('click', () => handleFollowRequest(notification.follower_id, 'reject', rejectButton));
+                            buttonGroup.appendChild(rejectButton);
+
+                            notificationItem.appendChild(buttonGroup);
+                        }
+
+                        // Display the time ago
+                        const timeAgo = document.createElement('p');
+                        timeAgo.classList.add('time-ago');
+                        timeAgo.textContent = notification.timeAgo;
+                        notificationItem.appendChild(timeAgo);
+
+                        notificationList.appendChild(notificationItem);
+                    });
+                }
+            })
+            .catch(error => console.error('Error fetching notifications:', error));
+
+        // Clear all notifications without confirmation
+const clearAllBtn = document.getElementById('clearAllBtn');
+clearAllBtn.addEventListener('click', async () => {
+    try {
+        const response = await fetch('/clear-notifications', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        if (response.ok) {
+            document.getElementById('notificationList').innerHTML = '<p class="text-center">No new notifications</p>';
+        } else {
+            alert('Failed to clear notifications');
+        }
+    } catch (error) {
+        console.error('Error clearing notifications:', error);
+        alert('Something went wrong while clearing notifications');
+    }
+});
+
+    });
+
+    async function handleFollowRequest(followerId, action, button) {
+        try {
+            const endpoint = action === 'accept' ? '/accept-follow-request' : '/reject-follow-request';
+            const response = await fetch(endpoint, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ followerId })
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                button.innerText = action === 'accept' ? 'Accepted' : 'Rejected';
+                button.style.filter = 'grayscale(100%)';
+                button.disabled = true;
+
+                const notificationItem = button.closest('.notification-item');
+                const otherButton = notificationItem.querySelector(action === 'accept' ? '.reject-button' : '.accept-button');
+
+                if (otherButton) {
+                    otherButton.remove();
+                }
+
+                setTimeout(() => {
+                    notificationItem.remove();
+                }, 3000);
+            } else {
+                alert(`Error: ${result.error}`);
+            }
+        } catch (error) {
+            console.error(`Error processing ${action} follow request:`, error);
+            alert('Something went wrong. Please try again.');
+        }
+    }
+</script>
+
+<script>
+    // Function to search users and display them
+    function searchContacts() {
+        let input = document.getElementById('searchContacts').value.toLowerCase();
+        let contactList = document.getElementById('contactList');
+        contactList.innerHTML = '';  // Clear previous results
+    
+        // Fetch all users from the database that match the search term
+        fetch('/search-users?query=' + input)
+            .then(response => response.json())
+            .then(data => {
+                data.users.forEach(user => {
+                    // Render each user as a list item with a follow button
+                    let li = document.createElement('li');
+                    li.innerHTML = `
+                        <img src="${user.profilePic}" alt="${user.fullname}">
+                        <span>${user.fullname}</span>
+                        <button onclick="followUser('${user.idnumber}')">Follow</button>
+                    `;
+                    contactList.appendChild(li);
+                });
+            });
+    }
+    
+    // Function to follow a user (will send POST request to backend)
+    function followUser(followeeId) {
+        fetch('/follow', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ followee_idnumber: followeeId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(data.message);
+            } else {
+                alert(data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error following user:', error);
+        });
+    }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <script>
+            let selectedUser = "";
+
+        // Open chat with selected contact
+        function openChat(user) {
+            selectedUser = user;
+            document.getElementById("chatHeader").textContent = user;
+            document.getElementById("chatBox").innerHTML = `<p class="chat-message received">Chat with ${user}.</p>`;
+        }
+
+        // Send message
+        function sendMessage() {
+            if (!selectedUser) return alert("Select a contact first!");
+            
+            let messageInput = document.getElementById("messageInput");
+            if (messageInput.value.trim() !== "") {
+                let chatBox = document.getElementById("chatBox");
+
+                // Create new message element
+                let newMessage = document.createElement("p");
+                newMessage.className = "chat-message sent"; // Sent messages appear on the right
+                newMessage.textContent = messageInput.value;
+                
+                // Append message to chat
+                chatBox.appendChild(newMessage);
+                messageInput.value = "";
+                chatBox.scrollTop = chatBox.scrollHeight;
+
+                // Simulate response (optional)
+                setTimeout(() => {
+                    let receivedMessage = document.createElement("p");
+                    receivedMessage.className = "chat-message received"; // Received messages appear on the left
+                    receivedMessage.textContent = "This is a reply from " + selectedUser;
+                    chatBox.appendChild(receivedMessage);
+                    chatBox.scrollTop = chatBox.scrollHeight;
+                }, 1000);
+            }
+        }
+
+
+    </script>
+
+            
+    <script>
+        // Function to Open a Modal
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = "block";
+        }
+
+        // Function to Close a Modal
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = "none";
+        }
+
+        // Close the modal if user clicks outside
+        window.onclick = function(event) {
+            if (event.target.classList.contains("modal")) {
+                event.target.style.display = "none";
+            }
+        }
+
+    </script>
+
+
+    <script>
+        function toggleDropdown() {
+        document.querySelector('.profile-dropdown').classList.toggle('active');
+    }
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function (event) {
+        let dropdown = document.querySelector('.profile-dropdown');
+        if (!dropdown.contains(event.target)) {
+            dropdown.classList.remove('active');
+        }
+    });
+
+    </script>
+
+
+<script>
+    const keywordInput = document.getElementById("keyword-input");
+    const addKeywordButton = document.getElementById("add-keyword");
+    const keywordList = document.getElementById("keyword-list");
+    const maxKeywords = 5;
+    let keywords = [];
+
+    addKeywordButton.addEventListener("click", () => {
+        const keyword = keywordInput.value.trim();
+        if (keyword === "") {
+            alert("Keyword cannot be empty.");
+            return;
+        }
+        if (keywords.length >= maxKeywords) {
+            alert(`You can only add up to ${maxKeywords} keywords.`);
+            return;
+        }
+        if (keywords.includes(keyword)) {
+            alert("This keyword has already been added.");
+            return;
+        }
+        keywords.push(keyword);
+        const listItem = document.createElement("li");
+        listItem.textContent = keyword;
+        listItem.className = "keyword-item d-flex justify-content-between align-items-center border p-2 mb-1 rounded";
+        listItem.style.borderColor = "#4CAF50";
+        const removeButton = document.createElement("button");
+        removeButton.textContent = "Remove";
+        removeButton.className = "btn btn-danger btn-sm";
+        removeButton.addEventListener("click", () => {
+            keywordList.removeChild(listItem);
+            keywords = keywords.filter(k => k !== keyword);
+        });
+        listItem.appendChild(removeButton);
+        keywordList.appendChild(listItem);
+        keywordInput.value = "";
+    });
+
+    // Select the form using querySelector (based on action attribute or other selector)
+    const form = document.querySelector('form[action="/fresearch/add"]'); // Select the form by its action URL
+
+    form.addEventListener('submit', (event) => {
+        event.preventDefault(); // Prevent the default form submission
+
+        // Join keywords into a comma-separated string
+        const keywordString = keywords.join(', ');
+
+        // If there are keywords, add them to a hidden input field
+        if (keywordString) {
+            const keywordField = document.createElement('input');
+            keywordField.type = 'hidden';
+            keywordField.name = 'keywords'; // Ensure this matches the name in the backend
+            keywordField.value = keywordString;
+            form.appendChild(keywordField); // Append the hidden field to the form
+        }
+
+        // Now submit the form with the updated keyword field
+        form.submit(); // This will now include the keywords as a comma-separated string
+    });
+</script>
+
+
+<script>
+    function toggleFields() {
+        const status = document.getElementById('status_id').value;
+        
+        // Reset the display of fields
+        document.getElementById('abstract-row').style.display = 'none';
+        document.getElementById('journal-publication-row').style.display = 'none';
+        document.getElementById('publication-date-row').style.display = 'none';
+        document.getElementById('isbn-row').style.display = 'none';
+        document.getElementById('duration-row').style.display = 'none';
+        document.getElementById('doi-row').style.display = 'none';
+        document.getElementById('research-file-row').style.display = 'none';
+        document.getElementById('fundingsource-row').style.display = 'none';
+        document.getElementById('keyword-row').style.display = 'none';
+
+       
+       
+
+        // Show fields based on status selection
+        if (status === '1') {  // Ongoing or Completed
+            document.getElementById('abstract-row').style.display = 'block';
+            document.getElementById('fundingsource-row').style.display = 'block';
+            document.getElementById('research-file-row').style.display = 'block';
+            document.getElementById('duration-row').style.display = 'block';
+            document.getElementById('keyword-row').style.display = 'block';
+            
+            
+        }
+
+          // Show fields based on status selection
+          if (status === '2') {  // Ongoing or Completed
+            document.getElementById('abstract-row').style.display = 'block';
+            document.getElementById('fundingsource-row').style.display = 'block';
+            document.getElementById('duration-row').style.display = 'block';
+            document.getElementById('keyword-row').style.display = 'block';
+        }
+        
+        if (status === '3') {  // Published
+            document.getElementById('abstract-row').style.display = 'block';
+            document.getElementById('journal-publication-row').style.display = 'block';
+            document.getElementById('publication-date-row').style.display = 'block';
+            document.getElementById('isbn-row').style.display = 'block';
+            document.getElementById('doi-row').style.display = 'block';
+            document.getElementById('fundingsource-row').style.display = 'block';
+            document.getElementById('research-file-row').style.display = 'block';
+            document.getElementById('duration-row').style.display = 'block';
+            document.getElementById('keyword-row').style.display = 'block';
+
+            
+        }
+        if (status === '4') {  // Proposed
+            // Only title, author, and status fields will be shown
+        }
+    }
+
+    // Initialize field visibility on page load
+    window.onload = function() {
+        toggleFields(); // Ensure correct fields are displayed on initial load
+    };
+</script>
+
+
+<script>
+    // Listen for the 'show.bs.modal' event to populate the modal fields
+    document.getElementById('editResearchModal').addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget; // Button that triggered the modal
+        var researchId = button.getAttribute('data-id');
+        var title = button.getAttribute('data-title');
+        var author = button.getAttribute('data-author');
+        var abstract = button.getAttribute('data-abstract');
+        var publicationDate = button.getAttribute('data-publication_date');
+        var journalPublication = button.getAttribute('data-journal_publication');
+        var statusName = button.getAttribute('data-status');
+        var doi = button.getAttribute('data-doi');
+        var funding = button.getAttribute('data-funding');
+        var nature = button.getAttribute('data-nature');
+        var origin = button.getAttribute('data-origin');
+        var isbn = button.getAttribute('data-isbn');
+        var startdate = button.getAttribute('data-startdate');
+        var enddate = button.getAttribute('data-enddate');
+        var keyword = button.getAttribute('data-keyword');
+        var filename = button.getAttribute('data-filename');
+        
+        // Set modal title dynamically
+        var modalTitle = document.querySelector('#editResearchModal .modal-title');
+        
+
+        // Populate the modal fields with the data from the button
+        var modalBody = document.querySelector('#editResearchModal .modal-body');
+
+        modalBody.querySelector('#researchId').value = researchId;
+        modalBody.querySelector('#title').value = title;
+        modalBody.querySelector('#author').value = author;
+        modalBody.querySelector('#abstract').value = abstract;
+        modalBody.querySelector('#publication_date').value = publicationDate;
+        modalBody.querySelector('#journal_publication').value = journalPublication;
+        modalBody.querySelector('#status_id').value = statusName; // For read-only
+        modalBody.querySelector('#doi').value = doi;
+        modalBody.querySelector('#funding').value = funding;
+        modalBody.querySelector('#nature').value = nature;
+        modalBody.querySelector('#origin').value = origin;
+        modalBody.querySelector('#isbn').value = isbn;
+        modalBody.querySelector('#startdate').value = startdate;
+        modalBody.querySelector('#enddate').value = enddate;
+        modalBody.querySelector('#keyword').value = keyword;
+        modalBody.querySelector('#filename').value = filename;
+    });
+</script>
+
+
+<script>
+    document.getElementById('ongoingUpdate').addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget; // Button that triggered the modal
+        var researchId = button.getAttribute('data-id');
+        var title = button.getAttribute('data-title');
+        var author = button.getAttribute('data-author');
+        var abstract = button.getAttribute('data-abstract');
+        var statusName = button.getAttribute('data-status');
+        var funding = button.getAttribute('data-funding');
+        var nature = button.getAttribute('data-nature');
+        var origin = button.getAttribute('data-origin');
+        var startdate = button.getAttribute('data-startdate');
+        var enddate = button.getAttribute('data-enddate');
+        var keyword = button.getAttribute('data-keyword');
+        var modalTitle = document.querySelector('#ongoingUpdateLabel');
+        var modalBody = document.querySelector('#ongoingUpdate .modal-body');
+
+       
+        modalBody.querySelector('#status_id').value = statusName;
+        modalBody.querySelector('#researchId').value = researchId;
+        modalBody.querySelector('#title').value = title;
+        modalBody.querySelector('#author').value = author;
+        modalBody.querySelector('#abstract').value = abstract;
+        modalBody.querySelector('#funding').value = funding;
+        modalBody.querySelector('#nature').value = nature;
+        modalBody.querySelector('#origin').value = origin;
+        modalBody.querySelector('#startdate').value = startdate;
+        modalBody.querySelector('#enddate').value = enddate;
+        modalBody.querySelector('#keyword').value = keyword;
+    });
+</script>
+
+<script>
+    document.getElementById('completeUpdate').addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget; // Button that triggered the modal
+        var researchId = button.getAttribute('data-id');
+        var title = button.getAttribute('data-title');
+        var author = button.getAttribute('data-author');
+        var abstract = button.getAttribute('data-abstract');
+        var statusName = button.getAttribute('data-status');
+        var funding = button.getAttribute('data-funding');
+        var nature = button.getAttribute('data-nature');
+        var origin = button.getAttribute('data-origin');
+        var startdate = button.getAttribute('data-startdate');
+        var enddate = button.getAttribute('data-enddate');
+        var keyword = button.getAttribute('data-keyword');
+        
+        var modalTitle = document.querySelector('#completeUpdateLabel');
+        var modalBody = document.querySelector('#completeUpdate .modal-body');
+
+       
+        modalBody.querySelector('#researchId').value = researchId;
+        modalBody.querySelector('#status_id').value = statusName;
+        modalBody.querySelector('#title').value = title;
+        modalBody.querySelector('#author').value = author;
+        modalBody.querySelector('#abstract').value = abstract;
+        modalBody.querySelector('#funding').value = funding;
+        modalBody.querySelector('#nature').value = nature;
+        modalBody.querySelector('#origin').value = origin;
+        modalBody.querySelector('#startdate').value = startdate;
+        modalBody.querySelector('#enddate').value = enddate;
+        modalBody.querySelector('#keyword').value = keyword;
+    });
+</script>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Function to hide empty fields
+        function hideEmptyFields() {
+            document.querySelectorAll(".modal-body p").forEach((element) => {
+                let span = element.querySelector("span");
+                if (!span || !span.textContent.trim()) {
+                    element.style.display = "none"; // Hide the <p> element if empty
+                }
+            });
+        }
+
+        // Run the function when modal is opened
+        document.getElementById("viewResearchModal").addEventListener("show.bs.modal", function () {
+            setTimeout(hideEmptyFields, 100); // Slight delay to ensure content is loaded
+        });
+    });
+</script>
+
+
+<script>
+    // Populate the modal with the research data
+    document.getElementById('viewResearchModal').addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget; // Button that triggered the modal
+
+        // Get filename from the button's data attribute
+        var filename = button.getAttribute('data-filename');
+
+        // Update filename text
+        document.getElementById('view-filename').textContent = filename;
+
+        // Update PDF preview source
+        var pdfPreview = document.getElementById('pdf-preview');
+        if (filename) {
+            pdfPreview.src = "/uploads/" + filename;
+        } else {
+            pdfPreview.src = ""; // Clear the preview if no filename
+            console.error("Filename is missing or invalid.");
+        }
+    });
+</script>
+
+
+<script>
+  // Function to format the publication date
+function formatDate(dateString) {
+    if (!dateString || isNaN(Date.parse(dateString))) {
+        return 'Not published yet'; // Return this if the date is not available or invalid
+    }
+
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', options);
+}
+
+// Print only the selected content
+document.getElementById('printModalContent').addEventListener('click', function () {
+    // Create a hidden iframe
+    var iframe = document.createElement('iframe');
+    iframe.style.position = 'absolute';
+    iframe.style.top = '-10000px'; // Hide it off-screen
+    document.body.appendChild(iframe);
+
+    // Get the iframe's document
+    var doc = iframe.contentDocument || iframe.contentWindow.document;
+
+    // Create the printable content
+    var barcode = document.getElementById('view-barcode-image').outerHTML;
+    
+    // Make the barcode a reasonable size by adding style
+    barcode = barcode.replace('<img', '<img style="width: 200px; height: 50px;"');  // Adjust width and height as needed
+
+    var campus = '<p style="font-size: 18px; margin-bottom: 60px; line-height: 1.5;">' + document.getElementById('view-campus').textContent + '</p>';
+    var title = '<p style="font-size: 26px; font-weight: bold; margin-bottom: 60px; line-height: 1.5;">' + document.getElementById('view-title').textContent + '</p>';
+    var journal = '<p style="font-size: 18px; margin-bottom: 60px; line-height: 1.5;">' + document.getElementById('view-journal-publication').textContent + '</p>';
+    var author = '<p style="font-size: 18px; margin-bottom: 60px; line-height: 1.5;">' + document.getElementById('view-author').textContent + '</p>';
+    var publicationDate = '<p style="font-size: 18px; margin-bottom: 60px; line-height: 1.5;">' + formatDate(document.getElementById('view-publication-date').textContent) + '</p>';
+
+    // Combine the content into a printable format
+    var printContent = `
+        <div style="padding: 60px; font-family: Arial, sans-serif; width: 100%; height: 100%; box-sizing: border-box;">
+            <div style="position: absolute; top: 20px; right: 20px;">
+                ${barcode}
+            </div>
+            <div style="margin-top: 250px; text-align: center;">
+                ${campus}
+                ${title}
+                ${journal}
+                ${author}
+                ${publicationDate}
+            </div>
+        </div>
+    `;
+
+    // Write the content into the iframe
+    doc.open();
+    doc.write('<html><head><title>Print</title></head><body>');
+    doc.write(printContent);
+    doc.write('</body></html>');
+    doc.close();
+
+    // Trigger the print
+    iframe.contentWindow.focus();
+    iframe.contentWindow.print();
+
+    // Remove the iframe after printing
+    setTimeout(() => document.body.removeChild(iframe), 1000);
+});
+
+
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+    const viewResearchModal = document.getElementById("viewResearchModal");
+    const pdfPreview = document.getElementById("pdf-preview");
+    const pdfPreviewContainer = pdfPreview.parentElement; // Container of the embed
+    const modalDialog = viewResearchModal.querySelector(".modal-dialog");
+
+    viewResearchModal.addEventListener("show.bs.modal", function (event) {
+        const button = event.relatedTarget;
+        const pdfFile = button.getAttribute("data-filename");
+
+        if (!pdfFile || pdfFile.trim() === "") {
+            // Show a placeholder with a background box and icon when no PDF is available
+            pdfPreviewContainer.innerHTML = `
+                <div class="d-flex flex-column align-items-center justify-content-center text-center p-4 border rounded-3 bg-light" 
+    style="min-height: 500px; position: relative; top: -20px;">
+    <i class="fa-solid fa-file-circle-xmark text-danger" style="font-size: 4rem;"></i>
+    <p class="mt-2 text-muted">PDF preview unavailable.<br>Please update your paper.</p>
+</div>
+
+
+            `;
+            modalDialog.classList.remove("modal-lg");
+            modalDialog.classList.add("modal-md");
+        } else {
+            // Restore the PDF preview with an embedded viewer
+            pdfPreviewContainer.innerHTML = `
+                <embed id="pdf-preview" type="application/pdf" width="100%" height="500px" class="border rounded-3" title="PDF Preview">
+            `;
+            document.getElementById("pdf-preview").src = `/uploads/${pdfFile}`;
+
+            modalDialog.classList.remove("modal-md");
+            modalDialog.classList.add("modal-lg");
+        }
+    });
+});
+
+
+</script>
+
+
     <!-- Include Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

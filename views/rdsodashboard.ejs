@@ -655,6 +655,10 @@ td {
         <option value="">Select Campus</option>
         <option value="ESSU MAIN">ESSU MAIN</option>
         <option value="ESSU MAYDOLONG">ESSU MAYDOLONG</option>
+        <option value="ESSU SALCEDO">ESSU SALCEDO</option>
+        <option value="ESSU CAN-AVID">ESSU CAN-AVID</option>
+        <option value="ESSU GUIUAN">ESSU GUIUAN</option>
+        <option value="ESSU ARTECHE">ESSU ARTECHE</option>
         <!-- Add more campuses as needed -->
     </select>
 
@@ -727,9 +731,19 @@ function updateColleges() {
 
     // Define colleges for each campus
     if (campus === "ESSU MAIN") {
-        colleges = ["Computer Studies", "Fisheries and Aquatics Sciences", "Hospitality Management"];
+        colleges = ["Agriculture", "Arts and Sciences", "Business Management and Accountancy", "Computer Studies", "Criminal Justice Education", "Education", "Engineering", "Fisheries and Aquatics Sciences",  "Hospitality Management", "Nursing and Allied Sciences", "Science", "Technology"];
     } else if (campus === "ESSU MAYDOLONG") {
-        colleges = ["Science"];
+        colleges = ["Education", "Criminal Justice Education", "Hospitality Management"];
+    } else if (campus === "ESSU SALCEDO") {
+        colleges = ["Engineering", "Education", "Nursing and Allied Sciences", "Computer Studies"];
+    } else if (campus === "ESSU CAN-AVID") {
+        colleges = ["Education", "Agriculture", "Business Management and Accountancy", "Criminal Justice Education", "Computer Studies"];
+    } else if (campus === "ESSU GUIUAN") {
+        colleges = ["Education", "Hospitality Management", "Criminal Justice Education", "Computer Studies", "Arts and Sciences", "Business Management and Accountancy", "Technology", "Engineering"];
+    } else if (campus === "ESSU ARTECHE") {
+        colleges = ["Education", "Hospitality Management", "Computer Studies"];
+    } else if (campus === "ESSU BALANGIGA") {
+        colleges = ["Business Management and Accountancy", "Hospitality Management"];
     }
 
     // Populate the college dropdown based on selected campus

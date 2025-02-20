@@ -353,6 +353,167 @@ label[for="profilePic"] {
     font-weight: 400; /* Lighter font weight */
 }
 
+.preview-container {
+                display: none; /* Hide preview containers initially */
+                width: 250px;
+                height: 250px;
+                border: 2px dashed #ccc;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+                font-size: 14px;
+                color: #666;
+                background-color: #f9f9f9;
+                border-radius: 10px;
+                overflow: hidden;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                transition: all 0.3s ease-in-out;
+            }
+        
+            .preview-container img {
+                max-width: 100%;
+                max-height: 100%;
+                object-fit: cover;
+                border-radius: 10px;
+            }
+
+            
+.or-text {
+    text-align: center;
+    font-size: 14px;
+    font-weight: bold;
+    color: #555;
+    margin: 8px 0; /* Adds spacing above and below */
+}
+
+    /* Telegram Style Base */
+    .telegram-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background: #f4f7fb;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+        max-width: 360px;
+        margin: auto;
+    }
+
+    .telegram-label {
+        font-weight: bold;
+        margin-bottom: 5px;
+        color: #333;
+    }
+
+    .input-container {
+        display: flex;
+        align-items: center;
+        background: white;
+        padding: 10px;
+        border-radius: 8px;
+        width: 100%;
+        margin-bottom: 10px;
+        border: 1px solid #ddd;
+    }
+
+    /* Buttons */
+    .telegram-btn {
+        padding: 12px 20px;
+        border: none;
+        border-radius: 50px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        width: 100%;
+        margin-top: 10px;
+    }
+    .primary { background: #22752f; color: white; }
+    .success { background: #28c76f; color: white; }
+    .danger { background: #ff3b30; color: white; }
+    
+    .telegram-btn:hover {
+        opacity: 0.8;
+    }
+
+    /* Animation for the camera box */
+@keyframes telegramPopup {
+    0% {
+        transform: scale(0.9);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Apply animation when the camera box is shown */
+.camera-box {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    background: white;
+    padding: 15px;
+    border-radius: 12px;
+    margin-top: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    animation: telegramPopup 0.3s ease-out; /* Apply the animation */
+}
+
+    
+    video {
+        width: 100%;
+        border-radius: 10px;
+    }
+
+    /* Preview Box */
+    .preview-box {
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        background: white;
+        padding: 15px;
+        border-radius: 12px;
+        margin-top: 10px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .preview-img {
+        width: 100%;
+        border-radius: 10px;
+        border: 4px solid #0088cc;
+    }
+    
+    .btn-group {
+        display: flex;
+        gap: 10px;
+        margin-top: 10px;
+    }
+
+    /* Small Button Style */
+    .small-btn {
+        padding: 6px 12px; /* Smaller padding */
+        font-size: 14px;   /* Reduce font size */
+        width: auto;       /* Prevent full width */
+        min-width: 80px;   /* Set a reasonable minimum width */
+    }
+
+
+    /* Adjust the confirm and retake button sizes */
+#confirmSelfie, #retakeSelfie {
+    padding: 8px 16px;  /* Reduce padding */
+    font-size: 14px;     /* Decrease font size */
+    width: auto;         /* Prevent full width */
+    min-width: 100px;    /* Set a reasonable minimum width */
+}
+
+            
 
 
 
@@ -375,7 +536,7 @@ label[for="profilePic"] {
 
      <!-- Line Above -->
      <hr class="divider">
-    <form action="/signup" method="POST" enctype="multipart/form-data">
+    <form id="signupForm" action="/signup" method="POST" enctype="multipart/form-data">
         <div class="form-group">
             
             <select class="form-select" id="role" name="role" required style="display: none;">
@@ -461,58 +622,167 @@ label[for="profilePic"] {
         <!-- Line Above -->
         <hr class="divider">
 
-        <style>
-            .preview-container {
-                display: none; /* Hide preview containers initially */
-                width: 250px;
-                height: 250px;
-                border: 2px dashed #ccc;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                text-align: center;
-                font-size: 14px;
-                color: #666;
-                background-color: #f9f9f9;
-                border-radius: 10px;
-                overflow: hidden;
-                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-                transition: all 0.3s ease-in-out;
-            }
         
-            .preview-container img {
-                max-width: 100%;
-                max-height: 100%;
-                object-fit: cover;
-                border-radius: 10px;
-            }
-        </style>
         
-        <!-- Upload ESSU Faculty ID -->
         <div class="form-group">
             <label for="facultyIDPic">Upload ESSU Faculty ID</label>
             <div class="input-container">
                 <i class="fas fa-id-card"></i>
                 <input type="file" class="form-control" id="facultyIDPic" name="facultyIDPic" accept="image/*" required>
             </div>
-            
+            <!-- Warning Message -->
+            <div id="facultyIDWarning" class="text-danger" style="display: none;">
+                Please upload a valid faculty ID picture and ensure the ID number is detected.
+            </div>
         </div>
         
-        <!-- Selfie with the uploaded ESSU Faculty ID -->
+        <!-- Extracted ID Number Display -->
         <div class="form-group">
-            <label for="selfieWithID">Selfie with the uploaded ESSU Faculty ID</label>
-            <div class="input-container">
-                <i class="fas fa-check-circle"></i>
-                <input type="file" class="form-control" id="selfieWithID" name="selfieWithID" accept="image/*" capture="user" required>
-            </div>
-            
+            <label for="extractedId">Extracted ID Number</label>
+            <input type="text" class="form-control" id="extractedId" name="faculty_no" readonly style="background-color: #f0f0f0; color: #555; border: 1px solid #ccc; pointer-events: none;">
         </div>
+        
+        <!-- Progress Loading Bar -->
+<div id="loadingIndicator" style="display: none;">
+    <p>Processing... <span id="progressPercentage">0%</span></p>
+    <div class="progress" style="height: 10px;">
+        <div id="progressBar" class="progress-bar bg-success" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+    </div>
+</div>
+
+        
+        
         
         
         
 
-<!-- Canvas for Face Detection -->
-<canvas id="canvas" style="display:none;"></canvas>
+        
+  <!-- Selfie with the uploaded ESSU Faculty ID -->
+<div class="telegram-container">
+    <label for="selfieWithID" class="telegram-label">Selfie with the uploaded ESSU Faculty ID</label>
+    
+    <div class="input-container">
+        <i class="fas fa-check-circle"></i>
+        <input type="file" class="form-control" id="selfieWithID" name="selfieWithID" accept="image/*" required>
+    </div>
+    
+    <!-- "or" text -->
+    <p class="or-text">or</p>
+    
+    <button type="button" id="openCamera" class="telegram-btn primary">📷 Take a Selfie</button>
+    
+
+    <!-- Webcam View -->
+<div id="cameraContainer" class="camera-box">
+    <video id="video" autoplay></video>
+    
+    <div class="btn-group">
+        <button type="button" id="captureSelfie" class="telegram-btn success small-btn">📸 Capture</button>
+        <button type="button" id="closeCamera" class="telegram-btn danger small-btn">✖ Close</button>
+    </div>
+</div>
+
+
+    <!-- Preview & Confirmation -->
+    <div id="previewContainer" class="preview-box">
+        <img id="previewImage" class="preview-img">
+        <div class="btn-group">
+            <button type="button" id="confirmSelfie" class="telegram-btn success">✅ Confirm</button>
+            <button type="button" id="retakeSelfie" class="telegram-btn danger">🔄 Retake</button>
+        </div>
+    </div>
+
+    <canvas id="canvas" style="display: none;"></canvas>
+</div>
+
+
+
+<!-- JavaScript -->
+<script>
+    const openCameraBtn = document.getElementById('openCamera');
+    const captureSelfieBtn = document.getElementById('captureSelfie');
+    const confirmSelfieBtn = document.getElementById('confirmSelfie');
+    const retakeSelfieBtn = document.getElementById('retakeSelfie');
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const selfieInput = document.getElementById('selfieWithID');
+    const cameraContainer = document.getElementById('cameraContainer');
+    const previewContainer = document.getElementById('previewContainer');
+    const previewImage = document.getElementById('previewImage');
+    let stream, capturedBlob;
+
+    openCameraBtn.addEventListener('click', function () {
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(function (mediaStream) {
+                stream = mediaStream;
+                video.srcObject = stream;
+                cameraContainer.style.display = 'flex';
+                previewContainer.style.display = 'none';
+            })
+            .catch(function (err) {
+                console.error("Error accessing camera: ", err);
+            });
+    });
+
+    document.getElementById('closeCamera').addEventListener('click', function () {
+    const cameraContainer = document.getElementById('cameraContainer');
+    const videoElement = document.getElementById('video');
+    
+    // Stop the video stream
+    if (videoElement.srcObject) {
+        const stream = videoElement.srcObject;
+        const tracks = stream.getTracks();
+        tracks.forEach(track => track.stop());
+    }
+
+    // Hide camera container
+    cameraContainer.style.display = 'none';
+});
+
+
+    captureSelfieBtn.addEventListener('click', function () {
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+
+        // Convert to Blob
+        canvas.toBlob(function (blob) {
+            capturedBlob = blob;
+            const url = URL.createObjectURL(blob);
+            previewImage.src = url;
+            cameraContainer.style.display = 'none';
+            previewContainer.style.display = 'flex';
+        }, 'image/jpeg');
+
+        // Stop the camera
+        stream.getTracks().forEach(track => track.stop());
+    });
+
+    confirmSelfieBtn.addEventListener('click', function () {
+        const timestamp = new Date().toISOString().replace(/[-:.TZ]/g, "");
+        const fileName = `selfie_${timestamp}.jpg`;
+
+        // Convert captured blob to a File and assign to input
+        const file = new File([capturedBlob], fileName, { type: 'image/jpeg' });
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(file);
+        selfieInput.files = dataTransfer.files;
+
+        previewContainer.style.display = 'none';
+    });
+
+    retakeSelfieBtn.addEventListener('click', function () {
+        openCameraBtn.click();
+    });
+</script>
+
+
+
+
+
+
+
+
 
 
           <!-- Line Above -->
@@ -565,150 +835,61 @@ label[for="profilePic"] {
 </div>
 
 
-
-
-<script>
-// Handle ESSU Faculty ID upload
-document.getElementById('facultyIDPic').addEventListener('change', function(event) {
-    const file = event.target.files[0];
-    const previewContainer = document.getElementById('uploadedIDPreview');
-    
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const imgElement = document.createElement('img');
-            imgElement.src = e.target.result;
-            imgElement.style.maxWidth = '200px'; // Resize the preview image
-            previewContainer.innerHTML = ''; // Clear previous preview
-            previewContainer.appendChild(imgElement);
-        };
-        reader.readAsDataURL(file);
-    } else {
-        previewContainer.innerHTML = '<p>No file uploaded</p>';
-    }
-});
-
-// Handle Selfie upload
-document.getElementById('selfieWithID').addEventListener('change', function(event) {
-    const file = event.target.files[0];
-    const previewContainer = document.getElementById('selfiePreview');
-    
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const imgElement = document.createElement('img');
-            imgElement.src = e.target.result;
-            imgElement.style.maxWidth = '200px'; // Resize the preview image
-            previewContainer.innerHTML = ''; // Clear previous preview
-            previewContainer.appendChild(imgElement);
-        };
-        reader.readAsDataURL(file);
-    } else {
-        previewContainer.innerHTML = '<p>No selfie taken</p>';
-    }
-});
-
-    // Load face-api.js library (ensure you include the script in your HTML)
-const script = document.createElement('script');
-script.src = 'https://cdn.jsdelivr.net/npm/face-api.js';
-document.head.appendChild(script);
-
-script.onload = () => {
-    // Load models for face-api.js
-    Promise.all([
-        faceapi.nets.ssdMobilenetv1.loadFromUri('/models'),
-        faceapi.nets.faceLandmark68Net.loadFromUri('/models'),
-        faceapi.nets.faceRecognitionNet.loadFromUri('/models')
-    ]).then(startApp);
-};
-
-function startApp() {
-    // Handle ESSU Faculty ID upload
-    document.getElementById('facultyIDPic').addEventListener('change', async function(event) {
-        const file = event.target.files[0];
-        const previewContainer = document.getElementById('uploadedIDPreview');
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/4.0.2/tesseract.min.js"></script>
+        <script>
+            document.getElementById('facultyIDPic').addEventListener('change', async function () {
+                const file = this.files[0];
         
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = async function(e) {
-                const img = new Image();
-                img.src = e.target.result;
-                
-                img.onload = async () => {
-                    previewContainer.innerHTML = '';
-                    previewContainer.appendChild(img);
-                    
-                    // Detect faces in the uploaded image
-                    const detections = await faceapi.detectAllFaces(img).withFaceLandmarks().withFaceDescriptors();
-                    if (detections.length > 0) {
-                        console.log("Face detected in ESSU Faculty ID");
-                    } else {
-                        console.log("No face detected in ESSU Faculty ID");
-                    }
-                };
-            };
-            reader.readAsDataURL(file);
-        } else {
-            previewContainer.innerHTML = '<p>No file uploaded</p>';
-        }
-    });
-
-    // Handle Selfie upload
-    document.getElementById('selfieWithID').addEventListener('change', async function(event) {
-        const file = event.target.files[0];
-        const previewContainer = document.getElementById('selfiePreview');
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = async function (event) {
+                        const imageData = event.target.result;
         
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = async function(e) {
-                const img = new Image();
-                img.src = e.target.result;
-                
-                img.onload = async () => {
-                    previewContainer.innerHTML = '';
-                    previewContainer.appendChild(img);
+                        // Disable form submission while processing OCR
+                        document.getElementById('signupForm').querySelector('button[type="submit"]').disabled = true;
+        
+                        // Show loading indicator
+                        document.getElementById('loadingIndicator').style.display = 'block';
+        
+                        Tesseract.recognize(imageData, 'eng', {
+                            logger: (m) => {
+                                if (m.status === 'recognizing text') {
+                                    const progress = Math.round(m.progress * 100);
+                                    document.getElementById('progressPercentage').innerText = `${progress}%`;
+                                    document.getElementById('progressBar').style.width = `${progress}%`;
+                                    document.getElementById('progressBar').setAttribute('aria-valuenow', progress);
+                                }
+                            }
+                        })
+                            .then(({ data: { text } }) => {
+                                console.log("Extracted Text:", text);
+        
+                                // Extract faculty ID
+                                const idMatch = text.match(/\bESSU[-\w\d]+-\d{2,4}-\d{4}\b/);
+                                if (idMatch) {
+                                    document.getElementById("extractedId").value = idMatch[0]; 
+                                } else {
+                                    document.getElementById("extractedId").value = "ID not detected";
+                                }
+                            })
+                            .finally(() => {
+                                // Hide loading indicator
+                                document.getElementById('loadingIndicator').style.display = 'none';
+        
+                                // Re-enable form submission after OCR completes
+                                document.getElementById('signupForm').querySelector('button[type="submit"]').disabled = false;
+                            })
+                            .catch(error => {
+                                console.error("OCR Error:", error);
+                                document.getElementById("extractedId").value = "OCR Error";
+                            });
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        </script>
 
-                    // Detect faces in the selfie
-                    const detections = await faceapi.detectAllFaces(img).withFaceLandmarks().withFaceDescriptors();
-                    if (detections.length > 0) {
-                        console.log("Face detected in selfie");
 
-                        // Compare the faces of the ESSU Faculty ID and the selfie
-                        compareFaces(detections, file);
-                    } else {
-                        console.log("No face detected in selfie");
-                    }
-                };
-            };
-            reader.readAsDataURL(file);
-        } else {
-            previewContainer.innerHTML = '<p>No selfie taken</p>';
-        }
-    });
-
-    // Function to compare faces
-    async function compareFaces(detections, selfieFile) {
-        // Get the descriptors from the uploaded ESSU Faculty ID image
-        const img = document.getElementById('uploadedIDPreview').querySelector('img');
-        const idDetections = await faceapi.detectAllFaces(img).withFaceLandmarks().withFaceDescriptors();
-
-        if (idDetections.length > 0 && detections.length > 0) {
-            // Compare the face descriptors
-            const faceMatcher = new faceapi.FaceMatcher(idDetections, 0.6);
-            const bestMatch = faceMatcher.findBestMatch(detections[0].descriptor);
-            
-            if (bestMatch.label === 'unknown') {
-                alert('No matching face detected. Please retake the selfie.');
-            } else {
-                alert('Face match confirmed!');
-            }
-        } else {
-            alert('No faces detected in the uploaded ESSU Faculty ID or the selfie.');
-        }
-    }
-}
-
-</script>
 
 <script>
     // Enforce lowercase and no spaces for username
@@ -793,6 +974,25 @@ profilePicInput.addEventListener('change', (event) => {
         reader.readAsDataURL(file);
     }
 });
+</script>
+
+<script>
+    document.getElementById('signupForm').addEventListener('submit', function(event) {
+    var extractedId = document.getElementById('extractedId').value;
+    var warningMessage = document.getElementById('facultyIDWarning');
+
+    // Check if the extracted ID field is empty or contains "ID not detected"
+    if (extractedId === "ID not detected" || extractedId === "") {
+        event.preventDefault();  // Prevent form submission
+        warningMessage.style.display = 'block';  // Show warning message
+        return false;  // Prevent form submission
+    }
+
+    warningMessage.style.display = 'none';  // Hide warning message if ID is valid
+    return true;  // Allow form submission
+});
+
+
 </script>
 
 
@@ -932,6 +1132,59 @@ profilePicInput.addEventListener('change', (event) => {
     });
 </script>
 
+<script>
+    document.getElementById('signupForm').addEventListener('submit', function(event) {
+    var extractedId = document.getElementById('extractedId').value;
+    var warningMessage = document.getElementById('facultyIDWarning');
+    var confirmPasswordError = document.getElementById('confirmPasswordError');
+    var fullnameField = document.getElementById('fullname');
+    var usernameField = document.getElementById('username');
+
+    // Check if the extracted ID field is empty or contains "ID not detected"
+    if (extractedId === "ID not detected" || extractedId === "") {
+        event.preventDefault();  // Prevent form submission
+        warningMessage.style.display = 'block';  // Show warning message
+        warningMessage.scrollIntoView({ behavior: 'smooth', block: 'center' }); // Scroll to the warning message
+        return false;  // Prevent form submission
+    }
+
+    // Check if password and confirm password match
+    var password = document.getElementById('password').value;
+    var confirmPassword = document.getElementById('confirmPassword').value;
+    if (password !== confirmPassword) {
+        event.preventDefault();  // Prevent form submission
+        confirmPasswordError.style.display = 'block';  // Show error message
+        confirmPasswordError.scrollIntoView({ behavior: 'smooth', block: 'center' }); // Scroll to confirm password error
+        return false;  // Prevent form submission
+    }
+
+    // Check if the Full Name field is empty
+    var fullname = fullnameField.value.trim();
+    if (fullname === "") {
+        event.preventDefault();  // Prevent form submission
+        fullnameField.focus();  // Focus on the Full Name field
+        window.scrollTo({ top: fullnameField.offsetTop, behavior: 'smooth' });  // Scroll to the Full Name field
+        alert("Full Name is required.");
+        return false;  // Prevent form submission
+    }
+
+    // Check if the Username is valid (lowercase and no spaces)
+    var username = usernameField.value.trim();
+    if (username === "" || /\s/.test(username)) {
+        event.preventDefault();  // Prevent form submission
+        usernameField.focus();  // Focus on the Username field
+        window.scrollTo({ top: usernameField.offsetTop, behavior: 'smooth' });  // Scroll to the Username field
+        alert("Username must be in lowercase and cannot contain spaces.");
+        return false;  // Prevent form submission
+    }
+
+    warningMessage.style.display = 'none';  // Hide warning message if ID is valid
+    confirmPasswordError.style.display = 'none';  // Hide confirm password error if passwords match
+    return true;  // Allow form submission
+});
+
+</script>
+
 
 
 
@@ -942,6 +1195,13 @@ profilePicInput.addEventListener('change', (event) => {
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- jQuery and Bootstrap (for modal) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+<!-- Font Awesome (for icons) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
 
 </body>
 </html>

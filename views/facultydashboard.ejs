@@ -683,6 +683,11 @@ h1.my-4 {
     background: #005fcc;
 }
 
+.messenger-icon {
+    display: none;
+}
+
+
 
 
     </style>
@@ -729,7 +734,8 @@ h1.my-4 {
 <div id="notificationModal" class="modal">
     <div class="modal-content">
         <span class="close" onclick="closeModal('notificationModal')">&times;</span>
-        <h2>Notifications</h2>
+        <h2><i class="fa-solid fa-bell"></i> Notifications</h2>
+
         <button id="clearAllBtn" class="clear-all-btn">Clear All Notifications</button>
         <div id="notificationList">
             <!-- Notifications will be dynamically generated here -->
